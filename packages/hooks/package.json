@@ -1,0 +1,25 @@
+{
+    "name": "@ra-lib/hooks",
+    "version": "0.1.2",
+    "description": "通用hooks",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "scripts": {
+        "build": "father-build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "peerDependencies": {
+        "react": "^17.0.2"
+    },
+    "author": "zkboys",
+    "license": "ISC",
+    "publishConfig": {
+        "registry": ""
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "homepage": "",
+    "gitHead": "7ed12e942b8f952a966c0133eb05d2f803e30b13"
+}

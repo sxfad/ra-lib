@@ -1,0 +1,22 @@
+{
+    "name": "@ra-lib/config-loader",
+    "version": "0.1.5",
+    "description": "config高阶组件配置抓取loader",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "scripts": {
+        "build": "father-build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "zkboys",
+    "license": "ISC",
+    "publishConfig": {
+        "registry": ""
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "homepage": "",
+    "gitHead": "1d4dd4fdbe097e5a8b2039a8d5857b0e0cf90cd0"
+}

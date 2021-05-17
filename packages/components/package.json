@@ -1,0 +1,35 @@
+{
+    "name": "@ra-lib/components",
+    "version": "0.1.11",
+    "description": "通用公共组件",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "sideEffects": [
+        "dist/*",
+        "*.less"
+    ],
+    "scripts": {
+        "build": "father-build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "peerDependencies": {
+        "@ant-design/icons": "^4.6.2",
+        "antd": "^4.15.2",
+        "classnames": "^2.3.1",
+        "path-to-regexp": "^6.2.0",
+        "prop-types": "^15.7.2",
+        "react": "^17.0.2",
+        "react-router-dom": "^5.2.0"
+    },
+    "author": "zkboys",
+    "license": "ISC",
+    "publishConfig": {
+        "registry": ""
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "homepage": "",
+    "gitHead": "1d4dd4fdbe097e5a8b2039a8d5857b0e0cf90cd0"
+}

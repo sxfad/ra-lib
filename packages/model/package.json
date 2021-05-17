@@ -1,0 +1,29 @@
+{
+    "name": "@ra-lib/model",
+    "version": "0.1.1",
+    "description": "redux封装",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "scripts": {
+        "build": "father-build",
+        "test": "umi-test"
+    },
+    "peerDependencies": {
+        "lodash": "^4.17.21",
+        "react-redux": "^7.2.3",
+        "redux": "^4.0.5",
+        "redux-thunk": "^2.3.0",
+        "redux-undo": "^1.0.1"
+    },
+    "author": "zkboys",
+    "license": "ISC",
+    "publishConfig": {
+        "registry": ""
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "homepage": "",
+    "gitHead": "7ed12e942b8f952a966c0133eb05d2f803e30b13"
+}

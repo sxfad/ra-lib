@@ -1,0 +1,19 @@
+@import '../../theme';
+
+@prefix-cls: ~'@{ra-lib-prefix}-layout-toggle-side';
+
+.@{prefix-cls} {
+    padding: 0 8px;
+    font-size: 18px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: @primary-color;
+    transition: background .3s cubic-bezier(0.2, 0, 0, 1);
+    border-bottom: 1px solid #e8e8e8;
+
+    &:hover {
+        opacity: .7;
+    }
+}

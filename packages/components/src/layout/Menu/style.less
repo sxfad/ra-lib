@@ -1,0 +1,33 @@
+@import '../../theme';
+
+@prefix-cls: ~'@{ra-lib-prefix}-layout-menu';
+
+.@{prefix-cls}-top {
+    flex: 0;
+}
+
+.@{prefix-cls}-search {
+    padding: 8px;
+}
+
+.@{prefix-cls}-menu {
+    flex: 1;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 0 !important;
+    }
+}
+
+.@{prefix-cls}-empty {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: .15;
+    margin: 0;
+
+    &.dark-menu {
+        color: #fff;
+    }
+}

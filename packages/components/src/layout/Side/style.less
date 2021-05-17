@@ -1,0 +1,31 @@
+@import '../../theme';
+
+@prefix-cls: ~'@{ra-lib-prefix}-layout-side';
+
+.@{prefix-cls} {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: @layout-z-index;
+    display: flex;
+    flex-direction: column;
+    transition: @layout-transition-duration cubic-bezier(0.2, 0, 0, 1);
+    overflow: auto;
+    background: #fff;
+
+    .@{ant-prefix}-menu-inline {
+        border-right: 0;
+    }
+
+    &.dark {
+        background: @layout-header-background;
+    }
+
+    &::-webkit-scrollbar {
+        width: 0 !important;
+    }
+
+    &-footer {
+        flex: 0;
+    }
+}

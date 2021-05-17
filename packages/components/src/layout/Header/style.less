@@ -1,0 +1,33 @@
+@import '../../theme';
+
+@prefix-cls: ~'@{ra-lib-prefix}-layout-header';
+
+.@{prefix-cls} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: @layout-z-index;
+    display: flex;
+    align-items: center;
+    background: #fff;
+
+    &.dark {
+        background-color: @layout-header-background;
+        color: #fff;
+    }
+
+    .@{ant-prefix}-menu-horizontal {
+        border-bottom-color: #fff;
+    }
+
+    &-content {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 8px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+}

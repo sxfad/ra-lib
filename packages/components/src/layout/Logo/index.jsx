@@ -1,0 +1,55 @@
+import {useContext} from 'react';
+import {withRouter} from 'react-router-dom';
+import classNames from 'classnames';
+import ComponentContext from '../../component-context';
+import './style.less';
+
+function Header(props) {
+    const context = useContext(ComponentContext);
+
+    let {
+        className,
+        prefixCls = context.prefixCls,
+
+        height,
+        width,
+        logo,
+        title,
+        sideCollapsed,
+        showSide,
+        theme = 'dark',
+    } = props;
+
+    function handleLogoClick() {
+        props.history.push('/');
+    }
+
+    prefixCls = `${prefixCls}-layout-logo`;
+    const rootClass = classNames(
+        prefixCls,
+        className,
+        {
+            collapsed: sideCollapsed,
+            ['no-side']: !showSide,
+            dark: theme === 'dark',
+        },
+    );
+
+    return (
+        <div
+            className={rootClass}
+            style={{width: width, flex: `0 0 ${width}px`}}
+            onClick={handleLogoClick}
+        >
+            <img
+                className={`${prefixCls}-image`}
+                style={{height: height - 16}}
+                src={logo}
+                alt="logo"
+            />
+            {sideCollapsed ? null : <h1 className={`${prefixCls}-title`}>{title}</h1>}
+        </div>
+    );
+}
+
+export default withRouter(Header);

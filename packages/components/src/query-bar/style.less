@@ -1,0 +1,35 @@
+@import '../theme';
+
+@prefix-cls: ~'@{ra-lib-prefix}-query-bar';
+
+.@{prefix-cls} {
+    position: relative;
+    margin-bottom: 8px;
+    margin-left: -@page-content-padding;
+    margin-right: -@page-content-padding;
+    border-bottom: 8px solid @body-background;
+    padding: 0 8px;
+    color: @primary-color;
+
+
+    &-collapsed-bar {
+        text-align: center;
+        cursor: pointer;
+        border-top: 1px solid @body-background;
+        padding: 2px 0;
+
+        &:hover {
+            opacity: .7;
+        }
+    }
+
+    &-tip {
+        margin-left: 4px;
+    }
+
+
+    .@{ant-prefix}-form-inline .@{ant-prefix}-form-item {
+        margin-bottom: 8px;
+    }
+}
+
