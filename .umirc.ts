@@ -15,6 +15,7 @@ export default defineConfig({
             'packages',
         ],
     },
+    base: '/ra-lib',
     publicPath: '/ra-lib/',
     locales: [ [ 'zh-CN', '中文' ] ],
     navs: {
