@@ -11,6 +11,8 @@ const initialValue = {
     okText: '确定',
     cancelText: '取消',
     layoutPageOtherHeight: 0,
+    isMobile: false,
+    mobileColumnDefaultWidth: 200,
 };
 
 export const ComponentContext = React.createContext(initialValue);
@@ -41,6 +43,11 @@ ComponentProvider.propTypes = {
     cancelText: PropTypes.any,
     // PageContent组件 fitHeight 时，计算高度所用到的额外高度值
     layoutPageOtherHeight: PropTypes.number,
+    // 是否是手机布局
+    isMobile: PropTypes.bool,
+    // 手机布局下，缺省column宽度默认值
+    mobileColumnDefaultWidth: PropTypes.number,
+
 };
 
 export const ComponentConsumer = ComponentContext.Consumer;

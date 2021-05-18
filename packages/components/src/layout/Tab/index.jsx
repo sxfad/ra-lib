@@ -16,7 +16,6 @@ export default withRouter(React.memo(function Tab(props) {
         className,
         prefixCls = context.prefixCls,
         pageTitle,
-        selectedMenu,
         tabs,
         onClose,
         tabHeight,
@@ -35,8 +34,6 @@ export default withRouter(React.memo(function Tab(props) {
         keepPageAlive,
         hashRouter,
     } = props;
-
-    pageTitle = pageTitle || selectedMenu?.title;
 
     let {pathname, search, hash} = window.location;
     const routePath = hashRouter ? hash.replace('#', '').split('?')[0] : pathname;

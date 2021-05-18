@@ -83,6 +83,7 @@ function Header(props) {
                 <SideToggle
                     sideCollapsed={sideCollapsed}
                     onToggleSide={onToggleSide}
+                    theme={theme}
                 />
             ) : null}
             <div className={contentClass}>

@@ -10,6 +10,7 @@ function Header(props) {
     let {
         className,
         prefixCls = context.prefixCls,
+        style={},
 
         height,
         width,
@@ -38,7 +39,7 @@ function Header(props) {
     return (
         <div
             className={rootClass}
-            style={{width: width, flex: `0 0 ${width}px`}}
+            style={{width: width, flex: `0 0 ${width}px`, ...style}}
             onClick={handleLogoClick}
         >
             <img

@@ -12,11 +12,12 @@ export default function SideToggle(props) {
         prefixCls = context.prefixCls,
         sideCollapsed,
         onToggleSide,
+        theme,
     } = props;
 
 
     prefixCls = `${prefixCls}-layout-toggle-side`;
-    const rootClass = classNames(prefixCls, className);
+    const rootClass = classNames(prefixCls, className, {dark: theme === 'dark'});
 
     return (
         <div

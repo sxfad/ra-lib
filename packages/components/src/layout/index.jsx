@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import {getTreeData, findNode, findParentNodes} from '@ra-lib/util';
 import ComponentContext from '../component-context';
 import Header from './Header';
+import MobileHeader from './MobileHeader';
 import Tab from './Tab';
 import PageHeader from './PageHeader';
 import Side from './Side';
@@ -44,6 +45,8 @@ const Layout = forwardRef((props, ref) => {
 
         logo: props.logo,
         title: props.title,
+        hashRouter: props.hashRouter,
+        isMobile: context.isMobile,
         headerTheme: props.headerTheme,
         headerHeight: props.headerHeight,
         sideMaxWidth: props.sideMaxWidth,
@@ -66,7 +69,6 @@ const Layout = forwardRef((props, ref) => {
         keepPageAlive: props.keepPageAlive,
         showTabHeaderExtra: props.showTabHeaderExtra,
         showTabSideToggle: props.showTabSideToggle,
-        hashRouter: props.hashRouter,
 
         menuTreeData: void 0,
         selectedMenu: null,
@@ -99,6 +101,7 @@ const Layout = forwardRef((props, ref) => {
         layoutType,
         keepPageAlive,
         hashRouter,
+        isMobile,
 
         // Tab页属性
         showTab,
@@ -217,6 +220,44 @@ const Layout = forwardRef((props, ref) => {
     }
 
     const rootClass = classNames(prefixCls, className);
+    pageTitle = pageTitle || selectedMenu?.title;
+
+    const side = (
+        <Side
+            headerHeight={showHeader ? headerHeight : showTab ? tabHeight : 0}
+            sideWidth={sideWidth}
+            sideMinWidth={sideMinWidth}
+            sideCollapsed={sideCollapsed}
+            showSearchMenu={showSearchMenu}
+            selectedMenuPath={selectedMenuPath}
+            searchMenuPlaceholder={searchMenuPlaceholder}
+            renderSide={renderSide}
+            menuTreeData={menuTreeData}
+            keepMenuOpen={keepMenuOpen}
+            layoutType={layoutType}
+            selectedMenuParents={selectedMenuParents}
+            theme={sideTheme}
+        />
+    );
+
+    if (isMobile) {
+
+        return (
+            <MobileHeader
+                logo={logo}
+                title={title}
+                sideWidth={sideWidth}
+                pageTitle={pageTitle}
+                height={headerHeight}
+                selectedMenuPath={selectedMenuPath}
+                extra={headerExtra}
+                theme={headerTheme}
+                sideTheme={sideTheme}
+            >
+                {side}
+            </MobileHeader>
+        );
+    }
     return (
         <>
             <div className={rootClass}>
@@ -243,7 +284,6 @@ const Layout = forwardRef((props, ref) => {
                         sideTheme={sideTheme}
                         routes={routes}
                         tabs={tabsRef.current}
-                        selectedMenu={selectedMenu}
                         pageTitle={pageTitle}
                         onClose={handleTabClose}
                         tabHeight={tabHeight}
@@ -264,7 +304,7 @@ const Layout = forwardRef((props, ref) => {
                 ) : null}
                 {showPageHeader ? (
                     <PageHeader
-                        title={pageTitle}
+                        pageTitle={pageTitle}
                         selectedMenu={selectedMenu}
                         selectedMenuParents={selectedMenuParents}
                         pageHeaderHeight={pageHeaderHeight}
@@ -275,23 +315,7 @@ const Layout = forwardRef((props, ref) => {
                         appendBreadcrumb={appendBreadcrumb}
                     />
                 ) : null}
-                {showSide ? (
-                    <Side
-                        headerHeight={showHeader ? headerHeight : showTab ? tabHeight : 0}
-                        sideWidth={sideWidth}
-                        sideMinWidth={sideMinWidth}
-                        sideCollapsed={sideCollapsed}
-                        showSearchMenu={showSearchMenu}
-                        selectedMenuPath={selectedMenuPath}
-                        searchMenuPlaceholder={searchMenuPlaceholder}
-                        renderSide={renderSide}
-                        menuTreeData={menuTreeData}
-                        keepMenuOpen={keepMenuOpen}
-                        layoutType={layoutType}
-                        selectedMenuParents={selectedMenuParents}
-                        theme={sideTheme}
-                    />
-                ) : null}
+                {showSide ? side : null}
 
                 {children ? (
                     <main>{children}</main>
@@ -363,6 +387,8 @@ Layout.propTypes = {
     showTabHeaderExtra: PropTypes.bool,
     // tab左侧是否显示菜单收起展开按钮
     showTabSideToggle: PropTypes.bool,
+    // 是否使用hash路由
+    hashRouter: PropTypes.bool,
 };
 
 Layout.defaultProps = {
@@ -391,6 +417,7 @@ Layout.defaultProps = {
     keepPageAlive: false,
     showTabHeaderExtra: false,
     showTabSideToggle: false,
+    hashRouter: false,
 };
 
 export default Layout;

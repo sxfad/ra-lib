@@ -2,6 +2,7 @@ import {useState, useRef, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {Table, ConfigProvider} from 'antd';
 import {useHeight} from '@ra-lib/hooks';
+import ComponentContext from '../component-context';
 
 function RATable(props) {
     let {
@@ -20,6 +21,7 @@ function RATable(props) {
         ...others
     } = props;
 
+    const context = useContext(ComponentContext);
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
     const rootRef = useRef(null);
@@ -27,6 +29,7 @@ function RATable(props) {
     const [hasPagination, setHasPagination] = useState(false);
     const pageContentPadding = 8;
     const pageContentMargin = 8;
+    const {isMobile, mobileColumnDefaultWidth} = context;
 
     let [height] = useHeight(rootRef);
     height = height - (_otherHeight || 0) - (offsetHeight || 0);
@@ -99,6 +102,14 @@ function RATable(props) {
             },
             ...columns,
         ];
+    }
+
+    if (isMobile) {
+        columns.forEach(item => {
+            if (!('width' in item)) {
+                item.width = mobileColumnDefaultWidth;
+            }
+        });
     }
 
     return (

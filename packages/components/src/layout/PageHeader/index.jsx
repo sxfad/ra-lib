@@ -15,13 +15,12 @@ export default function PageHeader(props) {
         tabHeight,
         pageHeaderHeight,
         sideWidth,
-        title,
+        pageTitle,
         selectedMenu,
         selectedMenuParents,
         breadcrumb,
         appendBreadcrumb,
     } = props;
-    const pageTitle = title || selectedMenu?.title;
 
     prefixCls = `${prefixCls}-layout-page-header`;
 

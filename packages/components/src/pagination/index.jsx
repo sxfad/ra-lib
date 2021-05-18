@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import {Pagination} from 'antd';
+import {useContext} from 'react';
+import ComponentContext from '../component-context';
 
 function RAPagination(props) {
+    const context = useContext(ComponentContext);
     const {
         total,
         pageNum = 1,
@@ -14,6 +17,8 @@ function RAPagination(props) {
         ...others
     } = props;
 
+    const {isMobile} = context;
+
     function handleChange(num, size) {
         onChange(num, size);
 
@@ -25,6 +30,7 @@ function RAPagination(props) {
     return (
         <div style={{display: 'flex', justifyContent: 'flex-end'}}>
             <Pagination
+                size={isMobile ? 'small' : 'default'}
                 style={{marginTop: 8, ...style}}
                 total={total}
                 showTotal={total => `共${total}条数据`}
