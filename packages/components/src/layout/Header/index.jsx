@@ -30,6 +30,7 @@ function Header(props) {
         extra,
         theme = 'default',
         sideTheme,
+        logoTheme,
     } = props;
 
     const [topSelectedMenuPath, setTopSelectedMenuPath] = useState(selectedMenuPath);
@@ -77,7 +78,7 @@ function Header(props) {
                 width={sideWidth}
                 sideCollapsed={sideCollapsed}
                 showSide={showSide}
-                theme={sideTheme}
+                theme={logoTheme}
             />
             {showToggle ? (
                 <SideToggle

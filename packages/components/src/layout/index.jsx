@@ -57,6 +57,7 @@ const Layout = forwardRef((props, ref) => {
         renderSide: props.renderSide,
         showSide: props.showSide,
         sideTheme: props.sideTheme,
+        logoTheme: props.logoTheme,
         keepMenuOpen: props.keepMenuOpen,
         showHeader: props.showHeader,
         showHeaderSideToggle: props.showHeaderSideToggle,
@@ -128,6 +129,7 @@ const Layout = forwardRef((props, ref) => {
         selectedMenuPath,
         showSide,
         sideTheme,
+        logoTheme,
         menuTreeData = [],
         keepMenuOpen,
         selectedMenu,
@@ -253,6 +255,7 @@ const Layout = forwardRef((props, ref) => {
                 extra={headerExtra}
                 theme={headerTheme}
                 sideTheme={sideTheme}
+                logoTheme={logoTheme}
             >
                 {side}
             </MobileHeader>
@@ -265,6 +268,7 @@ const Layout = forwardRef((props, ref) => {
                     <Header
                         theme={headerTheme}
                         sideTheme={sideTheme}
+                        logoTheme={logoTheme}
                         height={headerHeight}
                         logo={logo}
                         title={title}
@@ -281,7 +285,7 @@ const Layout = forwardRef((props, ref) => {
                 ) : null}
                 {showTab ? (
                     <Tab
-                        sideTheme={sideTheme}
+                        logoTheme={logoTheme}
                         routes={routes}
                         tabs={tabsRef.current}
                         pageTitle={pageTitle}
@@ -361,6 +365,8 @@ Layout.propTypes = {
     showSide: PropTypes.bool,
     // 侧边栏主题
     sideTheme: PropTypes.oneOf(['dark', 'default']),
+    // logo主题
+    logoTheme: PropTypes.oneOf(['dark', 'default']),
     // 是否显示头部
     showHeader: PropTypes.bool,
     // 是否显示头部菜单展开收起按钮
@@ -404,6 +410,7 @@ Layout.defaultProps = {
     renderSide: void 0,
     showSide: true,
     sideTheme: 'dark',
+    logoTheme: 'dark',
     keepMenuOpen: true,
     showHeader: true,
     showHeaderSideToggle: true,

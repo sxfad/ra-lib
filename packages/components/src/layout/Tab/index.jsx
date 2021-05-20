@@ -30,7 +30,7 @@ export default withRouter(React.memo(function Tab(props) {
         logo,
         title,
         persistTab,
-        sideTheme,
+        logoTheme,
         keepPageAlive,
         hashRouter,
     } = props;
@@ -194,7 +194,7 @@ export default withRouter(React.memo(function Tab(props) {
             <div className={leftClass}>
                 {showLogo ? (
                     <Logo
-                        theme={sideTheme}
+                        theme={logoTheme}
                         className={logoClass}
                         logo={logo}
                         title={title}

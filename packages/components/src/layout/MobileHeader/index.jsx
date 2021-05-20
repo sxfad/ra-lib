@@ -3,7 +3,6 @@ import {withRouter} from 'react-router-dom';
 import {Drawer} from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../../component-context';
-import Menu from '../Menu';
 import SideToggle from '../SideToggle';
 import Logo from '../Logo';
 import './style.less';
@@ -24,6 +23,7 @@ function MobileHeader(props) {
         extra,
         theme = 'default',
         sideTheme,
+        logoTheme,
         children,
     } = props;
 
@@ -70,7 +70,7 @@ function MobileHeader(props) {
                         logo={logo}
                         title={title}
                         height={height}
-                        theme={sideTheme}
+                        theme={logoTheme}
                     />
                 </div>
                 <div className={menuClass}>
