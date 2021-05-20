@@ -39,7 +39,7 @@ export default function PageHeader(props) {
                 {pageTitle}
             </h2>
             <Breadcrumb
-                pageTitle={title}
+                pageTitle={pageTitle}
                 selectedMenu={selectedMenu}
                 selectedMenuParents={selectedMenuParents}
                 breadcrumb={breadcrumb}
