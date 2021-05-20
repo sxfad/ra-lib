@@ -155,6 +155,8 @@ FormItem.propTypes = {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     autoFocus: PropTypes.bool,
+    allowClear: PropTypes.bool,
+    showSearch: PropTypes.bool,
 };
 
 FormItem.defaultProps = {
