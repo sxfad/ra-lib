@@ -153,7 +153,7 @@ const Layout = forwardRef((props, ref) => {
 
     if (layoutType === LAYOUT_TYPE.TOP_MENU) showSide = false;
 
-    selectedMenuPath = selectedMenuPath || hashRouter ? window.location.hash.replace('#', '').split('?')[0] : window.location.pathname;
+    selectedMenuPath = selectedMenuPath || (hashRouter ? window.location.hash.replace('#', '').split('?')[0] : window.location.pathname);
 
 
     const keepAlivePagesRef = useRef(null);
