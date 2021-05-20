@@ -67,6 +67,11 @@ function RATable(props) {
         setTimeout(() => {
             setHeight();
         });
+
+        // 窗口改变也设置高度
+        window.addEventListener('resize', setHeight);
+        return () => window.removeEventListener('resize', setHeight);
+
     }, [otherHeight, dataSource]);
 
     useEffect(() => {

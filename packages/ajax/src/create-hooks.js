@@ -40,7 +40,9 @@ export default function createHooks(ajax) {
             initOptions = {};
         }
 
-        const {mountFire = true, debounce = true} = initOptions;
+        let {debounce = true} = initOptions;
+
+        let mountFire = !('mountFire' in initOptions) ? true : !!initOptions.mountFire;
 
         // 用于取消ajax
         const ajaxHandler = useRef(null);

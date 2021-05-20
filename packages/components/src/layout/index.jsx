@@ -155,9 +155,13 @@ const Layout = forwardRef((props, ref) => {
 
     selectedMenuPath = selectedMenuPath || (hashRouter ? window.location.hash.replace('#', '').split('?')[0] : window.location.pathname);
 
-
     const keepAlivePagesRef = useRef(null);
     const tabsRef = useRef(persistTab && JSON.parse(window.localStorage.getItem('layout-tabs')) || []);
+
+    useEffect(() => {
+        // 延迟触发window 的 resize事件调整布局
+        setTimeout(() => window.dispatchEvent(new Event('resize')));
+    }, [sideCollapsed]);
 
     // body添加padding站位
     useEffect(() => {
