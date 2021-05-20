@@ -161,7 +161,17 @@ const Layout = forwardRef((props, ref) => {
     useEffect(() => {
         // 延迟触发window 的 resize事件调整布局
         setTimeout(() => window.dispatchEvent(new Event('resize')));
-    }, [sideCollapsed]);
+    }, [
+        sideCollapsed,
+        showSide,
+        sideWidth,
+        showHeader,
+        headerHeight,
+        showTab,
+        tabHeight,
+        showPageHeader,
+        pageHeaderHeight,
+    ]);
 
     // body添加padding站位
     useEffect(() => {
