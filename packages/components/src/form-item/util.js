@@ -75,12 +75,17 @@ export const formElementTypes = [
         type: 'select',
         Component: Select,
         componentName: 'Select',
+        getComponent: ({commonProps, props}) => {
+            return (
+                <Select optionFilterProp="label" {...commonProps} {...props}/>
+            );
+        },
     },
     {
         type: 'select-tree',
         getComponent: ({commonProps, props}) => {
             return (
-                <TreeSelect {...commonProps} {...props} treeData={props.treeData || props.options}/>
+                <TreeSelect treeNodeFilterProp="title" {...commonProps} {...props} treeData={props.treeData || props.options}/>
             );
         },
         componentName: 'TreeSelect',
