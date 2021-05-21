@@ -161,5 +161,6 @@ export default function createHooks(ajax) {
         usePut: create('put'),
         useDel: create('del'),
         usePatch: create('patch'),
+        useDownload: create('download'),
     };
 }

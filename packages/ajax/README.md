@@ -9,6 +9,11 @@
 - put 一般用于修改服务器资源
 - del 一般用于删除服务器上的资源
 - patch 一般用于部分修改服务器资源，很少用得到
+- download 下载文件，后端要设置headers参考如下：
+    ```
+    content-disposition: attachment;fileName=xxx.txt
+    content-type: application/octet-stream;charset=UTF-8
+    ```
 
 所有方法接受三个参数，url,params,options
 
@@ -190,5 +195,14 @@ const {run: batchDelete} = props.ajax.useDel('/roles', null, {successTip: '批�
 
 async function handleDelete(id) {
     await batchDelete({ids: id}, {successTip: '删除成功！'});
+}
+```
+
+```js
+// ajax下载文件
+async function handleDownload() {
+    // method 默认 get
+    // fileName 默认从响应header中获取
+    props.ajax.download('/download', null, {method: 'post', fileName: 'README.md'});
 }
 ```

@@ -195,6 +195,44 @@ export default class Ajax {
     del(url, params, options) {
         return this.ajax({url, params, method: 'delete', ...options});
     }
+
+    /**
+     * ajax 下载文件
+     * 后端设置header：
+     *  content-disposition: attachment;fileName=xxx.exl
+     *  content-type: application/octet-stream;charset=UTF-8
+     * @param url
+     * @param params
+     * @param options
+     * @returns {Promise<minimist.Opts.unknown>}
+     */
+    download(url, params, options = {}) {
+        let {method = 'get', originResponse = true, fileName, ...others} = options;
+        return this.ajax({url, params, method, originResponse, ...others})
+            .then(res => {
+                const errorMessage = 'download fail';
+
+                if (!res || !res.headers || !res.data) throw Error(errorMessage);
+
+                fileName = fileName
+                    || res?.headers.filename
+                    || res?.headers.fileName
+                    || res?.headers['file-name']
+                    || res?.headers['content-disposition']?.split('=')[1];
+
+                if (!fileName) throw Error('file name can not be null!');
+
+                const blob = new Blob([res.data], {type: res.headers['content-type']});
+
+                const link = document.createElement('a');
+                link.setAttribute('href', window.URL.createObjectURL(blob));
+                link.setAttribute('download', decodeURIComponent(fileName));
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+    }
 }
 
 /**

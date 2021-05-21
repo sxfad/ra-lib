@@ -24,7 +24,7 @@ const createAjaxHoc = ajax => ({propName = 'ajax'} = {}) => WrappedComponent => 
                 ...ajaxHooks,
             };
             this._$ajaxTokens = [];
-            const methods = ['get', 'post', 'put', 'patch', 'del'];
+            const methods = ['get', 'post', 'put', 'patch', 'del', 'download'];
 
             for (let method of methods) {
                 this._$ajax[method] = (...args) => {
