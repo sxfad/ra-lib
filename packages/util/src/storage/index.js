@@ -45,6 +45,9 @@ function getStorage(prefix, storage) {
         getItem(key) {
             key = prefix + key;
             let value = storage.getItem(key);
+
+            if (value === 'undefined') return undefined;
+
             return JSON.parse(value);
         },
 
