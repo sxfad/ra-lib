@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 /**
  * 获取地址栏参数，转为对象
  * @returns {{}}
@@ -13,6 +15,15 @@ export function getQuery() {
     }
 
     return query;
+}
+
+/**
+ * 对象转 query string
+ * @param obj
+ * @returns {string}
+ */
+export function toQuery(obj) {
+    return qs.stringify(obj, {encode: false});
 }
 
 /**
