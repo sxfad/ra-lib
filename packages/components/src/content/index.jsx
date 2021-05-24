@@ -42,7 +42,7 @@ const Content = forwardRef((props, ref) => {
             return;
         }
 
-        let {x: left, y: top, width, height} = rootRef.current.getBoundingClientRect();
+        let {left, top, width, height} = rootRef.current.getBoundingClientRect();
 
         // margin部分也遮住
         const computedStyle = window.getComputedStyle(rootRef.current);

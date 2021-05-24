@@ -91,7 +91,7 @@ export function elementIsVisible(element, containerEle = document.documentElemen
     const elementRect = element.getBoundingClientRect();
     const containerRect = containerEle.getBoundingClientRect();
 
-    const elementTop = elementRect.y - containerRect.y + containerScrollTop;
+    const elementTop = elementRect.top - containerRect.top + containerScrollTop;
     const elementBottom = elementTop + elementRect.height;
     const containerShownHeight = containerScrollTop + containerHeight;
 
