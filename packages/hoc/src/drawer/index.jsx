@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Drawer } from 'antd';
+import React, {Component} from 'react';
+import {Drawer} from 'antd';
 
 /**
  *  drawer高级组件，确保每次弹框内部组件都是新创建的，牺牲点性能，可有效避免脏数据问题
@@ -24,11 +24,12 @@ export default (options) => WrappedComponent => {
         static displayName = `WithModal(${componentName})`;
 
         render() {
+            let opt = options;
             // options 如果是函数，返回值作为参数
-            if (typeof options === 'function') options = options(this.props);
+            if (typeof options === 'function') opt = options(this.props);
 
             // options 如果为字符串，直接作为title
-            if (typeof options === 'string') options = { title: options };
+            if (typeof opt === 'string') opt = {title: opt};
 
             let {
                 visible,
@@ -40,11 +41,11 @@ export default (options) => WrappedComponent => {
                 title,
                 width = 256,
                 ...others
-            } = { ...options, ...this.props }; // 组件使用时传递的属性优先级高
+            } = {...opt, ...this.props}; // 组件使用时传递的属性优先级高
             if (!onCancel) onCancel = onClose;
 
             // 样式合并
-            let style = { top, ...(options.style || {}), ...(this.props.style || {}) };
+            let style = {top, ...(opt.style || {}), ...(this.props.style || {})};
 
             if (fullScreen) {
                 width = '100%';
@@ -64,7 +65,7 @@ export default (options) => WrappedComponent => {
                 <Drawer
                     destroyOnClose
                     width={width}
-                    bodyStyle={{ padding: 0 }}
+                    bodyStyle={{padding: 0}}
                     style={style}
                     footer={null}
                     maskClosable={false}
