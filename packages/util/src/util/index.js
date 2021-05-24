@@ -1,5 +1,36 @@
 import qs from 'qs';
 
+
+/**
+ * 数组快速排序方法，Array.prototype.sort() 方法有兼容性问题，不同浏览器表现不同
+ * @param arr
+ * @param orderBy
+ * @returns {*[]|*}
+ */
+export function quickSort(arr, orderBy = (a, b) => a - b) {
+    if (!arr || !Array.isArray(arr)) return arr;
+
+    if (arr.length <= 1) return [...arr];
+
+    arr = [...arr];
+
+    const pivotIndex = Math.floor(arr.length / 2);
+    const pivot = arr.splice(pivotIndex, 1)[0];
+    const left = [];
+    const right = [];
+
+    for (let i = 0; i < arr.length; i++) {
+        if (orderBy(arr[i], pivot) <= 0) {
+            left.push(arr[i]);
+        } else {
+            right.push(arr[i]);
+        }
+    }
+
+    return quickSort(left, orderBy).concat([pivot], quickSort(right, orderBy));
+}
+
+
 /**
  * 获取地址栏参数，转为对象
  * @returns {{}}
