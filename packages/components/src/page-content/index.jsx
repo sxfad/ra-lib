@@ -14,8 +14,8 @@ const PageContent = forwardRef((props, ref) => {
         ...others
     } = props;
 
-    prefixCls = `${prefixCls}-page-content`;
-    const rootClass = classNames(`${prefixCls}`, {[`${prefixCls}-fit-height`]: fitHeight}, className);
+    prefixCls = `${prefixCls}-content-page`;
+    const rootClass = classNames(`${prefixCls}`, className);
     return <Content className={rootClass} fitHeight={fitHeight} {...others} ref={ref}/>;
 });
 
