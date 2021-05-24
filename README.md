@@ -1,6 +1,6 @@
 # ra-lib
 
-通用工具、组件库
+通用工具、组件库。 [查看文档](https://sxfad.github.io/ra-lib/)
 
 - 多包管理 [lerna](https://github.com/lerna/lerna)
 - 打包 [father](https://github.com/umijs/father)
