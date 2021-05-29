@@ -44,7 +44,6 @@ function RATable(props) {
         window.document.body.style.overflowY = 'hidden';
 
         return () => {
-            console.log('oldOverflowY', oldOverflowY);
             window.document.body.style.overflowY = oldOverflowY;
         };
     }, []);
