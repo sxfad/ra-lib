@@ -6,7 +6,7 @@ import {useHeight} from '@ra-lib/hooks';
 import ComponentContext from '../component-context';
 import './style.less';
 
-function Content(props, ref) {
+const Content = forwardRef((props, ref) => {
     const context = useContext(ComponentContext);
 
     let {
@@ -98,7 +98,7 @@ function Content(props, ref) {
             </div>
         </>
     );
-}
+});
 
 Content.propTypes = {
     // 样式类名
@@ -130,4 +130,4 @@ Content.defaultProps = {
     offsetHeight: 0,
 };
 
-export default forwardRef(Content);
+export default Content;

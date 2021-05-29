@@ -4,7 +4,7 @@ import ComponentContext from '../component-context';
 import classNames from 'classnames';
 import './style.less';
 
-function PageContent(props, ref) {
+const PageContent = forwardRef((props, ref) => {
     const context = useContext(ComponentContext);
 
     let {
@@ -17,7 +17,7 @@ function PageContent(props, ref) {
     prefixCls = `${prefixCls}-content-page`;
     const rootClass = classNames(`${prefixCls}`, className);
     return <Content className={rootClass} fitHeight={fitHeight} {...others} ref={ref}/>;
-}
+});
 
 PageContent.propTypes = Content.propTypes;
 
@@ -25,4 +25,4 @@ PageContent.defaultProps = {
     isRoot: true,
 };
 
-export default forwardRef(PageContent);
+export default PageContent;

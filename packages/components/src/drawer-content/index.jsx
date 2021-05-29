@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, Spin, ConfigProvider} from 'antd';
 import ComponentContext from '../component-context';
 
-function DrawerContent(props, ref) {
+const DrawerContent = forwardRef((props, ref) => {
     const context = useContext(ComponentContext);
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
@@ -77,7 +77,7 @@ function DrawerContent(props, ref) {
             ) : null}
         </>
     );
-}
+});
 
 DrawerContent.propTypes = {
     // 是否全屏
@@ -113,4 +113,4 @@ DrawerContent.defaultProps = {
     onCancel: () => void 0,
 };
 
-export default forwardRef(DrawerContent);
+export default DrawerContent;
