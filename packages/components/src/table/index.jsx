@@ -40,7 +40,7 @@ function RATable(props) {
     if (fitHeight) _scroll.y = height;
 
     useEffect(() => {
-        function setHeight() {
+        function _setOtherHeight() {
             if (otherHeight !== undefined) return;
 
             if (!rootRef.current) return;
@@ -61,16 +61,19 @@ function RATable(props) {
         }
 
         // 预设值，防止body出现滚动条
-        setHeight();
+        const oldOverflowY = window.document.body.style.overflowY;
+        window.document.body.style.overflowY = 'hidden';
+        _setOtherHeight();
 
         // 等待table-thead 渲染完成 再设置，调整表格高度
         setTimeout(() => {
-            setHeight();
+            _setOtherHeight();
+            window.document.body.style.overflowY = oldOverflowY;
         });
 
         // 窗口改变也设置高度
-        window.addEventListener('resize', setHeight);
-        return () => window.removeEventListener('resize', setHeight);
+        window.addEventListener('resize', _setOtherHeight);
+        return () => window.removeEventListener('resize', _setOtherHeight);
 
     }, [otherHeight, dataSource]);
 
@@ -84,7 +87,7 @@ function RATable(props) {
 
         tableBody.style.height = `${height}px`;
         if (tablePlaceholder) {
-            tablePlaceholder.style.height = `${height - 20}px`;
+            tablePlaceholder.style.height = `${height - 40}px`;
             tablePlaceholder.style.border = 'none';
         }
 
