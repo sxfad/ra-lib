@@ -40,7 +40,18 @@ function RATable(props) {
     if (fitHeight) _scroll.y = height;
 
     useEffect(() => {
+        const oldOverflowY = window.document.body.style.overflowY || 'auto';
+        window.document.body.style.overflowY = 'hidden';
+
+        return () => {
+            console.log('oldOverflowY', oldOverflowY);
+            window.document.body.style.overflowY = oldOverflowY;
+        };
+    }, []);
+
+    useEffect(() => {
         function _setOtherHeight() {
+
             if (otherHeight !== undefined) return;
 
             if (!rootRef.current) return;
@@ -61,14 +72,11 @@ function RATable(props) {
         }
 
         // 预设值，防止body出现滚动条
-        const oldOverflowY = window.document.body.style.overflowY;
-        window.document.body.style.overflowY = 'hidden';
         _setOtherHeight();
 
         // 等待table-thead 渲染完成 再设置，调整表格高度
         setTimeout(() => {
             _setOtherHeight();
-            window.document.body.style.overflowY = oldOverflowY;
         });
 
         // 窗口改变也设置高度
