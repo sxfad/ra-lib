@@ -4,7 +4,8 @@ import {formElementTypes, getFormElement, getPlaceholder, getRules} from './util
 import PropTypes from 'prop-types';
 
 const {Item} = Form;
-const FormItem = forwardRef((props, ref) => {
+
+function FormItem(props, ref) {
     let {
         // 类型
         maxLength,
@@ -102,7 +103,7 @@ const FormItem = forwardRef((props, ref) => {
         </Item>
     );
 
-});
+};
 
 
 FormItem.propTypes = {
@@ -163,4 +164,4 @@ FormItem.defaultProps = {
     type: 'input',
 };
 
-export default FormItem;
+export default forwardRef(FormItem);
