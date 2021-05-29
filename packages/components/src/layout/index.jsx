@@ -37,7 +37,7 @@ function reducer(state, action) {
     }
 }
 
-const Layout = forwardRef((props, ref) => {
+function Layout(props, ref) {
     const context = useContext(ComponentContext);
 
     const initialState = {
@@ -350,7 +350,7 @@ const Layout = forwardRef((props, ref) => {
             ) : null}
         </>
     );
-});
+}
 
 Layout.propTypes = {
     // 头部额外内容
@@ -441,4 +441,4 @@ Layout.defaultProps = {
     hashRouter: false,
 };
 
-export default Layout;
+export default forwardRef(Layout);

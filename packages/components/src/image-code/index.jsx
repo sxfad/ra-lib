@@ -6,7 +6,7 @@ import defaultErrorImage from './defaultErrorImage.png';
 import ComponentContext from '../component-context';
 import './style.less';
 
-const ImageCode = forwardRef((props, ref) => {
+function ImageCode(props, ref) {
     const context = useContext(ComponentContext);
     let {
         className,
@@ -113,7 +113,7 @@ const ImageCode = forwardRef((props, ref) => {
             </div>
         </Spin>
     );
-});
+}
 
 
 ImageCode.propTypes = {
@@ -135,5 +135,5 @@ ImageCode.defaultProps = {
     imageWidth: 90,
 };
 
-export default ImageCode;
+export default forwardRef(ImageCode);
 

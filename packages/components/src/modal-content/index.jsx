@@ -4,7 +4,7 @@ import {Button, Spin, ConfigProvider} from 'antd';
 import ComponentContext from '../component-context';
 import {useHeight} from '@ra-lib/hooks';
 
-const ModalContent = forwardRef((props, ref) => {
+function ModalContent(props, ref) {
     const context = useContext(ComponentContext);
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
@@ -74,7 +74,7 @@ const ModalContent = forwardRef((props, ref) => {
             </div>
         </Spin>
     );
-});
+}
 
 ModalContent.propTypes = {
     // 是否全屏
@@ -115,4 +115,4 @@ ModalContent.defaultProps = {
     onCancel: () => void 0,
 };
 
-export default ModalContent;
+export default forwardRef(ModalContent);
