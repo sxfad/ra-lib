@@ -9,7 +9,6 @@ const PageContent = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
 
     let {
         isRoot = true,
-        // @ts-ignore
         prefixCls = context.prefixCls,
         className,
         fitHeight,

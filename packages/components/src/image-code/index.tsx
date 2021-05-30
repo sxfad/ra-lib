@@ -9,6 +9,7 @@ import './style.less';
 
 export interface ImageCodeProps {
     className?: string,
+    prefixCls?: string,
     value?: string | [ any, any ],
     onChange?: (value: string | [ any, any ]) => void,
     // src: string类型时，直接作为图片的src input value 为 string
@@ -28,15 +29,15 @@ export interface refProps {
 const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
     const context = useContext(ComponentContext);
     let {
+        placeholder = '请输入图片验证码',
+        errorImage = defaultErrorImage,
+        imageWidth = 90,
+
         className,
-        // @ts-ignore
         prefixCls = context.prefixCls,
         src,
-        placeholder,
         onChange,
         value,
-        errorImage,
-        imageWidth,
         ...others
     } = props;
 
@@ -134,12 +135,6 @@ const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
         </Spin>
     );
 });
-
-ImageCode.defaultProps = {
-    placeholder: '请输入图片验证码',
-    errorImage: defaultErrorImage,
-    imageWidth: 90,
-};
 
 export default ImageCode;
 

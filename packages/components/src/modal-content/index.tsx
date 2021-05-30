@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useContext, ReactNode } from 'react';
+import React, { forwardRef, useRef, useContext, ReactNode, CSSProperties } from 'react';
 import { Button, Spin, ConfigProvider } from 'antd';
 import ComponentContext from '../component-context';
 import { useHeight } from '@ra-lib/hooks';
@@ -49,15 +49,11 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
         onOk = () => void 0,
         onCancel = () => void 0,
         otherHeight,
-        // @ts-ignore
         loadingTip = context.loadingTip,
-        // @ts-ignore
         prefixCls = context.prefixCls,
         fullScreen,
         footer,
-        // @ts-ignore
         okText = context.okText,
-        // @ts-ignore
         cancelText = context.cancelText,
         ...others
     } = props;
@@ -71,7 +67,7 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
     const rootRef = useRef(null);
     const [ height ] = useHeight(rootRef, otherHeight || defaultOtherHeight);
 
-    const outerStyle = {
+    const outerStyle: CSSProperties = {
         display: 'flex',
         flexDirection: 'column',
         height: fitHeight ? height : 'auto',
@@ -87,7 +83,6 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
                     // @ts-ignore
                     if (ref) ref.current = rootDom;
                 }}
-                // @ts-ignore
                 style={outerStyle}
                 {...others}
             >

@@ -4,12 +4,13 @@ import { ButtonHTMLType } from 'antd/es/button/button';
 import ComponentContext from '../component-context';
 
 export interface DrawerContentProps {
+    prefixCls?: string,
     // 是否全屏
     fullScreen?: boolean,
     // 是否加载中
     loading?: boolean,
     // 加载中提示文案
-    loadingTip?: ReactNode
+    loadingTip?: string,
     // 底部 默认 确定、取消
     footer?: ReactNode
     // 确定按钮类型
@@ -41,15 +42,11 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
         onCancel = () => void 0,
         okHtmlType,
         children,
-        // @ts-ignore
         loadingTip = context.loadingTip,
-        // @ts-ignore
         prefixCls = context.prefixCls,
         fullScreen,
         footer,
-        // @ts-ignore
         okText = context.okText,
-        // @ts-ignore
         cancelText = context.cancelText,
         ...others
     } = props;

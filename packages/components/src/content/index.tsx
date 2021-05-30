@@ -37,11 +37,8 @@ const Content = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
         isRoot = false,
         offsetHeight = 0,
         children,
-        // @ts-ignore
         otherHeight = context.layoutPageOtherHeight,
-        // @ts-ignore
         loadingTip = context.loadingTip,
-        // @ts-ignore
         prefixCls = context.prefixCls,
         ...others
     } = props;
@@ -79,14 +76,12 @@ const Content = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
         height = height + marginTop + marginBottom;
 
         // body如果有滚动，算上body滚动偏移量
-        // @ts-ignore
-        top = top + (document.documentElement.scrollTop || document.body.srcollTop || 0);
+        top = top + (document.documentElement.scrollTop || document.body.scrollTop || 0);
 
         // 如果PageContent高度超过了窗口，只遮住可视范围
         const windowHeight = document.documentElement.clientHeight;
-        let bottom = 'auto';
+        let bottom: number | string = 'auto';
         if (height > windowHeight) {
-            // @ts-ignore
             bottom = 0;
             height = 'auto';
         }
