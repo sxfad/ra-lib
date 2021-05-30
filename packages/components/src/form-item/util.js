@@ -248,7 +248,7 @@ export function getPlaceholder({type, placeholder, label}) {
 
     if (type === 'time-range') return ['开始时间', '结束时间'];
 
-    if (type.endsWith('-range')) return undefined;
+    if (type && type.endsWith('-range')) return undefined;
 
     if (isInputLikeElement(type)) return `请输入${label}`;
     return `请选择${label}`;
