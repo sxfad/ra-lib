@@ -1,38 +1,67 @@
-import React, {useEffect, useState, forwardRef, useContext} from 'react';
-import PropTypes from 'prop-types';
-import {Button, Spin, ConfigProvider} from 'antd';
+import React, { useEffect, useState, forwardRef, useContext, ReactNode, CSSProperties } from 'react';
+import { Button, Spin, ConfigProvider } from 'antd';
+import { ButtonHTMLType } from 'antd/es/button/button';
 import ComponentContext from '../component-context';
 
-const DrawerContent = forwardRef((props, ref) => {
+export interface DrawerContentProps {
+    // 是否全屏
+    fullScreen?: boolean,
+    // 是否加载中
+    loading?: boolean,
+    // 加载中提示文案
+    loadingTip?: ReactNode
+    // 底部 默认 确定、取消
+    footer?: ReactNode
+    // 确定按钮类型
+    okHtmlType?: ButtonHTMLType
+    // 确定按钮文案
+    okText?: ReactNode
+    // 确定事件
+    onOk?: () => void
+    // 取消按钮文案
+    cancelText?: any
+    // 取消事件
+    onCancel?: () => void
+    // 最外层容器样式
+    style?: object
+    // 内容容器样式
+    bodyStyle?: object
+}
+
+const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref) => {
     const context = useContext(ComponentContext);
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
 
     let {
+        loading = false,
+        style = {},
+        bodyStyle = {},
+        onOk = () => void 0,
+        onCancel = () => void 0,
+        okHtmlType,
         children,
-        style,
-        bodyStyle,
-        loading,
+        // @ts-ignore
         loadingTip = context.loadingTip,
+        // @ts-ignore
         prefixCls = context.prefixCls,
         fullScreen,
         footer,
-        okHtmlType,
+        // @ts-ignore
         okText = context.okText,
+        // @ts-ignore
         cancelText = context.cancelText,
-        onOk,
-        onCancel,
         ...others
     } = props;
 
     // 延迟加载内容，解决 内部 input autoFocus 不生效问题
-    const [inMounted, setIsMounted] = useState(false);
+    const [ inMounted, setIsMounted ] = useState(false);
     useEffect(() => {
         setTimeout(() => setIsMounted(true));
     }, []);
     if (!inMounted) return null;
 
-    const outerStyle = {
+    const outerStyle: CSSProperties = {
         display: 'flex',
         flexDirection: 'column',
         ...style,
@@ -49,11 +78,11 @@ const DrawerContent = forwardRef((props, ref) => {
                 >
                     <div
                         className={`${prefixCls}-drawer-content-inner`}
-                        style={{flex: 1, padding: 16, ...bodyStyle}}
+                        style={{ flex: 1, padding: 16, ...bodyStyle }}
                     >
                         {children}
                         {/* footer 站位 */}
-                        <div style={footer !== false ? {height: 53} : null}/>
+                        <div style={footer !== false ? { height: 53 } : null}/>
                     </div>
                 </div>
             </Spin>
@@ -78,39 +107,5 @@ const DrawerContent = forwardRef((props, ref) => {
         </>
     );
 });
-
-DrawerContent.propTypes = {
-    // 是否全屏
-    fullScreen: PropTypes.bool,
-    // 是否加载中
-    loading: PropTypes.bool,
-    // 加载中提示文案
-    loadingTip: PropTypes.any,
-    // 底部 默认 确定、取消
-    footer: PropTypes.any,
-    // 确定按钮类型
-    okHtmlType: PropTypes.any,
-    // 确定按钮文案
-    okText: PropTypes.any,
-    // 确定事件
-    onOk: PropTypes.func,
-    // 取消按钮文案
-    cancelText: PropTypes.any,
-    // 取消事件
-    onCancel: PropTypes.func,
-    // 最外层容器样式
-    style: PropTypes.object,
-    // 内容容器样式
-    bodyStyle: PropTypes.object,
-};
-
-DrawerContent.defaultProps = {
-    loading: false,
-    style: {},
-    bodyStyle: {},
-    okHtmlType: '',
-    onOk: () => void 0,
-    onCancel: () => void 0,
-};
 
 export default DrawerContent;

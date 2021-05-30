@@ -1,15 +1,35 @@
-import React, {forwardRef, useImperativeHandle, useContext, useState, useEffect, useRef} from 'react';
-import PropTypes from 'prop-types';
-import {Input, Spin} from 'antd';
+import React, { forwardRef, useImperativeHandle, useContext, useState, useEffect, useRef } from 'react';
+import { Input, Spin } from 'antd';
 import classNames from 'classnames';
+// @ts-ignore
 import defaultErrorImage from './defaultErrorImage.png';
 import ComponentContext from '../component-context';
 import './style.less';
 
-const ImageCode = forwardRef((props, ref) => {
+
+export interface ImageCodeProps {
+    className?: string,
+    value?: string | [ any, any ],
+    onChange?: (value: string | [ any, any ]) => void,
+    // src: string类型时，直接作为图片的src input value 为 string
+    //      func  类型时，返回值如果是string，直接作为图片src input value 为 string
+    //                  返回值如果是[key, url]，数组第一个元素作为验证码id，第二个元素作为图片src input value 为 [key, code]
+    src?: () => string,
+    placeholder?: string,
+    // 出错时站位图片
+    errorImage?: string,
+    imageWidth?: number | string,
+}
+
+export interface refProps {
+    refresh: () => void,
+}
+
+const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
     const context = useContext(ComponentContext);
     let {
         className,
+        // @ts-ignore
         prefixCls = context.prefixCls,
         src,
         placeholder,
@@ -28,10 +48,10 @@ const ImageCode = forwardRef((props, ref) => {
 
     const imgRef = useRef(null);
 
-    const [url, setUrl] = useState(errorImage);
-    const [id, setId] = useState(null);
-    const [code, setCode] = useState(undefined);
-    const [loading, setLoading] = useState(false);
+    const [ url, setUrl ] = useState(errorImage);
+    const [ id, setId ] = useState(null);
+    const [ code, setCode ] = useState(undefined);
+    const [ loading, setLoading ] = useState(false);
 
     async function handleClick() {
         // 后端地址可直接作为src的情况
@@ -61,7 +81,7 @@ const ImageCode = forwardRef((props, ref) => {
         const code = e.target.value;
 
         if (id) {
-            onChange([id, code]);
+            onChange([ id, code ]);
         } else {
             onChange(code);
         }
@@ -78,7 +98,7 @@ const ImageCode = forwardRef((props, ref) => {
             setCode(value[1]);
         }
 
-    }, [value]);
+    }, [ value ]);
 
     useEffect(() => {
         (async () => {
@@ -104,7 +124,7 @@ const ImageCode = forwardRef((props, ref) => {
                 <img
                     ref={imgRef}
                     className={imgClass}
-                    style={{width: imageWidth}}
+                    style={{ width: imageWidth }}
                     src={url}
                     alt="图片验证码"
                     onClick={handleClick}
@@ -114,20 +134,6 @@ const ImageCode = forwardRef((props, ref) => {
         </Spin>
     );
 });
-
-
-ImageCode.propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    onChange: PropTypes.func,
-    // src: string类型时，直接作为图片的src input value 为 string
-    //      func  类型时，返回值如果是string，直接作为图片src input value 为 string
-    //                  返回值如果是[key, url]，数组第一个元素作为验证码id，第二个元素作为图片src input value 为 [key, code]
-    src: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-    placeholder: PropTypes.string,
-    // 出错时站位图片
-    errorImage: PropTypes.string,
-    imageWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-};
 
 ImageCode.defaultProps = {
     placeholder: '请输入图片验证码',

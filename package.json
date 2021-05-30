@@ -68,5 +68,6 @@
         "redux-undo": "^1.0.1",
         "shelljs": "^0.8.4",
         "yorkie": "^2.0.0"
-    }
+    },
+    "dependencies": {}
 }
