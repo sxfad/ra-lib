@@ -79,10 +79,10 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
     if (!('width' in style)) style.width = '100%';
 
     // 处理 placeholder
-    const placeholder = getPlaceholder(props);
+    const placeholder = getPlaceholder({ ...props, type });
 
     // 处理校验规则
-    const rules = getRules({ ...props, placeholder });
+    const rules = getRules({ ...props, type, placeholder });
 
     const element = getFormElement({
         ref,
