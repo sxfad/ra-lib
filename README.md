@@ -43,8 +43,6 @@ $ npm run release
 
 监听文件改变，单独构建对应包。
 
-注意：需要全局安装 father (2.30.1版本可以) `npm i father -g` PACKAGE=ajax father-build 无效，不知为啥。。。
-
 ```bash
 $ npm run start
 ```

@@ -24,7 +24,7 @@ chokidar.watch(WATCH_PATH, watchOptions)
 
             console.log(chalk.blue(`${event} ${packageFilePath}`));
 
-            const command = `PACKAGE=${packageName} father build`;
+            const command = `PACKAGE=${packageName} father-build`;
 
             // 频繁保存，终止上次未完成命令
             if (childProcess) {
@@ -32,7 +32,7 @@ chokidar.watch(WATCH_PATH, watchOptions)
             }
             // 等待上一个进程被杀死之后，重新启动loading
             setTimeout(() => {
-                spinner.start(chalk.yellow(`build package ${packageName}...\n`));
+                spinner.start(chalk.yellow(`build package ${packageName} ...\n`));
             }, 200);
             childProcess = exec(command, (error, stdout, stderr) => {
                 childProcess = null;

@@ -1,6 +1,5 @@
 import qs from 'qs';
 
-
 /**
  * 数组快速排序方法，Array.prototype.sort() 方法有兼容性问题，不同浏览器表现不同
  * @param arr
