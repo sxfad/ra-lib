@@ -10,7 +10,7 @@ export default function useHeight(domRef, otherHeight = 0, deps = []) {
 
         const eleTop = getElementTop(domRef.current);
         let marginBottom = window.getComputedStyle(domRef.current).getPropertyValue('margin-bottom');
-        marginBottom = window.parseInt(marginBottom, 10);
+        marginBottom = window.parseInt(marginBottom, 10) || 0;
 
         const oHeight = otherHeight + marginBottom + eleTop;
         const windowHeight = document.documentElement.clientHeight;

@@ -20,5 +20,5 @@ console.log();
 console.log(chalk.yellow('yarn unlink ' + packagesStr));
 
 console.log();
-console.log(chalk.blue('yarn remove ' + packagesStr + ' && yarn add ' + packagesStr));
+console.log(chalk.blue('yarn add ' + packagesStr));
 console.log();
