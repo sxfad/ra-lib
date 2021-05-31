@@ -1,5 +1,25 @@
 import qs from 'qs';
 
+
+/**
+ * 检测是否有重复字段
+ * @param dataSource
+ * @param field
+ * @returns {boolean|*}
+ */
+export function checkSameField(dataSource, field = 'id') {
+    if (!dataSource || dataSource.length <= 1) return false;
+
+    const allFields = dataSource.map(item => item[field]);
+    const fields = [];
+
+    for (let f of allFields) {
+        if (fields.includes(f)) return f;
+        fields.push(f);
+    }
+    return false;
+}
+
 /**
  * 数组快速排序方法，Array.prototype.sort() 方法有兼容性问题，不同浏览器表现不同
  * @param arr
