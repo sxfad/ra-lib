@@ -21,34 +21,22 @@ export function checkSameField(dataSource, field = 'id') {
 }
 
 /**
- * 数组快速排序方法，Array.prototype.sort() 方法有兼容性问题，不同浏览器表现不同
+ * 数组排序方法，Array.prototype.sort() 方法有兼容性问题，不同浏览器表现不同
  * @param arr
  * @param orderBy
  * @returns {*[]|*}
  */
-export function quickSort(arr, orderBy = (a, b) => a - b) {
-    if (!arr || !Array.isArray(arr)) return arr;
-
-    if (arr.length <= 1) return [...arr];
-
-    arr = [...arr];
-
-    const pivotIndex = Math.floor(arr.length / 2);
-    const pivot = arr.splice(pivotIndex, 1)[0];
-    const left = [];
-    const right = [];
-
-    for (let i = 0; i < arr.length; i++) {
-        if (orderBy(arr[i], pivot) <= 0) {
-            left.push(arr[i]);
-        } else {
-            right.push(arr[i]);
+export function sort(arr, orderBy = (a, b) => a - b) {
+    const length = arr.length;
+    for (let i = 0; i < length - 1; i++) {
+        for (let j = 0; j < length - i - 1; j++) {
+            if (orderBy(arr[j], arr[j + 1]) > 0) {
+                arr[j] = [arr[j + 1], arr[j + 1] = arr[j]][0];
+            }
         }
     }
-
-    return quickSort(left, orderBy).concat([pivot], quickSort(right, orderBy));
+    return arr;
 }
-
 
 /**
  * 获取地址栏参数，转为对象
