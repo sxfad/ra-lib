@@ -3,7 +3,7 @@ import {match} from 'path-to-regexp';
 import {Route, Switch} from 'react-router-dom';
 
 export default React.memo(forwardRef(function KeepPageAlive(props, ref) {
-    const {routes, render404, hashRouter} = props;
+    const {routes, render404, hashRouter, baseName} = props;
 
     const keepPagesRef = useRef([]);
     const [, setRefresh] = useState({});
@@ -32,7 +32,8 @@ export default React.memo(forwardRef(function KeepPageAlive(props, ref) {
 
     let {pathname, search, hash} = window.location;
 
-    const routePath = hashRouter ? hash.replace('#', '').split('?')[0] : pathname;
+    let routePath = hashRouter ? hash.replace('#', '').split('?')[0] : pathname;
+    if (baseName) routePath = routePath.replace(baseName, '');
 
     useEffect(() => {
         if (!keepRoutes.length) return;
@@ -45,27 +46,32 @@ export default React.memo(forwardRef(function KeepPageAlive(props, ref) {
 
         // 未找到已存在页面，添加一个
         if (index === -1) {
-            const route = keepRoutes.find(({path}) => match(path, {decode: decodeURIComponent})(routePath));
+            let route = keepRoutes.find(({path}) => match(path, {decode: decodeURIComponent})(routePath));
+            const unKeepRoute = unKeepRoutes.find(({path}) => match(path, {decode: decodeURIComponent})(routePath));
 
-            if (route) {
-                // 修复match属性，当前路由是 '/'，无法获取到正确的match
-                let routeMatch = {};
-                const {params} = match(route.path, {decode: decodeURIComponent})(routePath);
-                routeMatch.params = params;
-                routeMatch.path = route.path;
-                routeMatch.url = pathname;
-                routeMatch.isExact = true;
+            // 渲染404页面
+            if (!route && !unKeepRoute) route = {
+                path: routePath,
+                component: render404,
+            };
 
-                let Component = route.component;
-                keepPagesRef.current.unshift({
-                    path: route?.path,
-                    key,
-                    // 使用 React.memo 保持组件在没有属性变化的情况下不更新
-                    Component: React.memo((props) => {
-                        return <Component {...props} match={routeMatch}/>;
-                    }),
-                });
-            }
+            // 修复match属性，当前路由是 '/'，无法获取到正确的match
+            let routeMatch = {};
+            const {params} = match(route.path, {decode: decodeURIComponent})(routePath);
+            routeMatch.params = params;
+            routeMatch.path = route.path;
+            routeMatch.url = pathname;
+            routeMatch.isExact = true;
+
+            let Component = route.component;
+            keepPagesRef.current.unshift({
+                path: route?.path,
+                key,
+                // 使用 React.memo 保持组件在没有属性变化的情况下不更新
+                Component: React.memo((props) => {
+                    return <Component {...props} match={routeMatch}/>;
+                }),
+            });
         } else {
             // 页面已存在，当前页面标记激活
             const nextPage = keepPagesRef.current[index];
@@ -79,7 +85,7 @@ export default React.memo(forwardRef(function KeepPageAlive(props, ref) {
         }
         // 触发当前组件更新
         setRefresh({});
-    }, [reload, keepRoutes, pathname, search, hash]);
+    }, [reload, keepRoutes, unKeepRoutes, pathname, search, hash]);
     return (
         <>
             {/* 进行 keepAlive 的页面 */}
@@ -104,16 +110,6 @@ export default React.memo(forwardRef(function KeepPageAlive(props, ref) {
                     const {path, component} = item;
                     return (<Route key={path} exact path={path} component={component}/>);
                 })}
-            </Switch>
-
-            {/*404页面*/}
-            <Switch>
-                {routes.map(item => {
-                    const {path} = item;
-                    return (<Route key={path} exact path={path} render={() => null}/>);
-                })}
-
-                <Route render={render404}/>
             </Switch>
         </>
     );

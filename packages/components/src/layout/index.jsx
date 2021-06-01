@@ -46,6 +46,7 @@ const Layout = forwardRef((props, ref) => {
         logo: props.logo,
         title: props.title,
         hashRouter: props.hashRouter,
+        baseName: props.baseName,
         isMobile: context.isMobile,
         headerTheme: props.headerTheme,
         headerHeight: props.headerHeight,
@@ -102,6 +103,7 @@ const Layout = forwardRef((props, ref) => {
         layoutType,
         keepPageAlive,
         hashRouter,
+        baseName,
         isMobile,
 
         // Tab页属性
@@ -341,11 +343,11 @@ const Layout = forwardRef((props, ref) => {
             </div>
             {keepPageAlive ? (
                 <KeepPageAlive
-                    {...props}
                     ref={keepAlivePagesRef}
                     routes={routes}
                     render404={render404}
                     hashRouter={hashRouter}
+                    baseName={baseName}
                 />
             ) : null}
         </>
@@ -409,6 +411,7 @@ Layout.propTypes = {
     showTabSideToggle: PropTypes.bool,
     // 是否使用hash路由
     hashRouter: PropTypes.bool,
+    baseName: PropTypes.string,
 };
 
 Layout.defaultProps = {
@@ -439,6 +442,7 @@ Layout.defaultProps = {
     showTabHeaderExtra: false,
     showTabSideToggle: false,
     hashRouter: false,
+    baseName: '',
 };
 
 export default Layout;
