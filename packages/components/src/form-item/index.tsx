@@ -76,7 +76,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
 
     if (!style) style = {};
     // @ts-ignore
-    if (!('width' in style)) style.width = '100%';
+    if (!('width' in style)) style.width = type === 'switch' ? 'auto' : '100%';
 
     // 处理 placeholder
     const placeholder = getPlaceholder({ type, ...props });
