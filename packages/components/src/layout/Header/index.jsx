@@ -6,6 +6,7 @@ import ComponentContext from '../../component-context';
 import LAYOUT_TYPE from '../layout-type';
 import Menu from '../Menu';
 import SideToggle from '../SideToggle';
+import MenuPane from '../MenuPane';
 import Logo from '../Logo';
 import './style.less';
 
@@ -26,10 +27,10 @@ function Header(props) {
         selectedMenuPath,
         menuTreeData,
         showToggle = true,
+        showMenuPane = false,
         layoutType,
         extra,
         theme = 'default',
-        sideTheme,
         logoTheme,
     } = props;
 
@@ -85,6 +86,11 @@ function Header(props) {
                     sideCollapsed={sideCollapsed}
                     onToggleSide={onToggleSide}
                     theme={theme}
+                />
+            ) : null}
+            {showMenuPane ? (
+                <MenuPane
+
                 />
             ) : null}
             <div className={contentClass}>

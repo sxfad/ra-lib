@@ -1,6 +1,6 @@
 @import '../../theme';
 
-@prefix-cls: ~'@{ra-lib-prefix}-layout-toggle-side';
+@prefix-cls: ~'@{ra-lib-prefix}-layout-menu-pane';
 
 .@{prefix-cls} {
     padding: 0 8px;
@@ -21,4 +21,12 @@
     &:hover {
         opacity: .7;
     }
+}
+
+.@{prefix-cls}-container {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: hidden;
 }
