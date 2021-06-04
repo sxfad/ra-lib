@@ -13,6 +13,7 @@ function QueryBar(props) {
         prefixCls = context.prefixCls,
         defaultCollapsed,
         collapsedTips,
+        showCollapsedBar,
         children,
         ...others
     } = props;
@@ -30,7 +31,7 @@ function QueryBar(props) {
     return (
         <div {...others} className={rootClass}>
             {childrenIsFunction ? children(collapsed) : children}
-            {childrenIsFunction ? (
+            {showCollapsedBar && childrenIsFunction ? (
                 <div className={collapsedBarClass} onClick={() => setCollapsed(!collapsed)}>
                     {collapsed ? <DoubleRightOutlined rotate={90}/> : <DoubleLeftOutlined rotate={90}/>}
                     <span className={tipClass}>{collapsedTips[collapsed ? 0 : 1]}</span>
@@ -49,12 +50,15 @@ QueryBar.propTypes = {
     defaultCollapsed: PropTypes.bool,
     // 展开收起提示
     collapsedTips: PropTypes.array,
+    // 是否显示折叠bar
+    showCollapsedBar: PropTypes.bool,
     // 子组件，如果需要展开收起功能，使用 render-props 方式，即：children 为函数：collapsed => {...}
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
 };
 
 QueryBar.defaultProps = {
     defaultCollapsed: true,
+    showCollapsedBar: true,
     collapsedTips: ['展开更多', '收起更多'],
 };
 
