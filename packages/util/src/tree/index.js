@@ -136,6 +136,52 @@ export function getFirstNode(treeData, field) {
     return loop(treeData);
 }
 
+/**
+ * 返回下一个兄弟节点
+ * 如果是最后一个，返回上一个兄弟节点，
+ * 如果是唯一子节点，返回父节点
+ * @param treeData
+ * @param key
+ * @param keyField
+ */
+export function findNextNode(treeData, key, keyField = 'id') {
+    if (!Array.isArray(treeData)) treeData = [treeData];
+
+    const parentNode = findParentNode(treeData, key, keyField);
+    const dataSource = parentNode ? parentNode.children || [] : treeData;
+
+    if (!dataSource || !dataSource.length) return null;
+
+    if (dataSource.length === 1) return parentNode;
+
+    const index = dataSource.findIndex(item => item[keyField] === key);
+
+    // 最后一个
+    if (index === dataSource.length - 1) return dataSource[index - 1];
+
+    return dataSource[index + 1];
+}
+
+export function findParentNode(treeData, key, keyField = 'id') {
+    if (!Array.isArray(treeData)) treeData = [treeData];
+
+    const loop = nodes => {
+        for (let node of nodes) {
+            if (node && node.children) {
+                if (node.children.some(item => item[keyField] === key)) {
+                    return node;
+                }
+                const result = loop(node.children);
+
+                if (result) return result;
+            }
+        }
+        return null;
+    };
+
+    return loop(treeData);
+}
+
 
 /**
  * 过滤树
