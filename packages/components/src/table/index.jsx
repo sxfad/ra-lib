@@ -40,6 +40,7 @@ function RATable(props) {
     if (fitHeight) _scroll.y = height;
 
     useEffect(() => {
+        if (!fitHeight) return;
         const oldOverflowY = window.document.body.style.overflowY || 'auto';
         window.document.body.style.overflowY = 'hidden';
 
