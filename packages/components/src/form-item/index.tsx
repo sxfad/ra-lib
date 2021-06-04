@@ -84,6 +84,8 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
     // 处理校验规则
     const rules = getRules({ type, ...props, placeholder });
 
+    if (type === 'switch' && !valuePropName) valuePropName = "checked";
+
     const element = getFormElement({
         ref,
         type,
