@@ -1,9 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Checkbox} from 'antd';
 import {findGenerationNodes, findParentNodes} from '@ra-lib/util';
 
 export default function renderTableCheckbox(WrappedTable) {
     return class WithCheckboxTable extends React.Component {
+        static propTypes = {
+            ...WrappedTable.propTypes,
+            checkboxIndex: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+        };
+
         state = {
             selectedRowKeys: [],
         };
@@ -56,7 +62,7 @@ export default function renderTableCheckbox(WrappedTable) {
                     onChange={e => this.handleCheck(e, record)}
                     indeterminate={record.__indeterminate}
                 />
-            )
+            );
         };
         handleSelectAll = (selected, selectedRows, changeRows) => {
             const {dataSource} = this.props;
@@ -95,19 +101,21 @@ export default function renderTableCheckbox(WrappedTable) {
             const {rowSelection, columns, checkboxIndex = 0, ...otherProps} = this.props;
             const {selectedRowKeys, renderCell, onSelectAll, onChange, ...others} = rowSelection;
 
-
-            const nextColumns = [...columns];
-            const col = {...nextColumns[checkboxIndex]};
-            if (!col.render) col.render = value => value;
-            const render = (value, record, index) => (
-                <>
-                    {this.renderCell(null, record)}
-                    <span style={{marginLeft: 8}}>
+            let nextColumns = columns;
+            if (checkboxIndex !== false) {
+                nextColumns = [...columns];
+                const col = {...nextColumns[checkboxIndex]};
+                if (!col.render) col.render = value => value;
+                const render = (value, record, index) => (
+                    <>
+                        {this.renderCell(null, record)}
+                        <span style={{marginLeft: 8}}>
                         {col.render(value, record, index)}
                     </span>
-                </>
-            );
-            nextColumns.splice(checkboxIndex, 1, {...col, render});
+                    </>
+                );
+                nextColumns.splice(checkboxIndex, 1, {...col, render});
+            }
 
             return (
                 <WrappedTable
@@ -116,19 +124,17 @@ export default function renderTableCheckbox(WrappedTable) {
                     rowSelection={{
                         ...others,
                         selectedRowKeys: selectedRowKeys,
-                        renderCell: () => null,
+                        renderCell: checkboxIndex === false ? this.renderCell : () => null,
                         // renderCell: this.renderCell,
                         onSelectAll: this.handleSelectAll,
                     }}
                 />
-            )
+            );
         }
-    }
+    };
 }
 
 /*
-
-
 const testDataSource = [
     {id: '1', name: '名称1', remark: '备注1'},
     {id: '11', name: '名称11', remark: '备注11', parentId: '1'},
