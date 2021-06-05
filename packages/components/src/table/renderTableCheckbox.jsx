@@ -37,7 +37,7 @@ export default function renderTableCheckbox(WrappedTable) {
         useEffect(() => {
             // 设置当前节点状态
             const loop = nodes => nodes.forEach(record => {
-                record.___checked = selectedRowKeys.some(id => id === record[rowKey]);
+                record.___checked = (selectedRowKeys || []).some(id => id === record[rowKey]);
 
                 if (record.children) loop(record.children);
             });
