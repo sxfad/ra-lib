@@ -31,6 +31,7 @@ export default function renderTableCheckbox(WrappedTable) {
             nextColumns.splice(checkboxIndex, 1, {...col, render});
         }
 
+
         const [, setRefresh] = useState({});
         const recordStatusRef = useRef({});
 
@@ -43,7 +44,7 @@ export default function renderTableCheckbox(WrappedTable) {
                 const key = record[rowKey];
                 const _record = getStatusRecord(record);
 
-                _record.___checked = selectedRowKeys.some(id => id === key);
+                _record.___checked = (selectedRowKeys || []).some(id => id === key);
 
                 if (record.children) loop(record.children);
             });
