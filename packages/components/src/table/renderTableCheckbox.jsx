@@ -1,83 +1,132 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
 import {Checkbox} from 'antd';
 import {findGenerationNodes, findParentNodes} from '@ra-lib/util';
 
 export default function renderTableCheckbox(WrappedTable) {
-    return class WithCheckboxTable extends React.Component {
-        static propTypes = {
-            ...WrappedTable.propTypes,
-            checkboxIndex: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-        };
+    return function WithCheckboxTable(props) {
+        const {
+            dataSource,
+            rowSelection = {},
+            rowKey = 'key',
+            columns,
+            checkboxIndex = 0,
+            ...otherProps
+        } = props;
 
-        state = {
-            selectedRowKeys: [],
-        };
+        const {selectedRowKeys, renderCell: _renderCell, onSelectAll, onChange, ...others} = rowSelection;
 
-        handleCheck = (e, record) => {
-            const {dataSource, rowKey = 'key'} = this.props;
-            const {checked} = e.target;
-            const key = record[rowKey];
-            const generationNodes = record.__generationNodes || findGenerationNodes(dataSource, key) || [];
-            record.__generationNodes = generationNodes;
-            const parentNodes = record.___parentNodes || findParentNodes(dataSource, key) || [];
-            record.___parentNodes = parentNodes;
-            record.__indeterminate = false;
+        let nextColumns = columns;
+        if (checkboxIndex !== false) {
+            nextColumns = [...columns];
+            const col = {...nextColumns[checkboxIndex]};
+            if (!col.render) col.render = value => value;
+            const render = (value, record, index) => (
+                <>
+                    {renderCell(null, record)}
+                    <span style={{marginLeft: 8}}>
+                        {col.render(value, record, index)}
+                    </span>
+                </>
+            );
+            nextColumns.splice(checkboxIndex, 1, {...col, render});
+        }
 
-            if (checked) {
-                record.__checked = true;
-                // 后代全部选中
-                generationNodes.forEach(item => item.__checked = true);
-            } else {
-                record.__checked = false;
-                // 后代全部取消选中
-                generationNodes.forEach(item => item.__checked = false);
-            }
+        const [, setRefresh] = useState({});
 
-            // 处理父级半选状态, 从底层向上处理
-            [...parentNodes].reverse().forEach(node => {
-                const key = node[rowKey];
-                const generationNodes = node.__generationNodes || findGenerationNodes(dataSource, key);
-                node.__generationNodes = generationNodes;
+        // 基于 selectedRowKeys 推导选中状态
+        useEffect(() => {
+            // 设置当前节点状态
+            const loop = nodes => nodes.forEach(record => {
+                record.___checked = selectedRowKeys.some(id => id === record[rowKey]);
 
-                let allChecked = true;
-                let hasChecked = false;
-
-                generationNodes.forEach(item => {
-                    if (!item.__checked) allChecked = false;
-                    if (item.__checked) hasChecked = true;
-                });
-
-                node.__checked = allChecked || hasChecked;
-
-                node.__indeterminate = !allChecked && hasChecked;
+                if (record.children) loop(record.children);
             });
 
-            this.setSelectedKeys(dataSource);
-        };
-        renderCell = (_checked, record, index, originNode) => {
+            loop(dataSource);
+
+            // 设置父节点状态
+            setParentsCheckStatus();
+
+            // 触发重新render
+            setRefresh({});
+
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selectedRowKeys, dataSource, rowKey]);
+
+
+        function handleCheck(e, record) {
+            const {checked} = e.target;
+
+            const key = record[rowKey];
+
+            // 当前节点状态
+            record.___checked = checked;
+
+            // 后代节点状态
+            const generationNodes = record.___generationNodes || findGenerationNodes(dataSource, key);
+            record.___generationNodes = generationNodes;
+
+            // 父节点状态
+            setParentsCheckStatus();
+
+            generationNodes.forEach(node => node.___checked = checked);
+
+            setSelectedKeys(dataSource);
+        }
+
+        function setParentsCheckStatus() {
+            const loop = nodes => nodes.forEach(record => {
+                if (record.children) loop(record.children);
+
+                const key = record[rowKey];
+                const parentNodes = record.___parentNodes || findParentNodes(dataSource, key) || [];
+
+                record.___parentNodes = parentNodes;
+
+                // 处理父级半选状态, 从底层向上处理
+                [...parentNodes].reverse().forEach(node => {
+                    const key = node[rowKey];
+                    const generationNodes = node.___generationNodes || findGenerationNodes(dataSource, key);
+                    node.___generationNodes = generationNodes;
+
+                    let allChecked = true;
+                    let hasChecked = false;
+
+                    generationNodes.forEach(item => {
+                        if (!item.___checked) allChecked = false;
+                        if (item.___checked) hasChecked = true;
+                    });
+
+                    node.___checked = hasChecked;
+                    node.___indeterminate = !allChecked && hasChecked;
+                });
+            });
+
+            loop(dataSource);
+        }
+
+        function renderCell(_checked, record, index, originNode) {
             return (
                 <Checkbox
-                    checked={record.__checked}
-                    onChange={e => this.handleCheck(e, record)}
-                    indeterminate={record.__indeterminate}
+                    checked={record.___checked}
+                    onChange={e => handleCheck(e, record)}
+                    indeterminate={record.___indeterminate}
                 />
             );
-        };
-        handleSelectAll = (selected, selectedRows, changeRows) => {
-            const {dataSource} = this.props;
+        }
+
+        function handleSelectAll(selected, selectedRows, changeRows) {
             const loop = nodes => nodes.forEach(node => {
                 const {children} = node;
-                node.__checked = selected;
-                node.__indeterminate = false;
+                node.___checked = selected;
+                node.___indeterminate = false;
                 if (children) loop(children);
             });
             loop(dataSource);
-            this.setSelectedKeys(dataSource);
-        };
+            setSelectedKeys(dataSource);
+        }
 
-        setSelectedKeys = (dataSource) => {
-            const {rowKey = 'key', rowSelection = {}} = this.props;
+        function setSelectedKeys(dataSource) {
             const {onChange} = rowSelection;
 
             const selectedRows = [];
@@ -86,7 +135,7 @@ export default function renderTableCheckbox(WrappedTable) {
             const loop = nodes => nodes.forEach(node => {
                 const {children} = node;
                 const key = node[rowKey];
-                if (node.__checked) {
+                if (node.___checked) {
                     selectedRowKeys.push(key);
                     selectedRows.push(node);
                 }
@@ -95,46 +144,26 @@ export default function renderTableCheckbox(WrappedTable) {
             loop(dataSource);
 
             onChange && onChange(selectedRowKeys, selectedRows);
-        };
-
-        render() {
-            const {rowSelection, columns, checkboxIndex = 0, ...otherProps} = this.props;
-            const {selectedRowKeys, renderCell, onSelectAll, onChange, ...others} = rowSelection;
-
-            let nextColumns = columns;
-            if (checkboxIndex !== false) {
-                nextColumns = [...columns];
-                const col = {...nextColumns[checkboxIndex]};
-                if (!col.render) col.render = value => value;
-                const render = (value, record, index) => (
-                    <>
-                        {this.renderCell(null, record)}
-                        <span style={{marginLeft: 8}}>
-                        {col.render(value, record, index)}
-                    </span>
-                    </>
-                );
-                nextColumns.splice(checkboxIndex, 1, {...col, render});
-            }
-
-            return (
-                <WrappedTable
-                    {...otherProps}
-                    columns={nextColumns}
-                    rowSelection={{
-                        ...others,
-                        selectedRowKeys: selectedRowKeys,
-                        renderCell: checkboxIndex === false ? this.renderCell : () => null,
-                        // renderCell: this.renderCell,
-                        onSelectAll: this.handleSelectAll,
-                    }}
-                />
-            );
         }
+
+        return (
+            <WrappedTable
+                {...otherProps}
+                columns={nextColumns}
+                dataSource={dataSource}
+                rowKey={rowKey}
+                rowSelection={{
+                    ...others,
+                    selectedRowKeys: selectedRowKeys,
+                    renderCell: checkboxIndex === false ? renderCell : () => null,
+                    onSelectAll: handleSelectAll,
+                }}
+            />
+        );
     };
 }
-
 /*
+
 const testDataSource = [
     {id: '1', name: '名称1', remark: '备注1'},
     {id: '11', name: '名称11', remark: '备注11', parentId: '1'},
@@ -148,6 +177,7 @@ const testDataSource = [
     {id: '3', name: '名称3', remark: '备注3'},
     {id: '4', name: '名称4', remark: '备注4'},
 ];
+
 const CheckboxTable = renderTableCheckbox(Table);
 
 @config({
@@ -156,7 +186,7 @@ const CheckboxTable = renderTableCheckbox(Table);
 export default class TableSelect extends React.Component {
     state = {
         dataSource: [],
-        selectedRowKeys: [],
+        selectedRowKeys: ['111', '112', '113', '4'],
         selectedRows: [],
     };
     columns = [
@@ -179,8 +209,6 @@ export default class TableSelect extends React.Component {
     render() {
         const {dataSource, selectedRowKeys} = this.state;
 
-        console.log('selectedRowKeys', selectedRowKeys);
-
         return (
             <PageContent>
                 <CheckboxTable
@@ -195,7 +223,7 @@ export default class TableSelect extends React.Component {
                     pagination={false}
                 />
             </PageContent>
-        )
+        );
     }
 }
 */
