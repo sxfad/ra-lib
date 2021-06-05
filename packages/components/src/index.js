@@ -12,6 +12,7 @@ export {default as ImageCode} from './image-code';
 export {default as MessageCode} from './message-code';
 export {default as FormItem} from './form-item';
 export {default as Table} from './table';
+export {default as renderTableCheckbox} from './table/renderTableCheckbox';
 export {default as Pagination} from './pagination';
 export {default as ToolBar} from './tool-bar';
 export {default as batchDeleteConfirm} from './batch-delete-confirm';
