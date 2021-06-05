@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Checkbox} from 'antd';
 import {findGenerationNodes, findParentNodes} from '@ra-lib/util';
 
@@ -32,12 +32,18 @@ export default function renderTableCheckbox(WrappedTable) {
         }
 
         const [, setRefresh] = useState({});
+        const recordStatusRef = useRef({});
 
         // 基于 selectedRowKeys 推导选中状态
         useEffect(() => {
+            recordStatusRef.current = {};
+
             // 设置当前节点状态
             const loop = nodes => nodes.forEach(record => {
-                record.___checked = (selectedRowKeys || []).some(id => id === record[rowKey]);
+                const key = record[rowKey];
+                const _record = getStatusRecord(record);
+
+                _record.___checked = selectedRowKeys.some(id => id === key);
 
                 if (record.children) loop(record.children);
             });
@@ -53,23 +59,33 @@ export default function renderTableCheckbox(WrappedTable) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selectedRowKeys, dataSource, rowKey]);
 
+        function getStatusRecord(record) {
+            const key = record[rowKey];
+            if (!recordStatusRef.current[key]) recordStatusRef.current[key] = {};
+
+            return recordStatusRef.current[key];
+        }
 
         function handleCheck(e, record) {
             const {checked} = e.target;
-
             const key = record[rowKey];
+            const _record = getStatusRecord(record);
 
             // 当前节点状态
-            record.___checked = checked;
+            _record.___checked = checked;
 
             // 后代节点状态
-            const generationNodes = record.___generationNodes || findGenerationNodes(dataSource, key);
-            record.___generationNodes = generationNodes;
+            const generationNodes = _record.___generationNodes || findGenerationNodes(dataSource, key);
+            _record.___generationNodes = generationNodes;
 
             // 父节点状态
             setParentsCheckStatus();
 
-            generationNodes.forEach(node => node.___checked = checked);
+            generationNodes.forEach(node => {
+                const _node = getStatusRecord(node);
+
+                _node.___checked = checked;
+            });
 
             setSelectedKeys(dataSource);
         }
@@ -79,26 +95,31 @@ export default function renderTableCheckbox(WrappedTable) {
                 if (record.children) loop(record.children);
 
                 const key = record[rowKey];
-                const parentNodes = record.___parentNodes || findParentNodes(dataSource, key) || [];
+                const _record = getStatusRecord(record);
+                const parentNodes = _record.___parentNodes || findParentNodes(dataSource, key) || [];
 
-                record.___parentNodes = parentNodes;
+                _record.___parentNodes = parentNodes;
 
                 // 处理父级半选状态, 从底层向上处理
                 [...parentNodes].reverse().forEach(node => {
                     const key = node[rowKey];
-                    const generationNodes = node.___generationNodes || findGenerationNodes(dataSource, key);
-                    node.___generationNodes = generationNodes;
+                    const _node = getStatusRecord(node);
+
+                    const generationNodes = _node.___generationNodes || findGenerationNodes(dataSource, key);
+                    _node.___generationNodes = generationNodes;
 
                     let allChecked = true;
                     let hasChecked = false;
 
                     generationNodes.forEach(item => {
-                        if (!item.___checked) allChecked = false;
-                        if (item.___checked) hasChecked = true;
+                        const _item = getStatusRecord(item);
+
+                        if (!_item.___checked) allChecked = false;
+                        if (_item.___checked) hasChecked = true;
                     });
 
-                    node.___checked = hasChecked;
-                    node.___indeterminate = !allChecked && hasChecked;
+                    _node.___checked = hasChecked;
+                    _node.___indeterminate = !allChecked && hasChecked;
                 });
             });
 
@@ -106,11 +127,13 @@ export default function renderTableCheckbox(WrappedTable) {
         }
 
         function renderCell(_checked, record, index, originNode) {
+            const _record = getStatusRecord(record);
+
             return (
                 <Checkbox
-                    checked={record.___checked}
+                    checked={_record.___checked}
                     onChange={e => handleCheck(e, record)}
-                    indeterminate={record.___indeterminate}
+                    indeterminate={_record.___indeterminate}
                 />
             );
         }
@@ -118,8 +141,10 @@ export default function renderTableCheckbox(WrappedTable) {
         function handleSelectAll(selected, selectedRows, changeRows) {
             const loop = nodes => nodes.forEach(node => {
                 const {children} = node;
-                node.___checked = selected;
-                node.___indeterminate = false;
+                const _node = getStatusRecord(node);
+
+                _node.___checked = selected;
+                _node.___indeterminate = false;
                 if (children) loop(children);
             });
             loop(dataSource);
@@ -135,7 +160,9 @@ export default function renderTableCheckbox(WrappedTable) {
             const loop = nodes => nodes.forEach(node => {
                 const {children} = node;
                 const key = node[rowKey];
-                if (node.___checked) {
+                const _node = getStatusRecord(node);
+
+                if (_node.___checked) {
                     selectedRowKeys.push(key);
                     selectedRows.push(node);
                 }
