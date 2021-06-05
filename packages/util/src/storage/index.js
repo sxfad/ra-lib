@@ -19,13 +19,13 @@ const sessionStorage = window.sessionStorage;
 
 export default class Storage {
     constructor({prefix = ''} = {}) {
-        this.session = getStorage(prefix, sessionStorage);
-        this.local = getStorage(prefix, localStorage);
-        this.global = getStorage(prefix, globalStorage);
+        this.session = getStorage(prefix, sessionStorage, JSON.parse, JSON.stringify);
+        this.local = getStorage(prefix, localStorage, JSON.parse, JSON.stringify);
+        this.global = getStorage(prefix, globalStorage, value => value, value => value);
     }
 }
 
-function getStorage(prefix, storage) {
+function getStorage(prefix, storage, parse, stringify) {
     return {
         /**
          * 存储数据
@@ -34,7 +34,7 @@ function getStorage(prefix, storage) {
          */
         setItem(key, value) {
             key = prefix + key;
-            value = JSON.stringify(value);
+            value = stringify(value);
             storage.setItem(key, value);
         },
         /**
@@ -48,7 +48,7 @@ function getStorage(prefix, storage) {
 
             if (value === 'undefined') return undefined;
 
-            return JSON.parse(value);
+            return parse(value);
         },
 
         /**
