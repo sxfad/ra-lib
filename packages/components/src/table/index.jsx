@@ -148,6 +148,7 @@ RATable.defaultProps = {
     serialNumberWidth: 60,
     serialNumberFixed: false,
     offsetHeight: 0,
+    pagination: false,
 };
 
 RATable.propTypes = {
