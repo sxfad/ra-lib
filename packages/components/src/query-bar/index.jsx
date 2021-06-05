@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {DoubleRightOutlined, DoubleLeftOutlined} from '@ant-design/icons';
 import classNames from 'classnames';
@@ -20,6 +20,10 @@ function QueryBar(props) {
 
     const [collapsed, setCollapsed] = useState(defaultCollapsed);
 
+    useEffect(() => {
+        // 延迟触发window 的 resize事件调整布局
+        setTimeout(() => window.dispatchEvent(new Event('resize')));
+    }, [collapsed]);
 
     prefixCls = `${prefixCls}-query-bar`;
     const rootClass = classNames(prefixCls, className);
