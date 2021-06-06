@@ -3,12 +3,50 @@ import { Form } from 'antd';
 import { FormItemProps } from 'antd/es/form';
 import { getFormElement, getPlaceholder, getRules } from './util';
 
+const tuple = <T extends string[]>(...args: T) => args;
+const ItemTypes = tuple(
+    'image-code',
+    'message-code',
+    'input',
+    'hidden',
+    'number',
+    'textarea',
+    'password',
+    'mobile',
+    'email',
+    'select',
+    'select-tree',
+    'checkbox',
+    'checkbox-group',
+    'radio',
+    'radio-button',
+    'radio-group',
+    'switch',
+    'date',
+    'week',
+    'month',
+    'quarter',
+    'year',
+    'date-range',
+    'week-range',
+    'month-range',
+    'quarter-range',
+    'year-range',
+    'time',
+    'time-range',
+    'date-time',
+    'date-time-range',
+    'cascader',
+    'transfer',
+);
+export type ItemType = typeof ItemTypes[number];
+
 export interface ItemProps extends FormItemProps {
     // 类型
     maxLength?: number, // 允许输入最大字符数
     minLength?: number, // 允许输入最小字符数
     // type: PropTypes.oneOf(formElementTypes.map(item => item.type)),
-    type?: string,
+    type?: ItemType,
     children?: ReactChildren,
     noSpace?: boolean,
 
