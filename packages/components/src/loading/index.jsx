@@ -51,6 +51,7 @@ export default class Loading extends Component {
             bottom: 0,
             left: 0,
             cursor: 'not-allowed',
+            zIndex: 9999,
             ...style,
         };
         return (
