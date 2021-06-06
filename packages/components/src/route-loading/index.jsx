@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import {Spin} from 'antd';
+import {Component} from 'react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -14,20 +13,6 @@ export default class RouteLoading extends Component {
     }
 
     render() {
-        const style = {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-        };
-        return (
-            <div style={style}>
-                <Spin spinning tip={this.props.tip}/>
-            </div>
-        );
+        return null;
     }
 }
