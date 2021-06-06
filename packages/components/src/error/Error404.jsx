@@ -1,8 +1,11 @@
 import React from 'react';
-import {Result} from 'antd';
+import PropTypes from 'prop-types';
+import {Result, Button, Space} from 'antd';
+import {withRouter} from 'react-router-dom';
 import PageContent from '../page-content';
 
-export default function Error404(props) {
+function Error404(props) {
+    const {homePath = '/', history} = props;
     return (
         <PageContent
             fitHeight
@@ -17,7 +20,19 @@ export default function Error404(props) {
                 status="404"
                 title="404"
                 subTitle="您访问的页面不存在"
+                extra={
+                    <Space>
+                        <Button type="primary" onClick={() => history.replace(homePath)}>返回首页</Button>
+                        <Button onClick={() => history.goBack()}>返回上个页面</Button>
+                    </Space>
+                }
             />
         </PageContent>
     );
 }
+
+Error404.prototype = {
+    homePath: PropTypes.string,
+};
+
+export default withRouter(Error404);
