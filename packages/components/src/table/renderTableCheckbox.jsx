@@ -13,7 +13,7 @@ export default function renderTableCheckbox(WrappedTable) {
             ...otherProps
         } = props;
 
-        const {selectedRowKeys, renderCell: _renderCell, onSelectAll, onChange, ...others} = rowSelection;
+        const {selectedRowKeys, getCheckboxProps, renderCell: _renderCell, onSelectAll, onChange, ...others} = rowSelection;
 
         let nextColumns = columns;
         if (checkboxIndex !== false) {
@@ -129,9 +129,11 @@ export default function renderTableCheckbox(WrappedTable) {
 
         function renderCell(_checked, record, index, originNode) {
             const _record = getStatusRecord(record);
+            const checkboxProps = getCheckboxProps && getCheckboxProps(record) || {};
 
             return (
                 <Checkbox
+                    {...checkboxProps}
                     checked={_record.___checked}
                     onChange={e => handleCheck(e, record)}
                     indeterminate={_record.___indeterminate}
@@ -182,6 +184,7 @@ export default function renderTableCheckbox(WrappedTable) {
                 rowKey={rowKey}
                 rowSelection={{
                     ...others,
+                    getCheckboxProps,
                     selectedRowKeys: selectedRowKeys,
                     renderCell: checkboxIndex === false ? renderCell : () => null,
                     onSelectAll: handleSelectAll,
