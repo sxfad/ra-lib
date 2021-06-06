@@ -5,7 +5,7 @@ import ComponentContext from '../component-context';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-class Loading extends Component {
+export default class Loading extends Component {
     constructor(...props) {
         super(...props);
         const {progress} = props;
@@ -13,6 +13,15 @@ class Loading extends Component {
     }
 
     static contextType = ComponentContext;
+    static propTypes = {
+        spin: PropTypes.bool,
+        progress: PropTypes.bool,
+        tip: PropTypes.any,
+    };
+    static defaultProps = {
+        progress: true,
+        spin: false,
+    };
 
     componentWillUnmount() {
         const {progress} = this.props;
@@ -20,13 +29,15 @@ class Loading extends Component {
     }
 
     render() {
-        const {
+        let {
             spin,
             progress,
             style = {},
-            tip = this.context.loadingTip,
+            tip,
             ...others
         } = this.props;
+
+        if (!tip && this.context) tip = this.context.loadingTip;
 
         if (!spin) return null;
 
@@ -49,14 +60,3 @@ class Loading extends Component {
         );
     }
 }
-
-Loading.prototype = {
-    spin: PropTypes.bool,
-    progress: PropTypes.bool,
-    tip: PropTypes.any,
-};
-Loading.defaultProps = {
-    progress: true,
-    spin: false,
-};
-export default Loading;
