@@ -47,7 +47,7 @@ export default withRouter(function MenuComponent(props) {
                 );
             }
             return (
-                <Menu.Item key={path} icon={icon} node={item}>
+                <Menu.Item key={path || id} icon={icon} node={item}>
                     {title}
                 </Menu.Item>
             );
