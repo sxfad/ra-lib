@@ -6,10 +6,8 @@ export default function useHeight(domRef, otherHeight = 0, deps = []) {
 
     // 窗口大小改变事件
     const handleWindowResize = () => {
-        if (!domRef.current) return;
-
-        const eleTop = getElementTop(domRef.current);
-        let marginBottom = window.getComputedStyle(domRef.current).getPropertyValue('margin-bottom');
+        const eleTop = domRef?.current ? getElementTop(domRef?.current) : 0;
+        let marginBottom = domRef?.current ? window.getComputedStyle(domRef?.current).getPropertyValue('margin-bottom') : 0;
         marginBottom = window.parseInt(marginBottom, 10) || 0;
 
         const oHeight = otherHeight + marginBottom + eleTop;
@@ -19,10 +17,8 @@ export default function useHeight(domRef, otherHeight = 0, deps = []) {
     };
 
     useEffect(() => {
-        if (!domRef.current) return;
-
         handleWindowResize();
-    }, [domRef.current, ...deps]);
+    }, [domRef?.current, ...deps]);
 
     // 组件加载完成
     useEffect(() => {
