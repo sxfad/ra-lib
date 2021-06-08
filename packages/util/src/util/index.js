@@ -1,5 +1,29 @@
 import qs from 'qs';
 
+/**
+ * 遍历对象
+ * @param obj
+ * @param run
+ * @returns {*}
+ */
+export function loopObject(obj, run = (obj, key, value) => value) {
+    const loop = record => {
+        if (!record) return;
+        if (typeof record !== 'object') return;
+        if (Array.isArray(record)) return record.forEach(item => loop(item, run));
+
+        Object.entries(record)
+            .forEach(([key, value]) => {
+                if (typeof value === 'object') return loop(value);
+
+                run(record, key, value);
+            });
+    };
+
+    loop(obj);
+
+    return obj;
+}
 
 /**
  * 检测是否有重复字段
@@ -40,12 +64,13 @@ export function sort(arr, orderBy = (a, b) => a - b) {
 
 /**
  * 获取地址栏参数，转为对象
+ * @param str
  * @returns {{}}
  */
-export function getQuery() {
+export function getQuery(str) {
     const query = {};
 
-    const search = window.location.href.split('?')[1];
+    const search = str || window.location.href.split('?')[1];
     const urlSearchParams = new URLSearchParams(search);
 
     for (let key of urlSearchParams.keys()) {
@@ -55,6 +80,8 @@ export function getQuery() {
     return query;
 }
 
+export const queryParse = getQuery();
+
 /**
  * 对象转 query string
  * @param obj
@@ -63,6 +90,8 @@ export function getQuery() {
 export function toQuery(obj) {
     return qs.stringify(obj, {encode: false});
 }
+
+export const queryStringify = toQuery;
 
 /**
  * 获取一个元素距离浏览器顶部高度

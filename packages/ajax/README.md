@@ -58,7 +58,8 @@ ajax.get('/url', params, options)
 | successTip | 成功提示，默认不触发onSuccess | `string` | `false` |
 | errorTip | 失败提示，默认触发onError | `string` | - |
 | reject | promise是否进行reject，如果为false，promise将不会reject，出错结果为：`{$type: 'unRejectError', $error: err}` | `boolean` | `true` |
-| noEmpty | 是否去掉空参数 `'' null undefined`不发送给后端  | `boolean` | `true` |
+| noEmpty | 对象参数第一层数据是否去掉空参数 `'' null undefined`不发送给后端  | `boolean` | `true` |
+| trim | 对象参数第一层数据是否去空格  | `boolean` | `true` |
 | originResponse | 是否返回相应的原始对象，一般用到完整的响应结果场景会用到 | `boolean` | `false` |
 
 ### ajax初始化

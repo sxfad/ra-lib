@@ -12,6 +12,7 @@ export default class Ajax {
             onError = () => void 0,
             reject = true,
             noEmpty = true,
+            trim = true,
             ...defaults
         } = options;
 
@@ -39,6 +40,7 @@ export default class Ajax {
         this.onError = onError;
         this.reject = reject;
         this.noEmpty = noEmpty;
+        this.trim = trim;
     }
 
     /**
@@ -53,6 +55,7 @@ export default class Ajax {
             reject: _reject = this.reject,
             noEmpty = this.noEmpty, // 过滤掉 值为 null、''、undefined三种参数，不传递给后端
             originResponse = false, // 返回原始相应对象
+            trim = this.trim, // 前后去空格
 
             url,
             params = {},
@@ -61,7 +64,13 @@ export default class Ajax {
             ...otherOptions
         } = options;
 
-        // 删除 参数对象中为 null '' undefined 的数据，不发送给后端
+        // 第一层参数值字符串去空格
+        if (trim === true) {
+            data = trimObject(data);
+            params = trimObject(params);
+        }
+
+        // 删除 参数对象第一层中为 null '' undefined 的数据，不发送给后端
         if (noEmpty === true) {
             data = empty(data);
             params = empty(params);
@@ -252,6 +261,29 @@ function empty(data) {
 
         if (value !== null && value !== '' && value !== void 0) {
             prev[key] = value;
+        }
+
+        return prev;
+    }, {});
+}
+
+/**
+ * 第一层 对象字符串值 去空格
+ * @param data
+ * @returns {{}|*}
+ */
+function trimObject(data) {
+    if (!data) return data;
+
+    if (typeof data !== 'object') return data;
+
+    if (Array.isArray(data)) return data;
+
+    return Object.entries(data).reduce((prev, curr) => {
+        const [key, value] = curr;
+
+        if (typeof value === 'string') {
+            prev[key] = value.trim();
         }
 
         return prev;
