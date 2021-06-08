@@ -284,6 +284,8 @@ function trimObject(data) {
 
         if (typeof value === 'string') {
             prev[key] = value.trim();
+        } else {
+            prev[key] = value;
         }
 
         return prev;
