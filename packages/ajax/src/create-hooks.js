@@ -1,6 +1,9 @@
 import {useState, useEffect, useRef, useCallback} from 'react';
 import useDebounceEffect from './useDebounceEffect';
 
+
+const isObject = value => value && typeof value === 'object' && !Array.isArray(value);
+
 /**
  * ajax hooks
  * 1. 提供 {run, loading, data, error}数据
@@ -64,7 +67,7 @@ export default function createHooks(ajax) {
                 params = formatParams(params);
                 // 对象参数合并
                 if (!params) params = initParams;
-                if (params && typeof params === 'object' && !Array.isArray(params)) {
+                if (isObject(params) && isObject(initParams)) {
                     params = {...initParams, ...params};
                 }
 
@@ -134,7 +137,11 @@ export default function createHooks(ajax) {
                     });
                 return ajaxToken;
             },
-            [url, initOptions],
+            [
+                url,
+                JSON.stringify(initParams),
+                JSON.stringify(initOptions),
+            ],
         );
 
         // 组件被卸载，清除未完成的ajax请求 对于hooks 不清除好像也不会报警告
