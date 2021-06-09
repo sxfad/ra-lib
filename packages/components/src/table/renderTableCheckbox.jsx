@@ -114,14 +114,14 @@ export default function renderTableCheckbox(WrappedTable) {
             const generationNodes = _record.___generationNodes || findGenerationNodes(dataSource, key);
             _record.___generationNodes = generationNodes;
 
-            // 父节点状态
-            setParentsCheckStatus();
-
             generationNodes.forEach(node => {
                 const _node = getStatusRecord(node);
 
                 _node.___checked = checked;
             });
+
+            // 父节点状态
+            setParentsCheckStatus();
 
             setSelectedKeys(dataSource);
         }
@@ -172,6 +172,9 @@ export default function renderTableCheckbox(WrappedTable) {
                     checked={_record.___checked}
                     onChange={e => handleCheck(e, record)}
                     indeterminate={_record.___indeterminate}
+                    onClick={e => {
+                        e.stopPropagation();
+                    }}
                 />
             );
         }
