@@ -12,6 +12,7 @@ import {
     Transfer,
     TreeSelect,
 } from 'antd';
+import moment from 'moment';
 
 import MessageCode from '../message-code';
 import ImageCode from '../image-code';
@@ -290,15 +291,35 @@ export function getRules(options) {
     return rules;
 }
 
-export function getFormElement(options) {
-    const {type = 'input', children, ...props} = options;
+export function Element(props) {
+    const {
+        type = 'input',
+        dateFormat,
+        children,
+        value,
+        onChange,
+        ...others
+    } = props;
 
     const commonProps = {
         size: 'default',
     };
 
+    const elementProps = {value, onChange, ...others};
+
+    if (dateFormat) {
+        elementProps.value = value ? moment(value) : value;
+        elementProps.onChange = value => {
+            let val = value;
+            if (value) {
+                val = dateFormat !== 'timestamp' ? value.format(dateFormat) : value.valueOf();
+            }
+            onChange(val);
+        };
+    }
+
     // 如果 children 存在，直接返回children
-    if (children) return children;
+    if (children) return React.cloneElement(children, elementProps);
 
     const typeItem = formElementTypes.find(item => item.type === type);
 
@@ -310,8 +331,8 @@ export function getFormElement(options) {
 
     // 类似Input组件 添加type
     if (isInputLikeElement(type)) {
-        return <Component {...commonProps} type={type} {...props}/>;
+        return <Component {...commonProps} type={type} {...elementProps}/>;
     }
 
-    return <Component {...commonProps} {...props}/>;
+    return <Component {...commonProps} {...elementProps}/>;
 }

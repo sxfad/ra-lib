@@ -1,7 +1,7 @@
 import React, { forwardRef, ReactChildren } from 'react';
 import { Form } from 'antd';
 import { FormItemProps } from 'antd/es/form';
-import { getFormElement, getPlaceholder, getRules } from './util';
+import { Element, getPlaceholder, getRules } from './util';
 
 const tuple = <T extends string[]>(...args: T) => args;
 const ItemTypes = tuple(
@@ -41,6 +41,16 @@ const ItemTypes = tuple(
 );
 export type ItemType = typeof ItemTypes[number];
 
+const dateFormatTypes = tuple(
+    'YYYY-MM-DD',
+    'YYYY-MM-DD HH:mm:ss',
+    'YYYYMMDD',
+    'YYYY-MM',
+    'YYYYMM',
+    'timestamp',
+);
+export type dateFormatType = typeof dateFormatTypes[number];
+
 export interface ItemProps extends FormItemProps {
     // 类型
     maxLength?: number, // 允许输入最大字符数
@@ -49,6 +59,7 @@ export interface ItemProps extends FormItemProps {
     type?: ItemType,
     children?: ReactChildren,
     noSpace?: boolean,
+    dateFormat?: dateFormatType,
 
     // 其他为Element 属性
     style?: object,
@@ -75,6 +86,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
         type = 'input',
         children,
         noSpace,
+        dateFormat,
 
         // Form.Item属性
         colon,
@@ -124,14 +136,15 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
 
     if (type === 'switch' && !valuePropName) valuePropName = "checked";
 
-    const element = getFormElement({
+    const elementProps = {
         ref,
         type,
         children,
         style,
         placeholder,
+        dateFormat,
         ...others,
-    });
+    };
 
     return (
         <Item
@@ -164,7 +177,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             valuePropName={valuePropName}
             wrapperCol={wrapperCol}
         >
-            {element}
+            <Element {...elementProps}/>
         </Item>
     );
 
