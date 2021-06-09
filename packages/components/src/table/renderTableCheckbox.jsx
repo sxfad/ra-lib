@@ -1,17 +1,52 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useContext} from 'react';
 import {Checkbox} from 'antd';
 import {findGenerationNodes, findParentNodes} from '@ra-lib/util';
+import ComponentContext from '../component-context';
+import classNames from 'classnames';
+import './style.less';
 
 export default function renderTableCheckbox(WrappedTable) {
     return function WithCheckboxTable(props) {
-        const {
+        const context = useContext(ComponentContext);
+        let {
+            prefixCls = context.prefixCls,
             dataSource,
             rowSelection = {},
             rowKey = 'key',
             columns,
             checkboxIndex = 0,
+            rowCheck = true,
+            onRow: propsOnRow = () => ({}),
+            rowClassName = () => '',
             ...otherProps
         } = props;
+
+        let onRow;
+        if (rowCheck) {
+            onRow = (record, index) => {
+                const result = propsOnRow(record, index);
+                const {onClick = () => null, ...others} = result;
+                const nextOnClick = event => {
+                    onClick(event);
+                    const checkboxProps = getCheckboxProps && getCheckboxProps(record) || {};
+
+                    if (checkboxProps.disabled) return;
+
+                    const _record = getStatusRecord(record);
+                    // 当前节点状态
+                    const checked = !_record.___checked;
+
+                    const e = {target: {checked}};
+                    handleCheck(e, record);
+                };
+
+                return {
+                    onClick: nextOnClick,
+                    ...others,
+                };
+
+            };
+        }
 
         const {selectedRowKeys, getCheckboxProps, renderCell: _renderCell, onSelectAll, onChange, ...others} = rowSelection;
 
@@ -144,10 +179,14 @@ export default function renderTableCheckbox(WrappedTable) {
         function handleSelectAll(selected, selectedRows, changeRows) {
             const loop = nodes => nodes.forEach(node => {
                 const {children} = node;
-                const _node = getStatusRecord(node);
+                const checkboxProps = getCheckboxProps && getCheckboxProps(node) || {};
+                if(!checkboxProps.disabled) {
+                    const _node = getStatusRecord(node);
 
-                _node.___checked = selected;
-                _node.___indeterminate = false;
+                    _node.___checked = selected;
+                    _node.___indeterminate = false;
+                }
+
                 if (children) loop(children);
             });
             loop(dataSource);
@@ -176,12 +215,22 @@ export default function renderTableCheckbox(WrappedTable) {
             onChange && onChange(selectedRowKeys, selectedRows);
         }
 
+        prefixCls = `${prefixCls}-table`;
+        const rowClass = classNames({
+            [`${prefixCls}-row-check`]: rowCheck,
+        });
+
         return (
             <WrappedTable
                 {...otherProps}
                 columns={nextColumns}
                 dataSource={dataSource}
                 rowKey={rowKey}
+                onRow={onRow}
+                rowClassName={(record, index) => {
+                    const cls = rowClassName(record, index);
+                    return classNames(rowClass, cls);
+                }}
                 rowSelection={{
                     ...others,
                     getCheckboxProps,
