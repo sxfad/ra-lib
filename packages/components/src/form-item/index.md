@@ -29,6 +29,7 @@ group:
 | noSpace | 不允许输入空格 | `boolean` | - |
 | maxLength | 可输入最大字符数 | `number` | - |
 | minLength | 可输入最小字符数 | `number` | - |
+| dateFormat | 日期字符串与moment对象自动互转 | `string` | - |
 
 ### type类型
 
