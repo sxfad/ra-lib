@@ -53,6 +53,7 @@
         "lint-staged": "^10.5.4",
         "lodash": "^4.17.21",
         "nodemon": "^2.0.7",
+        "nprogress": "^0.2.0",
         "ora": "^5.4.0",
         "path-to-regexp": "^6.2.0",
         "ppfish": "^1.8.1",

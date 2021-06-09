@@ -41,6 +41,7 @@ const ItemTypes = tuple(
 );
 export type ItemType = typeof ItemTypes[number];
 
+// 需要符合 recognized RFC2822 or ISO format
 const dateFormatTypes = tuple(
     'YYYY-MM-DD',
     'YYYY-MM-DD HH:mm:ss',
