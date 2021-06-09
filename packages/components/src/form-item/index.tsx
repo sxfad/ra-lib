@@ -177,7 +177,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             valuePropName={valuePropName}
             wrapperCol={wrapperCol}
         >
-            <Element {...elementProps}/>
+            {typeof children === 'function' ? children : <Element {...elementProps}/>}
         </Item>
     );
 

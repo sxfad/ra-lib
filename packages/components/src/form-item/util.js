@@ -340,7 +340,7 @@ export function Element(props) {
 
     const {Component, getComponent} = typeItem;
 
-    if (getComponent) return getComponent({commonProps, props});
+    if (getComponent) return getComponent({commonProps, props: elementProps});
 
     // 类似Input组件 添加type
     if (isInputLikeElement(type)) {
