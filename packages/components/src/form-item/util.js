@@ -308,11 +308,24 @@ export function Element(props) {
     const elementProps = {value, onChange, ...others};
 
     if (dateFormat) {
-        elementProps.value = value ? moment(value) : value;
+        if (value) {
+            if (Array.isArray(value)) {
+                elementProps.value = value.map(item => moment(item));
+            } else {
+                elementProps.value = moment(value);
+            }
+        }
+
         elementProps.onChange = value => {
-            let val = value;
-            if (value) {
-                val = dateFormat !== 'timestamp' ? value.format(dateFormat) : value.valueOf();
+            if (!value) return onChange(value);
+
+            let val;
+            if (Array.isArray(value)) {
+                val = value.map(item => {
+                    return dateFormat === 'timestamp' ? item.valueOf() : item.format(dateFormat);
+                });
+            } else {
+                val = dateFormat === 'timestamp' ? value.valueOf() : value.format(dateFormat);
             }
             onChange(val);
         };
