@@ -1,7 +1,8 @@
 import React, { forwardRef, ReactChildren } from 'react';
 import { Form } from 'antd';
 import { FormItemProps } from 'antd/es/form';
-import { Element, getPlaceholder, getRules } from './util';
+import { getPlaceholder, getRules } from './util';
+import Element from './Element';
 
 const tuple = <T extends string[]>(...args: T) => args;
 const ItemTypes = tuple(
@@ -138,7 +139,6 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
     if (type === 'switch' && !valuePropName) valuePropName = "checked";
 
     const elementProps = {
-        ref,
         type,
         children,
         style,
@@ -178,10 +178,9 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             valuePropName={valuePropName}
             wrapperCol={wrapperCol}
         >
-            {typeof children === 'function' ? children : <Element {...elementProps}/>}
+            {typeof children === 'function' ? children : <Element {...elementProps} forwardRef={ref}/>}
         </Item>
     );
-
 });
 
 export default FormItem;

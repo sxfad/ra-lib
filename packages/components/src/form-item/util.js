@@ -12,7 +12,6 @@ import {
     Transfer,
     TreeSelect,
 } from 'antd';
-import moment from 'moment';
 
 import MessageCode from '../message-code';
 import ImageCode from '../image-code';
@@ -289,63 +288,4 @@ export function getRules(options) {
     }
 
     return rules;
-}
-
-export function Element(props) {
-    const {
-        type = 'input',
-        dateFormat,
-        children,
-        value,
-        onChange,
-        ...others
-    } = props;
-
-    const commonProps = {
-        size: 'default',
-    };
-
-    const elementProps = {value, onChange, ...others};
-
-    if (dateFormat) {
-        if (value) {
-            if (Array.isArray(value)) {
-                elementProps.value = value.map(item => moment(item));
-            } else {
-                elementProps.value = moment(value);
-            }
-        }
-
-        elementProps.onChange = value => {
-            if (!value) return onChange(value);
-
-            let val;
-            if (Array.isArray(value)) {
-                val = value.map(item => {
-                    return dateFormat === 'timestamp' ? item.valueOf() : item.format(dateFormat);
-                });
-            } else {
-                val = dateFormat === 'timestamp' ? value.valueOf() : value.format(dateFormat);
-            }
-            onChange(val);
-        };
-    }
-
-    // 如果 children 存在，直接返回children
-    if (children) return React.cloneElement(children, elementProps);
-
-    const typeItem = formElementTypes.find(item => item.type === type);
-
-    if (!typeItem) throw new Error(`no such type: ${type}`);
-
-    const {Component, getComponent} = typeItem;
-
-    if (getComponent) return getComponent({commonProps, props: elementProps});
-
-    // 类似Input组件 添加type
-    if (isInputLikeElement(type)) {
-        return <Component {...commonProps} type={type} {...elementProps}/>;
-    }
-
-    return <Component {...commonProps} {...elementProps}/>;
 }
