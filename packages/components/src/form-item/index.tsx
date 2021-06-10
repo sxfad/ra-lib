@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactChildren } from 'react';
+import React, { forwardRef, ReactChildren, ReactNode } from 'react';
 import { Form } from 'antd';
 import { FormItemProps } from 'antd/es/form';
 import { getPlaceholder, getRules } from './util';
@@ -77,6 +77,12 @@ export interface ItemProps extends FormItemProps {
     autoFocus?: boolean,
     allowClear?: boolean,
     showSearch?: boolean,
+    disabled?: boolean,
+    loading?: boolean,
+
+    // switch
+    checkedChildren?: ReactNode,
+    unCheckedChildren?: ReactNode,
 }
 
 const { Item } = Form;
@@ -140,7 +146,6 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
 
     const elementProps = {
         type,
-        children,
         style,
         placeholder,
         dateFormat,
@@ -178,7 +183,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             valuePropName={valuePropName}
             wrapperCol={wrapperCol}
         >
-            {typeof children === 'function' ? children : <Element {...elementProps} forwardRef={ref}/>}
+            {children ? children : <Element {...elementProps} forwardRef={ref}/>}
         </Item>
     );
 });

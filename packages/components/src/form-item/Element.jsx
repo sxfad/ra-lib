@@ -7,7 +7,6 @@ export default function Element(props) {
     const {
         type = 'input',
         dateFormat,
-        children,
         value,
         onChange,
         forwardRef,
@@ -44,9 +43,6 @@ export default function Element(props) {
             onChange(val);
         };
     }
-
-    // 如果 children 存在，直接返回children
-    if (children) return React.cloneElement(children, {...commonProps, ...elementProps});
 
     const typeItem = formElementTypes.find(item => item.type === type);
 
