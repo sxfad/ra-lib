@@ -2,7 +2,6 @@
 PS：变量不用记忆，只是react组件在AST中的称呼。需要手撸babel插件时打开https://astexplorer.net/ 对照即可。
 types: https://babeljs.io/docs/en/babel-types
 */
-
 // babel部分 对外暴露了一个函数，接受参数types。
 function babelPlugin({types: t}) {
     return {
