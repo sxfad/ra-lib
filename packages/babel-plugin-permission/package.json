@@ -1,0 +1,10 @@
+{
+    "name": "@ra-lib/babel-plugin-permission",
+    "version": "0.0.1",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "scripts": {
+        "build": "father-build",
+        "test": "node src/test.js"
+    }
+}

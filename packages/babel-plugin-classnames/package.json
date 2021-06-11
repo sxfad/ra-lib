@@ -2,15 +2,10 @@
     "name": "@ra-lib/babel-plugin-classnames",
     "version": "0.2.1",
     "description": "Never import classnames again! Converts arrays of classnames to a call of a function of your choice.",
-    "main": "index.js",
-    "files": [
-        "index.js",
-        "README.md",
-        "LICENSE.md"
-    ],
+    "main": "lib/index.js",
+    "module": "es/index.js",
     "scripts": {
-        "test": "node test.js"
-    },
-    "keywords": [],
-    "license": "MIT"
+        "build": "father-build",
+        "test": "node src/test.js"
+    }
 }
