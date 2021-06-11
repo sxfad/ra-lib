@@ -10,6 +10,7 @@ const titleClass = [styles.title, {[styles.title2]: true}];
 classNames(a, b && foo);
 <div className="hhi" />;
 <div className={hhi} />;
+<div className={good && hhi} />;
 <div className={[a,b && fo].join('')} />;
 `.trim(), {plugins: ['@babel/plugin-syntax-jsx', plugin]}, (err, result) => {
     if (err) {

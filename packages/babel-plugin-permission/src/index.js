@@ -2,6 +2,22 @@
 PS：变量不用记忆，只是react组件在AST中的称呼。需要手撸babel插件时打开https://astexplorer.net/ 对照即可。
 */
 
+/*
+{
+    importName 非必填 默认 null importName存在 import { [importName] as method} from packageName; 不存在：import method from packageName
+    packageName 必填
+    attributeName 必填 要处理的属性名称，比如 r-code、className等
+    methodName 非必填，默认 'method'，值所包裹的处理函数名称
+    conditional 非必填，默认 true，是否使用三元操作
+    replaceAttributeName 非必填 默认 attributeName，替换属性名称
+}
+* */
+// importName存在 import { [importName] as method} from packageName;
+// conditional = true 替换成：method(value) ? <div> : null;
+// conditional = false 替换成： <div [attributeName]={method(value)}>
+// replaceAttributeName 存在 替换成 <div [replaceAttributeName]={method(value)}>
+
+
 // babel部分 对外暴露了一个函数，接受参数types。
 function babelPlugin({types: t}) {
     return {
@@ -20,14 +36,15 @@ function babelPlugin({types: t}) {
             Program: {
                 enter(path, state) {
                     // 生成一个唯一的函数名: _method
-                    state.methodUidIdentifier = path.scope.generateUidIdentifier('hasPermission');
+                    const methodName = state.opts.methodName || 'method';
+                    state.methodUidIdentifier = path.scope.generateUidIdentifier(methodName);
                 },
                 exit(path, state) {
                     // 文件中有使用自定义属性，并做了转换了
                     if (state.hasAttr) {
                         // import 模块名称，如果存在：import { importName as _method} from packageName
                         // 如果不存在：import _method from packageName
-                        const importName = state.opts.importName || 'hasPermission';
+                        const importName = state.opts.importName;
 
                         const importDeclaration = t.importDeclaration(
                             [
@@ -36,7 +53,7 @@ function babelPlugin({types: t}) {
                                     : t.importDefaultSpecifier(state.methodUidIdentifier),
                             ],
                             // from 的库名字 import xxx from packageName
-                            t.stringLiteral(state.opts.packageName || 'src/commons'),
+                            t.stringLiteral(state.opts.packageName),
                         );
 
                         // 将 import 语句 放入文件头部
@@ -48,41 +65,31 @@ function babelPlugin({types: t}) {
             JSXElement: function(path, state) {
                 // path.node 可获取到该节点的AST
                 let {node} = path;
+                const attributeName = state.opts.attributeName;
+                const replaceAttributeName = state.opts.replaceAttributeName || attributeName;
+                const conditional = state.opts.conditional !== false;
 
                 // 遍历 JSXElement 上所有的属性并找出带r-code的元素
                 let rCodeAttr = node.openingElement.attributes
-                    .find(({type, name}) => type === 'JSXAttribute' && name.name === 'r-code');
-                if (rCodeAttr == null) { // 如果rCodeAttr为undefined则表示该组件没有r-code，则停止访问
+                    .find(({type, name}) => type === 'JSXAttribute' && name.name === attributeName);
+
+                // 如果rCodeAttr为undefined则表示该组件没有r-code，则停止访问
+                if (rCodeAttr == null) {
                     return;
                 }
+
+                // 已经处理过了，就不处理了，否则会死循环
+                if (
+                    attributeName === replaceAttributeName
+                    && t.isJSXExpressionContainer(rCodeAttr.value)
+                    && t.isCallExpression(rCodeAttr.value.expression)
+                    && rCodeAttr.value.expression.callee
+                    && rCodeAttr.value.expression.callee.name === state.methodUidIdentifier.name
+                ) {
+                    return;
+                }
+
                 // 如果rCodeAttr不为undefined则表示该组件有r-code。下一步是创建新的组件替换之
-
-                /*
-                给大家解释一下什么是起始标签 什么是结束标签
-                <div r-code="true"> 起始部位
-                </div> 结束部位
-                */
-
-
-                // t.JSXOpeningElement表示创建一个组件（或者html标签）的起始部位，参数分别为：标签的类型，属性
-                // 这里我创建了一个组件的起始部位，再将原有的属性赋给新的组件
-                let jsxOpeningElement = t.JSXOpeningElement(
-                    node.openingElement.name,
-                    // 删除 r-code属性
-                    node.openingElement.attributes
-                        ? node.openingElement.attributes.filter((attr) => attr !== rCodeAttr)
-                        : null,
-                    // 自关闭标签，比如 <div r-code={true} />
-                    node.openingElement.selfClosing,
-                );
-                // console.log('node.closingElement', node.closingElement);
-                // t.JSXElement 表示创建一个react组件（或者html标签），参数分别为：开始标签，结束标签，子集
-                // 创建新的react组件，并讲上一步创建好的起始部位拿过来
-                let jsxElement = t.JSXElement(
-                    jsxOpeningElement,
-                    node.closingElement,
-                    node.children,
-                );
 
                 // t.conditionalExpression 创建一个三元表达式 ，参数分别为：条件，为真时执行，为假时执行
                 // 等于：expression = r-code === true? <div></div> : null
@@ -101,11 +108,50 @@ function babelPlugin({types: t}) {
 
                 const rCodeCallExpression = t.callExpression(state.methodUidIdentifier, [valueExpression]);
 
-                let expression = t.conditionalExpression(
+                /*
+                给大家解释一下什么是起始标签 什么是结束标签
+                <div r-code="true"> 起始部位
+                </div> 结束部位
+                */
+
+                // t.JSXOpeningElement表示创建一个组件（或者html标签）的起始部位，参数分别为：标签的类型，属性
+                // 这里我创建了一个组件的起始部位，再将原有的属性赋给新的组件
+                const attributes = (() => {
+                    let nodeAttributes = node.openingElement.attributes;
+                    if (!nodeAttributes) return null;
+
+                    // 删除属性
+                    const nextNodeAttributes = nodeAttributes.filter((attr) => attr !== rCodeAttr);
+
+                    if (replaceAttributeName) {
+                        // 添加新的属性
+                        const attr = t.jsxAttribute(t.jsxIdentifier(replaceAttributeName), t.JSXExpressionContainer(rCodeCallExpression));
+                        nextNodeAttributes.push(attr);
+                    }
+                    return nextNodeAttributes;
+                })();
+
+                let jsxOpeningElement = t.JSXOpeningElement(
+                    node.openingElement.name,
+                    // 删除 r-code属性
+                    attributes,
+                    // 自关闭标签，比如 <div r-code={true} />
+                    node.openingElement.selfClosing,
+                );
+                // console.log('node.closingElement', node.closingElement);
+                // t.JSXElement 表示创建一个react组件（或者html标签），参数分别为：开始标签，结束标签，子集
+                // 创建新的react组件，并讲上一步创建好的起始部位拿过来
+                let jsxElement = t.JSXElement(
+                    jsxOpeningElement,
+                    node.closingElement,
+                    node.children,
+                );
+
+                let expression = conditional ? t.conditionalExpression(
                     rCodeCallExpression, // r-code=“true”
                     jsxElement, // 创建好的react组件
                     t.nullLiteral(), // 这个方法会返回一个 null
-                );
+                ) : jsxElement;
                 //  replaceWith 方法为替换方法
                 path.replaceWith(expression);
 
