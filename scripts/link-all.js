@@ -5,7 +5,7 @@ const chalk = require('chalk');
 
 const packagesPath = path.join(__dirname, '../', 'packages');
 
-const packages = fs.readdirSync(packagesPath);
+const packages = fs.readdirSync(packagesPath).filter(item => !item.startsWith('.'));
 
 packages.forEach(pac => {
     shell.exec(`cd ${packagesPath}/${pac} && yarn link`);

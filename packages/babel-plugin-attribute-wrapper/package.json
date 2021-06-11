@@ -1,5 +1,5 @@
 {
-    "name": "@ra-lib/babel-plugin-permission",
+    "name": "@ra-lib/babel-plugin-attribute-wrapper",
     "version": "0.0.1",
     "main": "lib/index.js",
     "module": "es/index.js",

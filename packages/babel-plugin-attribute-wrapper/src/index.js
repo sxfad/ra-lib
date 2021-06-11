@@ -1,23 +1,7 @@
 /*
 PS：变量不用记忆，只是react组件在AST中的称呼。需要手撸babel插件时打开https://astexplorer.net/ 对照即可。
+types: https://babeljs.io/docs/en/babel-types
 */
-
-/*
-{
-    importName 非必填 默认 null importName存在 import { [importName] as method} from packageName; 不存在：import method from packageName
-    packageName 必填
-    attributeName 必填 要处理的属性名称，比如 r-code、className等
-    methodName 非必填，默认 'method'，值所包裹的处理函数名称
-    conditional 非必填，默认 false，是否使用三元操作
-    replaceAttributeName 非必填 默认 attributeName，替换属性名称
-    wrapperAttributedName 非必填，包裹摸个属性 [attributeName]={xxx} onClick={handleClick} => onClick={method(xxx, handleClick)}
-}
-* */
-// importName存在 import { [importName] as method} from packageName;
-// conditional = true 替换成：method(value) ? <div> : null;
-// conditional = false 替换成： <div [attributeName]={method(value)}>
-// replaceAttributeName 存在 替换成 <div [replaceAttributeName]={method(value)}>
-
 
 // babel部分 对外暴露了一个函数，接受参数types。
 function babelPlugin({types: t}) {
@@ -66,10 +50,13 @@ function babelPlugin({types: t}) {
             JSXElement: function(path, state) {
                 // path.node 可获取到该节点的AST
                 let {node} = path;
+                const conditional = state.opts.conditional;
+                const negation = state.opts.negation;
                 const attributeName = state.opts.attributeName;
                 const wrapperAttributedName = state.opts.wrapperAttributedName;
-                const replaceAttributeName = state.opts.replaceAttributeName || wrapperAttributedName || attributeName;
-                const conditional = state.opts.conditional;
+                let replaceAttributeName = state.opts.replaceAttributeName || wrapperAttributedName || attributeName;
+
+                if (conditional) replaceAttributeName = null;
 
                 // 遍历 JSXElement 上所有的属性并找出带r-code的元素
                 let rCodeAttr = node.openingElement.attributes
@@ -102,11 +89,15 @@ function babelPlugin({types: t}) {
 
                 if (!valueExpression) return;
 
-                const rCodeCallExpression = t.callExpression(
+                let rCodeCallExpression = t.callExpression(
                     state.methodUidIdentifier,
                     [valueExpression, wrapperAttributedName ? wrapperValueExpression : null]
                         .filter(item => !!item),
                 );
+
+                if (negation) {
+                    rCodeCallExpression = t.unaryExpression('!', rCodeCallExpression);
+                }
 
                 /*
                 给大家解释一下什么是起始标签 什么是结束标签
