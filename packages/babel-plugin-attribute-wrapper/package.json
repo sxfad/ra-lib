@@ -6,5 +6,6 @@
     "scripts": {
         "build": "father-build",
         "test": "node src/test.js"
-    }
+    },
+    "gitHead": "ba4a928f24d98b64014402478f6052480940ae5a"
 }

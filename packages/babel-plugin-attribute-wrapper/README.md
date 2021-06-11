@@ -1,6 +1,6 @@
 # babel-plugin-attribute-wrapper
 
-jsx 属性包装babel插件
+jsx 属性包装babel插件 
 
 ## API
 
