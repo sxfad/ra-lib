@@ -26,7 +26,7 @@ function babelPlugin({types: t}) {
                 },
                 exit(path, state) {
                     // 文件中有使用自定义属性，并做了转换了
-                    if (state.hasAttr) {
+                    if (state.needImport) {
                         // import 模块名称，如果存在：import { importName as _method} from packageName
                         // 如果不存在：import _method from packageName
                         const importName = state.opts.importName;
@@ -59,23 +59,23 @@ function babelPlugin({types: t}) {
                 if (conditional) replaceAttributeName = null;
 
                 // 遍历 JSXElement 上所有的属性并找出带r-code的元素
-                let rCodeAttr = node.openingElement.attributes
+                let targetAttr = node.openingElement.attributes
                     .find(({type, name}) => type === 'JSXAttribute' && name.name === attributeName);
                 let wrapperAttr = node.openingElement.attributes
                     .find(({type, name}) => type === 'JSXAttribute' && name.name === wrapperAttributedName);
 
                 // 如果rCodeAttr为undefined则表示该组件没有r-code，则停止访问
-                if (rCodeAttr == null) {
+                if (targetAttr == null) {
                     return;
                 }
 
                 // 已经处理过了，就不处理了，否则会死循环
                 if (
                     attributeName === replaceAttributeName
-                    && t.isJSXExpressionContainer(rCodeAttr.value)
-                    && t.isCallExpression(rCodeAttr.value.expression)
-                    && rCodeAttr.value.expression.callee
-                    && rCodeAttr.value.expression.callee.name === state.methodUidIdentifier.name
+                    && t.isJSXExpressionContainer(targetAttr.value)
+                    && t.isCallExpression(targetAttr.value.expression)
+                    && targetAttr.value.expression.callee
+                    && targetAttr.value.expression.callee.name === state.methodUidIdentifier.name
                 ) {
                     return;
                 }
@@ -84,19 +84,19 @@ function babelPlugin({types: t}) {
 
                 // t.conditionalExpression 创建一个三元表达式 ，参数分别为：条件，为真时执行，为假时执行
                 // 等于：expression = r-code === true? <div></div> : null
-                const valueExpression = getValueExpression(rCodeAttr, t);
+                const valueExpression = getValueExpression(targetAttr, t);
                 const wrapperValueExpression = getValueExpression(wrapperAttr, t);
 
                 if (!valueExpression) return;
 
-                let rCodeCallExpression = t.callExpression(
+                let methodCallExpression = t.callExpression(
                     state.methodUidIdentifier,
                     [valueExpression, wrapperAttributedName ? wrapperValueExpression : null]
                         .filter(item => !!item),
                 );
 
                 if (negation) {
-                    rCodeCallExpression = t.unaryExpression('!', rCodeCallExpression);
+                    methodCallExpression = t.unaryExpression('!', methodCallExpression);
                 }
 
                 /*
@@ -113,14 +113,14 @@ function babelPlugin({types: t}) {
 
                     // 删除属性
                     const nextNodeAttributes = nodeAttributes.filter((attr) => {
-                        return attr !== rCodeAttr
+                        return attr !== targetAttr
                             && attr !== wrapperAttr;
                     });
 
                     // 将 attributeName 替换为 replaceAttributeName
                     if (replaceAttributeName) {
                         // 添加新的属性
-                        const attr = t.jsxAttribute(t.jsxIdentifier(replaceAttributeName), t.JSXExpressionContainer(rCodeCallExpression));
+                        const attr = t.jsxAttribute(t.jsxIdentifier(replaceAttributeName), t.JSXExpressionContainer(methodCallExpression));
                         nextNodeAttributes.push(attr);
                     }
 
@@ -145,14 +145,14 @@ function babelPlugin({types: t}) {
                 );
 
                 let expression = conditional ? t.conditionalExpression(
-                    rCodeCallExpression, // r-code=“true”
+                    methodCallExpression, // r-code=“true”
                     jsxElement, // 创建好的react组件
                     t.nullLiteral(), // 这个方法会返回一个 null
                 ) : jsxElement;
                 //  replaceWith 方法为替换方法
                 path.replaceWith(expression);
 
-                state.hasAttr = true;
+                state.needImport = true;
             },
         },
     };
