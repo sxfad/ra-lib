@@ -8,8 +8,9 @@ PS：变量不用记忆，只是react组件在AST中的称呼。需要手撸babe
     packageName 必填
     attributeName 必填 要处理的属性名称，比如 r-code、className等
     methodName 非必填，默认 'method'，值所包裹的处理函数名称
-    conditional 非必填，默认 true，是否使用三元操作
+    conditional 非必填，默认 false，是否使用三元操作
     replaceAttributeName 非必填 默认 attributeName，替换属性名称
+    wrapperAttributedName 非必填，包裹摸个属性 [attributeName]={xxx} onClick={handleClick} => onClick={method(xxx, handleClick)}
 }
 * */
 // importName存在 import { [importName] as method} from packageName;
@@ -66,12 +67,15 @@ function babelPlugin({types: t}) {
                 // path.node 可获取到该节点的AST
                 let {node} = path;
                 const attributeName = state.opts.attributeName;
-                const replaceAttributeName = state.opts.replaceAttributeName || attributeName;
-                const conditional = state.opts.conditional !== false;
+                const wrapperAttributedName = state.opts.wrapperAttributedName;
+                const replaceAttributeName = state.opts.replaceAttributeName || wrapperAttributedName || attributeName;
+                const conditional = state.opts.conditional;
 
                 // 遍历 JSXElement 上所有的属性并找出带r-code的元素
                 let rCodeAttr = node.openingElement.attributes
                     .find(({type, name}) => type === 'JSXAttribute' && name.name === attributeName);
+                let wrapperAttr = node.openingElement.attributes
+                    .find(({type, name}) => type === 'JSXAttribute' && name.name === wrapperAttributedName);
 
                 // 如果rCodeAttr为undefined则表示该组件没有r-code，则停止访问
                 if (rCodeAttr == null) {
@@ -93,20 +97,16 @@ function babelPlugin({types: t}) {
 
                 // t.conditionalExpression 创建一个三元表达式 ，参数分别为：条件，为真时执行，为假时执行
                 // 等于：expression = r-code === true? <div></div> : null
-                const valueExpression = (() => {
-                    // <div r-code/> 情况，值默认为true
-                    if (!rCodeAttr.value) return t.BooleanLiteral(true);
-
-                    // <div r-code="ADD" /> 情况，值为字符串
-                    if (t.isStringLiteral(rCodeAttr.value)) return rCodeAttr.value;
-
-                    // <div r-code={'ADD'} /> 情况，写了花括号，为表达式
-                    if (rCodeAttr.value.expression) return rCodeAttr.value.expression;
-                })();
+                const valueExpression = getValueExpression(rCodeAttr, t);
+                const wrapperValueExpression = getValueExpression(wrapperAttr, t);
 
                 if (!valueExpression) return;
 
-                const rCodeCallExpression = t.callExpression(state.methodUidIdentifier, [valueExpression]);
+                const rCodeCallExpression = t.callExpression(
+                    state.methodUidIdentifier,
+                    [valueExpression, wrapperAttributedName ? wrapperValueExpression : null]
+                        .filter(item => !!item),
+                );
 
                 /*
                 给大家解释一下什么是起始标签 什么是结束标签
@@ -121,13 +121,19 @@ function babelPlugin({types: t}) {
                     if (!nodeAttributes) return null;
 
                     // 删除属性
-                    const nextNodeAttributes = nodeAttributes.filter((attr) => attr !== rCodeAttr);
+                    const nextNodeAttributes = nodeAttributes.filter((attr) => {
+                        return attr !== rCodeAttr
+                            && attr !== wrapperAttr;
+                    });
 
+                    // 将 attributeName 替换为 replaceAttributeName
                     if (replaceAttributeName) {
                         // 添加新的属性
                         const attr = t.jsxAttribute(t.jsxIdentifier(replaceAttributeName), t.JSXExpressionContainer(rCodeCallExpression));
                         nextNodeAttributes.push(attr);
                     }
+
+
                     return nextNodeAttributes;
                 })();
 
@@ -159,6 +165,17 @@ function babelPlugin({types: t}) {
             },
         },
     };
+}
+
+function getValueExpression(attr, t) {
+    if (!attr) return;
+    if (!attr.value) return t.BooleanLiteral(true);
+
+    // <div r-code="ADD" /> 情况，值为字符串
+    if (t.isStringLiteral(attr.value)) return attr.value;
+
+    // <div r-code={'ADD'} /> 情况，写了花括号，为表达式
+    if (attr.value.expression) return attr.value.expression;
 }
 
 exports = module.exports = babelPlugin;
