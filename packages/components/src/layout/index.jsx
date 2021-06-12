@@ -55,6 +55,7 @@ const Layout = forwardRef((props, ref) => {
         sideCollapsed: props.sideCollapsed,
         showSearchMenu: props.showSearchMenu,
         searchMenuPlaceholder: props.searchMenuPlaceholder,
+        collectedMenuTitle: props.collectedMenuTitle,
         renderSide: props.renderSide,
         showSide: props.showSide,
         sideTheme: props.sideTheme,
@@ -128,6 +129,7 @@ const Layout = forwardRef((props, ref) => {
         sideMinWidth,
         showSearchMenu,
         searchMenuPlaceholder,
+        collectedMenuTitle,
         renderSide,
         sideCollapsed,
         selectedMenuPath,
@@ -258,6 +260,7 @@ const Layout = forwardRef((props, ref) => {
             showSearchMenu={showSearchMenu}
             selectedMenuPath={selectedMenuPath}
             searchMenuPlaceholder={searchMenuPlaceholder}
+            collectedMenuTitle={collectedMenuTitle}
             renderSide={renderSide}
             menuTreeData={menuTreeData}
             collectedMenus={collectedMenus}
@@ -386,6 +389,8 @@ Layout.propTypes = {
     showSearchMenu: PropTypes.bool,
     // 侧边栏搜索菜单提示文案
     searchMenuPlaceholder: PropTypes.string,
+    // 收藏菜单名称
+    collectedMenuTitle: PropTypes.string,
     // 侧边栏自定义渲染
     renderSide: PropTypes.func,
     // 是否显示侧边栏
@@ -439,6 +444,7 @@ Layout.defaultProps = {
     sideCollapsed: false,
     showSearchMenu: true,
     searchMenuPlaceholder: '搜索菜单',
+    collectedMenuTitle: '我的收藏',
     renderSide: void 0,
     showSide: true,
     sideTheme: 'dark',

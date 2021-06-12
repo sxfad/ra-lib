@@ -19,6 +19,7 @@ export default function Side(props) {
         sideCollapsed,
         selectedMenuPath,
         searchMenuPlaceholder,
+        collectedMenuTitle,
         showSearchMenu,
         renderSide,
         menuTreeData,
@@ -58,7 +59,7 @@ export default function Side(props) {
             children: collectedMenus,
         };
         const collectionMenuIds = findGenerationNodes(collectionMenu, collectionMenuId).map(item => `${item.id}`);
-        collectionMenu.title = `我的收藏（${collectionMenuIds.length}）`;
+        collectionMenu.title = `${collectedMenuTitle}（${collectionMenuIds.length}）`;
         sideMenus.unshift(collectionMenu);
 
         // 标记是否已收藏
