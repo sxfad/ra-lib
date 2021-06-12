@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {getTreeData, findNode, findParentNodes} from '@ra-lib/util';
+import { getTreeData, findNode, findParentNodes } from '@ra-lib/util';
 import ComponentContext from '../component-context';
 import Header from './Header';
 import MobileHeader from './MobileHeader';
@@ -21,16 +21,16 @@ import logo from './logo.png';
 import './style.less';
 
 function reducer(state, action) {
-    const {type, payload} = action;
+    const { type, payload } = action;
     switch (type) {
         case 'setState': {
             if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
-                return {...state, ...payload};
+                return { ...state, ...payload };
             }
-            return {...state};
+            return { ...state };
         }
         case 'toggleSide': {
-            return {...state, sideCollapsed: !state.sideCollapsed};
+            return { ...state, sideCollapsed: !state.sideCollapsed };
         }
         default:
             throw new Error(`no such action type [${type}]`);
@@ -82,17 +82,19 @@ const Layout = forwardRef((props, ref) => {
         children,
         className,
         menus,
+        collectedMenus,
+        onMenuCollect,
         headerExtra,
         routes,
         render404,
     } = props;
 
-    const [state, dispatch] = useReducer(reducer, {...initialState});
+    const [state, dispatch] = useReducer(reducer, { ...initialState });
 
     const layoutAction = {
         state,
-        setState: payload => dispatch({type: 'setState', payload}),
-        toggleSide: () => dispatch({type: 'toggleSide'}),
+        setState: payload => dispatch({ type: 'setState', payload }),
+        toggleSide: () => dispatch({ type: 'toggleSide' }),
     };
 
     // 通过ref将一系列方法、数据返回给调用者使用
@@ -204,12 +206,15 @@ const Layout = forwardRef((props, ref) => {
     ]);
 
     // 菜单转树状结构
-    useEffect(() => layoutAction.setState({menuTreeData: getTreeData(menus)}), [menus]);
+    useEffect(() => layoutAction.setState({ menuTreeData: getTreeData(menus) }), [menus]);
 
     // 菜单选中状态
     useEffect(() => {
-        const selectedMenu = findNode(menuTreeData, selectedMenuPath, 'path');
-        const selectedMenuParents = findParentNodes(menuTreeData, selectedMenuPath, 'path');
+        // 收藏菜单不参与展开
+        const menus = menuTreeData.filter(item => item.id !== 'collection-menu');
+
+        const selectedMenu = findNode(menus, selectedMenuPath, 'path');
+        const selectedMenuParents = findParentNodes(menus, selectedMenuPath, 'path');
 
         layoutAction.setState({
             selectedMenu,
@@ -228,7 +233,7 @@ const Layout = forwardRef((props, ref) => {
         if (!keepAlivePagesRef.current.pages) return;
         if (!Array.isArray(keys)) keys = [keys];
 
-        const {pages} = keepAlivePagesRef.current;
+        const { pages } = keepAlivePagesRef.current;
 
         keys.forEach(key => {
             const index = pages.findIndex(item => item.key === key);
@@ -251,6 +256,8 @@ const Layout = forwardRef((props, ref) => {
             searchMenuPlaceholder={searchMenuPlaceholder}
             renderSide={renderSide}
             menuTreeData={menuTreeData}
+            collectedMenus={collectedMenus}
+            onMenuCollect={onMenuCollect}
             keepMenuOpen={keepMenuOpen}
             layoutType={layoutType}
             selectedMenuParents={selectedMenuParents}
@@ -393,6 +400,10 @@ Layout.propTypes = {
     pageHeaderHeight: PropTypes.number,
     // 菜单数据
     menus: PropTypes.array,
+    // 用户收藏菜单数据
+    collectedMenus: PropTypes.array,
+    // 用户点击收藏事件
+    onMenuCollect: PropTypes.func,
     // 保持菜单打开状态
     keepMenuOpen: PropTypes.bool,
     // 布局类型
@@ -437,6 +448,8 @@ Layout.defaultProps = {
     persistTab: true,
     tabHeight: 40,
     menus: [],
+    collectedMenus: [],
+    onMenuCollect: () => undefined,
     layoutType: LAYOUT_TYPE.SIDE_MENU,
     keepPageAlive: false,
     showTabHeaderExtra: false,
