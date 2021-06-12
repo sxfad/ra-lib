@@ -1,4 +1,5 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useMemo } from 'react';
+import { Badge } from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../../component-context';
 import { findParentNodes, findGenerationNodes } from '@ra-lib/util';
@@ -35,34 +36,32 @@ export default function Side(props) {
 
     const collectionMenuId = 'collection-menu';
     const showCollectedMenus = !!collectedMenus;
-    const [sideMenus, setSideMenus] = useState(menuTreeData);
 
-    useEffect(() => {
+    const sideMenus = useMemo(() => {
         let sideMenus = [];
         if (LAYOUT_TYPE.SIDE_MENU === layoutType) {
-            sideMenus = menuTreeData;
+            sideMenus = [...menuTreeData];
         }
 
         if (LAYOUT_TYPE.TOP_SIDE_MENU === layoutType) {
             const parentNodes = findParentNodes(menuTreeData, selectedMenuPath, 'path');
             if (parentNodes && parentNodes.length) {
-                sideMenus = parentNodes[0].children || [];
+                sideMenus = [...(parentNodes[0].children || [])];
             }
         }
 
-        if (!showCollectedMenus) return setSideMenus(sideMenus);
+        if (!showCollectedMenus) return sideMenus;
 
+        // 添加我的收藏菜单
         const collectionMenu = {
             id: collectionMenuId,
-            title: '我的收藏',
             children: collectedMenus,
         };
         const collectionMenuIds = findGenerationNodes(collectionMenu, collectionMenuId).map(item => `${item.id}`);
-
-        const index = sideMenus.findIndex(item => item.id === collectionMenuId);
-        if (index !== -1) sideMenus.splice(index, 1);
+        collectionMenu.title = `我的收藏（${collectionMenuIds.length}）`;
         sideMenus.unshift(collectionMenu);
 
+        // 标记是否已收藏
         const loop = nodes => nodes.forEach(node => {
             const { id, children } = node;
             node.isCollected = collectionMenuIds.includes(`${id}`) && id !== collectionMenuId;
@@ -71,10 +70,8 @@ export default function Side(props) {
 
         loop(sideMenus);
 
-        setSideMenus([...sideMenus]);
-
+        return sideMenus;
     }, [menuTreeData, collectedMenus, showCollectedMenus, layoutType, selectedMenuPath]);
-
 
     prefixCls = `${prefixCls}-layout-side`;
     const rootClass = classNames(

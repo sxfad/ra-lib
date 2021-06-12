@@ -212,6 +212,10 @@ const Layout = forwardRef((props, ref) => {
     useEffect(() => {
         // 收藏菜单不参与展开
         const menus = menuTreeData.filter(item => item.id !== 'collection-menu');
+        menus.forEach(item => {
+            // 头部加左侧时，我的收藏菜单在children中
+            if (item.children) item.children = item.children.filter(item => item.id !== 'collection-menu');
+        });
 
         const selectedMenu = findNode(menus, selectedMenuPath, 'path');
         const selectedMenuParents = findParentNodes(menus, selectedMenuPath, 'path');
