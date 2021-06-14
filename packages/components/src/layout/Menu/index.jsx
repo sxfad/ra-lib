@@ -36,6 +36,7 @@ export default withRouter(function MenuComponent(props) {
     const openKeysRef = useRef([]);
     const searchTimeRef = useRef(0);
     const menuContainerRef = useRef(null);
+    const nodesRef = useRef({});
 
     prefixCls = `${prefixCls}-layout-menu`;
     const titleWrapperClass = classNames(`${prefixCls}-title-wrapper`);
@@ -44,8 +45,12 @@ export default withRouter(function MenuComponent(props) {
 
     // 创建菜单
     const menuItems = useMemo(() => {
+        nodesRef.current = {};
         const loop = (nodes) => nodes.map(item => {
             let {id, path, icon, title, children, isCollected} = item;
+
+            nodesRef.current[path || id] = item;
+
             if (showCollectedMenus && !sideCollapsed && id !== collectionMenuId) {
                 const CollectionIcon = isCollected ? HeartFilled : HeartOutlined;
                 title = (
@@ -126,7 +131,9 @@ export default withRouter(function MenuComponent(props) {
     }
 
     function handleClick(info) {
-        const {node} = info.item.props;
+        const {key} = info;
+        const node = nodesRef.current[key];
+
         if (!node) return;
 
         const {path, target} = node;
