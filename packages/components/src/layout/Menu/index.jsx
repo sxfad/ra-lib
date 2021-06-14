@@ -1,9 +1,9 @@
-import { useContext, useRef, useMemo, useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { ConfigProvider, Empty, Input, Menu, Popconfirm } from 'antd';
-import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import {useContext, useRef, useMemo, useState, useEffect} from 'react';
+import {withRouter} from 'react-router-dom';
+import {ConfigProvider, Empty, Input, Menu, Popconfirm} from 'antd';
+import {HeartOutlined, HeartFilled} from '@ant-design/icons';
 import classNames from 'classnames';
-import { filterTree, scrollElement } from '@ra-lib/util';
+import {filterTree, scrollElement} from '@ra-lib/util';
 import ComponentContext from '../../component-context';
 import './style.less';
 
@@ -38,24 +38,25 @@ export default withRouter(function MenuComponent(props) {
     const menuContainerRef = useRef(null);
 
     prefixCls = `${prefixCls}-layout-menu`;
+    const titleWrapperClass = classNames(`${prefixCls}-title-wrapper`);
     const titleClass = classNames(`${prefixCls}-title`);
     const collectionClass = classNames(`${prefixCls}-collection-icon`);
 
     // 创建菜单
     const menuItems = useMemo(() => {
         const loop = (nodes) => nodes.map(item => {
-            let { id, path, icon, title, children, isCollected } = item;
+            let {id, path, icon, title, children, isCollected} = item;
             if (showCollectedMenus && !sideCollapsed && id !== collectionMenuId) {
                 const CollectionIcon = isCollected ? HeartFilled : HeartOutlined;
                 title = (
-                    <div className={titleClass}>
-                        {title}
+                    <div className={titleWrapperClass}>
+                        <span className={titleClass}>{title}</span>
                         <span className={collectionClass} onClick={e => e.stopPropagation()}>
                             <Popconfirm
                                 title={`您确定${isCollected ? '取消' : '加入'}收藏？`}
                                 onConfirm={() => onMenuCollect(item, !isCollected)}
                             >
-                                <CollectionIcon />
+                                <CollectionIcon/>
                             </Popconfirm>
                         </span>
                     </div>
@@ -77,7 +78,7 @@ export default withRouter(function MenuComponent(props) {
         });
 
         return loop(treeData);
-    }, [treeData]);
+    }, [treeData, sideCollapsed, showCollectedMenus, collectionMenuId]);
 
     function handleChange(e) {
         // 防抖
@@ -90,7 +91,7 @@ export default withRouter(function MenuComponent(props) {
         let isAll = true;
         if (value) value = value.toLowerCase();
         const treeData = filterTree(menuTreeData, node => {
-            let { title, path } = node;
+            let {title, path} = node;
             title = (title || '').toLowerCase();
             path = (path || '').toLowerCase();
 
@@ -110,7 +111,7 @@ export default withRouter(function MenuComponent(props) {
         // 展开所有查询出的结果
         let openKeys = [];
         const loop = nodes => nodes.forEach(node => {
-            const { id, children } = node;
+            const {id, children} = node;
             openKeys.push(id);
             if (children) loop(children);
         });
@@ -125,10 +126,10 @@ export default withRouter(function MenuComponent(props) {
     }
 
     function handleClick(info) {
-        const { node } = info.item.props;
+        const {node} = info.item.props;
         if (!node) return;
 
-        const { path, target } = node;
+        const {path, target} = node;
         if (target) return window.open(path, target);
 
         props.history.push(path);
@@ -206,7 +207,7 @@ export default withRouter(function MenuComponent(props) {
             ) : null}
             <div className={menuClass} ref={menuContainerRef}>
                 {mode === 'inline' && (!menuItems || !menuItems.length) ? (
-                    <Empty className={emptyClass} />
+                    <Empty className={emptyClass}/>
                 ) : (
                     <Menu
                         mode={mode}

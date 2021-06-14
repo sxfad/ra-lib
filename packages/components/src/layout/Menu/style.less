@@ -20,22 +20,31 @@
         }
     }
 
-    &-title {
+    &-title-wrapper {
         display: flex;
         align-items: center;
         justify-content: space-between;
 
         &:hover {
             .@{prefix-cls}-collection-icon {
-                opacity: 1;
+                transform: scale(1);
+                transition-delay: 500ms;
             }
         }
     }
 
+    &-title {
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
     &-collection-icon {
         flex: 0;
-        opacity: 0;
-        transition: opacity .3s;
+        transform: scale(0);
+        transition: transform .2s;
+        transition-delay: 0ms;
     }
 
     &-empty {
