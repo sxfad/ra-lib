@@ -47,9 +47,11 @@ export default withRouter(function MenuComponent(props) {
     const menuItems = useMemo(() => {
         nodesRef.current = {};
         const loop = (nodes) => nodes.map(item => {
-            let {id, path, icon, title, children, isCollected} = item;
+            let {id, path, icon, title, children, isCollected, isCollectedMenu} = item;
 
-            nodesRef.current[path || id] = item;
+            const key = isCollectedMenu ? `collectedMenu-${path || id}` : (path || id);
+
+            nodesRef.current[key] = item;
 
             if (showCollectedMenus && !sideCollapsed && id !== collectionMenuId) {
                 const CollectionIcon = isCollected ? HeartFilled : HeartOutlined;
@@ -70,13 +72,13 @@ export default withRouter(function MenuComponent(props) {
 
             if (children && children.length) {
                 return (
-                    <Menu.SubMenu key={id} title={title} icon={icon} node={item}>
+                    <Menu.SubMenu key={key} title={title} icon={icon} node={item}>
                         {loop(children)}
                     </Menu.SubMenu>
                 );
             }
             return (
-                <Menu.Item key={path || id} icon={icon} node={item}>
+                <Menu.Item key={key} icon={icon} node={item}>
                     {title}
                 </Menu.Item>
             );
@@ -219,7 +221,7 @@ export default withRouter(function MenuComponent(props) {
                     <Menu
                         mode={mode}
                         theme={theme}
-                        selectedKeys={[selectedMenuPath]}
+                        selectedKeys={[selectedMenuPath, `collectedMenu-${selectedMenuPath}`]}
                         openKeys={openKeys}
                         onOpenChange={handleOpenChange}
                         onClick={handleClick}

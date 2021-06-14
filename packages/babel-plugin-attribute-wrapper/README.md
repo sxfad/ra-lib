@@ -103,7 +103,7 @@ import {hasPermission as _method} from "src/commons";
 </div>
 ```
 
-### 添加disabled={_method(xxx)}属性
+### 添加disabled={!_method(xxx)}属性
 
 babel配置：
 
