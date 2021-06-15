@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useContext, useState, useEffect, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useContext, useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Input, Spin } from 'antd';
 import classNames from 'classnames';
 // @ts-ignore
@@ -11,10 +11,9 @@ export interface ImageCodeProps {
     className?: string,
     prefixCls?: string,
     value?: string | [ any, any ],
-    onChange?: (value: string | [ any, any ]) => void,
+    onChange?: (value: ChangeEvent<HTMLInputElement>) => void,
     // src: string类型时，直接作为图片的src input value 为 string
-    //      func  类型时，返回值如果是string，直接作为图片src input value 为 string
-    //                  返回值如果是[key, url]，数组第一个元素作为验证码id，第二个元素作为图片src input value 为 [key, code]
+    //      func  类型时，返回值，直接作为图片src
     src?: () => string,
     placeholder?: string,
     // 出错时站位图片
@@ -50,8 +49,6 @@ const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
     const imgRef = useRef(null);
 
     const [ url, setUrl ] = useState(errorImage);
-    const [ id, setId ] = useState(null);
-    const [ code, setCode ] = useState(undefined);
     const [ loading, setLoading ] = useState(false);
 
     async function handleClick() {
@@ -60,46 +57,20 @@ const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
             setUrl(`${src}?t=${Date.now()}`);
         }
 
-        // ajax请求之后两种情况，一种 [id, url] 一种 url
         if (typeof src === 'function') {
             setLoading(true);
             try {
                 const result = await src();
-
-                if (typeof result === 'string') setUrl(result || errorImage);
-
-                if (Array.isArray(result)) {
-                    setId(result[0]);
-                    setUrl(result[1] || errorImage);
-                }
+                setUrl(result || errorImage);
             } finally {
                 setLoading(false);
             }
         }
     }
 
-    function handleChange(e) {
-        const code = e.target.value;
-
-        if (id) {
-            onChange([ id, code ]);
-        } else {
-            onChange(code);
-        }
-    }
-
     function handleError() {
         setUrl(errorImage);
     }
-
-    useEffect(() => {
-        if (typeof value === 'string') setCode(value);
-
-        if (Array.isArray(value)) {
-            setCode(value[1]);
-        }
-
-    }, [ value ]);
 
     useEffect(() => {
         (async () => {
@@ -118,8 +89,8 @@ const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
                 <Input
                     className={inputClass}
                     placeholder={placeholder}
-                    value={code}
-                    onChange={handleChange}
+                    value={value}
+                    onChange={onChange}
                     {...others}
                 />
                 <img
