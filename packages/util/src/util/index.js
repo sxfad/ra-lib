@@ -80,7 +80,7 @@ export function getQuery(str) {
     return query;
 }
 
-export const queryParse = getQuery();
+export const queryParse = getQuery;
 
 /**
  * 对象转 query string

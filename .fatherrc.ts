@@ -3,9 +3,11 @@ import fs from 'fs';
 
 const packagesPath = path.join(__dirname, 'packages');
 let packageNames = fs.readdirSync(packagesPath).filter(item => !item.startsWith('.'));
+
 const pkgs = [
     'util',
     'hooks',
+    'admin',
 ];
 packageNames = packageNames.filter(name => !pkgs.includes(name));
 
@@ -17,7 +19,9 @@ export default {
         importLibToEs: true,
     },
     pkgs: [
-        ...pkgs,
+        'util',
+        'hooks',
         ...packageNames,
+        'admin',
     ],
 };
