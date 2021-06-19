@@ -111,7 +111,6 @@ export function getElementTop(element) {
     return actualTop;
 }
 
-
 /**
  * 获取浏览器滚动条宽度
  * @returns {number}
@@ -142,7 +141,6 @@ export function hasScrollBar(element, direction = 'vertical') {
         return element.scrollWidth > element.clientWidth;
     }
 }
-
 
 /**
  * 判断元素是否在可视窗口内

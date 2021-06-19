@@ -114,7 +114,6 @@ export function findNode(treeData, fieldValue, field = 'id', compare) {
     return node;
 }
 
-
 /**
  * 查找给定节点，及其后代节点property属性，第一个不为空的值
  * @param {Array} treeData 节点数据，树状结构
@@ -162,6 +161,13 @@ export function findNextNode(treeData, key, keyField = 'id') {
     return dataSource[index + 1];
 }
 
+/**
+ * 获取父级节点
+ * @param treeData
+ * @param key
+ * @param keyField
+ * @returns {{children}|*}
+ */
 export function findParentNode(treeData, key, keyField = 'id') {
     if (!Array.isArray(treeData)) treeData = [treeData];
 
@@ -181,7 +187,6 @@ export function findParentNode(treeData, key, keyField = 'id') {
 
     return loop(treeData);
 }
-
 
 /**
  * 过滤树
@@ -208,7 +213,6 @@ export function filterTree(treeData, filter = node => true) {
 
     return treeData.reduce(getNodes, []);
 }
-
 
 /**
  * 获取所有后代节点
