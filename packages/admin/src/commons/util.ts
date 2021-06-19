@@ -37,8 +37,11 @@ export function setToken(token) {
  * token来源: queryString > sessionStorage > loginUser
  */
 export function getToken() {
+    // @ts-ignore
     const query = queryParse();
+    // @ts-ignore
     if (query?.token) setToken(query.token);
+    // @ts-ignore
     return query?.token
         || window.sessionStorage.getItem(LOGIN_USER_TOKEN_STORAGE_KEY);
 }
@@ -77,7 +80,7 @@ export function setLoginUser(loginUser = {}) {
     // @ts-ignore
     window.sessionStorage.setItem(LOGIN_USER_ID_STORAGE_KEY, loginUser.id);
     // @ts-ignore
-    window.sessionStorage.setItem(LOGIN_USER_TOKEN_STORAGE_KEY, loginUser.token);
+    setToken(loginUser.token);
 }
 
 /**

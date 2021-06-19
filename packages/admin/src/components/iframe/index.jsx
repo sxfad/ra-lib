@@ -1,10 +1,21 @@
 import {Result} from 'antd';
 import {PageContent} from '@ra-lib/components';
+import {queryStringify} from '@ra-lib/util';
+import {getToken} from '../../commons/util';
 
 export default function IFrame(props) {
     let {src} = props?.match?.params || {};
 
     src = window.decodeURIComponent(src);
+
+    // 通过src 传递token
+    if (src && src !== 'undefined') {
+        const queryStr = queryStringify({
+            token: getToken(),
+        });
+
+        src = `${src}${src.includes('?') ? '&' : '?'}${queryStr}`;
+    }
 
     return (
         <PageContent
