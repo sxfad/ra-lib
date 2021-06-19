@@ -10,10 +10,11 @@ export function loopObject(obj, run = (obj, key, value) => value) {
     const loop = record => {
         if (!record) return;
         if (typeof record !== 'object') return;
+        // @ts-ignore
         if (Array.isArray(record)) return record.forEach(item => loop(item, run));
 
         Object.entries(record)
-            .forEach(([key, value]) => {
+            .forEach(([ key, value ]) => {
                 if (typeof value === 'object') return loop(value);
 
                 run(record, key, value);
@@ -55,7 +56,7 @@ export function sort(arr, orderBy = (a, b) => a - b) {
     for (let i = 0; i < length - 1; i++) {
         for (let j = 0; j < length - i - 1; j++) {
             if (orderBy(arr[j], arr[j + 1]) > 0) {
-                arr[j] = [arr[j + 1], arr[j + 1] = arr[j]][0];
+                arr[j] = [ arr[j + 1], arr[j + 1] = arr[j] ][0];
             }
         }
     }
@@ -88,7 +89,7 @@ export const queryParse = getQuery;
  * @returns {string}
  */
 export function toQuery(obj) {
-    return qs.stringify(obj, {encode: false});
+    return qs.stringify(obj, { encode: false });
 }
 
 export const queryStringify = toQuery;

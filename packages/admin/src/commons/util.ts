@@ -1,4 +1,6 @@
-import {queryParse, Storage} from '@ra-lib/util';
+// @ts-ignore
+import { queryParse, Storage } from '@ra-lib/util';
+// @ts-ignore
 import appPackage from 'root/package.json';
 
 /**
@@ -20,7 +22,7 @@ const STORAGE_PREFIX = `${PACKAGE_NAME}_${userId || ''}_`;
  * storage.local.setItem(key, value) storage.local.getItem(key, value)
  * @type {Storage}
  */
-export const storage = new Storage({prefix: STORAGE_PREFIX});
+export const storage = new Storage({ prefix: STORAGE_PREFIX });
 
 /**
  * 存储token到sessionStorage及loginUser中
@@ -58,16 +60,23 @@ export function setLoginUser(loginUser = {}) {
 
     // 将用户属性在这里展开，方便查看系统都用到了那些用户属性
     const userStr = JSON.stringify({
+        // @ts-ignore
         id: loginUser.id,                   // 用户id 必须
+        // @ts-ignore
         name: loginUser.name,               // 用户名 必须
+        // @ts-ignore
         avatar: loginUser.avatar,           // 用头像 非必须
+        // @ts-ignore
         token: loginUser.token,             // 登录凭证 非必须 ajax请求有可能会用到，也许是cookie
+        // @ts-ignore
         permissions: loginUser.permissions, // 用户权限 如果控制权限，必传
         ...loginUser,
     });
 
     window.sessionStorage.setItem(LOGIN_USER_STORAGE_KEY, userStr);
+    // @ts-ignore
     window.sessionStorage.setItem(LOGIN_USER_ID_STORAGE_KEY, loginUser.id);
+    // @ts-ignore
     window.sessionStorage.setItem(LOGIN_USER_TOKEN_STORAGE_KEY, loginUser.token);
 }
 

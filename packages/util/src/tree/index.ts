@@ -6,7 +6,7 @@
 export function getTreeData(dataSource) {
     if (!dataSource) return [];
 
-    if (!Array.isArray(dataSource)) dataSource = [dataSource];
+    if (!Array.isArray(dataSource)) dataSource = [ dataSource ];
 
     // 含有children属性，已经是树状结构
     if (dataSource.find(item => !!item.children)) return dataSource;
@@ -25,13 +25,13 @@ export function convertToTree(rows, keyField = 'id', parentKeyField = 'parentId'
     if (!rows) return [];
 
     // 拷贝，多次执行修改原始的rows会出问题，指定id，parentId
-    rows = rows.map(item => ({id: item[keyField], parentId: item[parentKeyField], ...item}));
+    rows = rows.map(item => ({ id: item[keyField], parentId: item[parentKeyField], ...item }));
 
     // 获取所有的顶级节点
     let nodes = rows.filter(item => !rows.find(r => r.id === item.parentId));
 
     // 存放要处理的节点
-    let toDo = [...nodes];
+    let toDo = [ ...nodes ];
 
     while (toDo.length) {
         // 处理一个，头部弹出一个。
@@ -43,7 +43,7 @@ export function convertToTree(rows, keyField = 'id', parentKeyField = 'parentId'
                 if (node.children) {
                     node.children.push(child);
                 } else {
-                    node.children = [child];
+                    node.children = [ child ];
                 }
                 // child加入toDo，继续处理
                 toDo.push(child);
@@ -61,7 +61,7 @@ export function convertToTree(rows, keyField = 'id', parentKeyField = 'parentId'
  * @returns {*|[]}
  */
 export function findParentNodes(treeData, fieldValue, field = 'id') {
-    treeData = Array.isArray(treeData) ? treeData : [treeData];
+    treeData = Array.isArray(treeData) ? treeData : [ treeData ];
 
     // 深度遍历查找
     function dfs(data, fieldValue, parents) {
@@ -94,7 +94,7 @@ export function findParentNodes(treeData, fieldValue, field = 'id') {
  * @returns {object} 返回根据 key value查找到的节点
  */
 export function findNode(treeData, fieldValue, field = 'id', compare) {
-    treeData = Array.isArray(treeData) ? treeData : [treeData];
+    treeData = Array.isArray(treeData) ? treeData : [ treeData ];
 
     if (!treeData || !treeData.length) return null;
     if (!compare) compare = (a, b) => a === b;
@@ -102,7 +102,7 @@ export function findNode(treeData, fieldValue, field = 'id', compare) {
     const loop = (data) => {
         for (let item of data) {
             if (compare(item[field], fieldValue, item)) {
-                node = {...item};
+                node = { ...item };
                 break;
             }
             if (item.children && item.children.length) {
@@ -121,7 +121,7 @@ export function findNode(treeData, fieldValue, field = 'id', compare) {
  * @returns {*}
  */
 export function getFirstNode(treeData, field) {
-    if (!Array.isArray(treeData)) treeData = [treeData];
+    if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const loop = nodes => {
         for (let node of nodes) {
@@ -144,7 +144,7 @@ export function getFirstNode(treeData, field) {
  * @param keyField
  */
 export function findNextNode(treeData, key, keyField = 'id') {
-    if (!Array.isArray(treeData)) treeData = [treeData];
+    if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const parentNode = findParentNode(treeData, key, keyField);
     const dataSource = parentNode ? parentNode.children || [] : treeData;
@@ -169,7 +169,7 @@ export function findNextNode(treeData, key, keyField = 'id') {
  * @returns {{children}|*}
  */
 export function findParentNode(treeData, key, keyField = 'id') {
-    if (!Array.isArray(treeData)) treeData = [treeData];
+    if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const loop = nodes => {
         for (let node of nodes) {
@@ -197,7 +197,7 @@ export function findParentNode(treeData, key, keyField = 'id') {
 export function filterTree(treeData, filter = node => true) {
     if (!treeData) return [];
 
-    if (!Array.isArray(treeData)) treeData = [treeData];
+    if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const getNodes = (result, node) => {
         if (filter(node)) {
@@ -206,7 +206,7 @@ export function filterTree(treeData, filter = node => true) {
         }
         if (Array.isArray(node.children)) {
             const children = node.children.reduce(getNodes, []);
-            if (children.length) result.push({...node, children});
+            if (children.length) result.push({ ...node, children });
         }
         return result;
     };
@@ -222,6 +222,7 @@ export function filterTree(treeData, filter = node => true) {
  * @returns {*[]}
  */
 export function findGenerationNodes(treeData, fieldValue, field = 'id') {
+    // @ts-ignore
     const node = findNode(treeData, fieldValue, field);
 
     if (!node) return [];

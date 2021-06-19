@@ -1,23 +1,25 @@
-import {LAYOUT_TYPE} from '@ra-lib/components';
-import appPackage from 'root/package.json';
+import { LAYOUT_TYPE } from '@ra-lib/components';
 import * as development from './config.development';
 import * as production from './config.production';
 import handleError from '../commons/handle-error';
 import handleSuccess from '../commons/handle-success';
-import {getToken, storage, getConfigValue as gc} from '../commons/util';
+import { getToken, storage, getConfigValue as gc } from '../commons/util';
+// @ts-ignore
 import * as customerConfig from 'src/config';
+// @ts-ignore
+import appPackage from 'root/package.json';
 
-const allEnvConfig = {development, production};
+const allEnvConfig = { development, production };
 const env = process.env.REACT_APP_CONFIG_ENV || process.env.NODE_ENV;
 const envConfig = allEnvConfig[env] || {};
-const getConfigValue = (key, defaultValue, parse) => {
+const getConfigValue = (key, defaultValue, parse = value => value) => {
     const val = gc(envConfig, key, defaultValue, parse);
     const cVal = customerConfig[key];
 
     if (typeof val === 'object') {
-        if (Array.isArray(val)) return [...val, ...(cVal || [])];
+        if (Array.isArray(val)) return [ ...val, ...(cVal || []) ];
 
-        return {...val, ...cVal};
+        return { ...val, ...cVal };
     }
 
     if (key in customerConfig) return cVal;
@@ -41,12 +43,13 @@ export const CONFIG_ENV = process.env.REACT_APP_CONFIG_ENV;
 export const CONFIG_HOC_STORAGE_KEY = 'CONFIG_HOC_STORAGE_KEY';
 
 // ajax 相关配置
-let {baseURL = '/api', ...ajaxOthers} = C_AJAX;
+let { baseURL = '/api', ...ajaxOthers } = C_AJAX;
 if (baseURL.startsWith('/')) baseURL = baseURL.replace('/', '');
 export const AJAX = {
+    // @ts-ignore
     baseURL: window.__POWERED_BY_QIANKUN__ ? `${window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__}${baseURL}` : `/${baseURL}`,
     timeout: 1000 * 60,
-    headers: {'USER-TOKEN': getToken()},
+    headers: { 'USER-TOKEN': getToken() },
     // 错误处理
     onError: handleError,
     // 成功处理
@@ -65,6 +68,7 @@ export const WITH_SYSTEMS = getConfigValue('WITH_SYSTEMS', true);
 // 应用名称
 export const APP_NAME = getConfigValue('APP_NAME', 'React Admin');
 // 页面路由前缀
+// @ts-ignore
 export const BASE_NAME = getConfigValue('BASE_NAME', window.__POWERED_BY_QIANKUN__ ? `/${appPackage.name}` : '');
 // 是否使用hash路由
 export const HASH_ROUTER = getConfigValue('HASH_ROUTER', false);
@@ -73,6 +77,7 @@ export const PUBLIC_URL = getConfigValue('PUBLIC_URL', '');
 // 是否是开发环境
 export const IS_DEV = getConfigValue('IS_DEV', NODE_ENV === 'development');
 // 是否作为乾坤子项目，或者嵌入在iframe中
+// @ts-ignore
 export const IS_SUB = getConfigValue('IS_SUB', window.__POWERED_BY_QIANKUN__ || window.self !== window.top);
 // 是否是手机布局
 export const IS_MOBILE = getConfigValue('IS_MOBILE', window.document.body.clientWidth <= 575);
