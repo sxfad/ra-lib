@@ -1,9 +1,9 @@
 import {toLogin} from './commons';
 import {getLoginUser, getToken, isLoginPage, getContainerId, isActiveApp} from './commons/util';
 import {CONFIG_HOC} from './config';
-import ajax from './commons/ajax';
 import {checkSameField, convertToTree, sort} from '@ra-lib/util';
 import {Icon} from 'src/components';
+import * as api from 'src/api';
 
 /**
  * 获取菜单数据
@@ -11,13 +11,12 @@ import {Icon} from 'src/components';
  * @returns {Promise<*>}
  */
 export async function getMenus() {
-    // 启用mock时，getMenuData，会早于mock生效前调用，这里做个延迟
+    // 启用mock时，api.getMenus，会早于mock生效前调用，这里做个延迟
     if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_MOCK) {
         await new Promise(resolve => setTimeout(resolve));
     }
 
-    const serverMenus = await getMenuData();
-    const menus = serverMenus.filter(item => !item.type || item.type === 1);
+    const menus = await api.getMenus();
 
     return formatMenus(menus);
 }
@@ -26,16 +25,12 @@ export async function getCollectedMenus() {
     // 登录页面，不加载
     if (isLoginPage()) return [];
 
-    const loginUser = getLoginUser();
-    const collectedMenus = await ajax.get('/authority/queryUserCollectedMenus', {userId: loginUser?.id});
-    collectedMenus.forEach(item => item.isCollectedMenu = true);
+    const collectedMenus = await api.getCollectedMenus();
     return formatMenus(collectedMenus);
 }
 
 export async function getPermissions() {
-    const serverMenus = await getMenuData();
-    return serverMenus.filter(item => item.type === 2)
-        .map(item => item.code);
+    return await api.getPermissions();
 }
 
 /**
@@ -50,49 +45,17 @@ export async function getSubApps() {
             token: getToken(),
         },
     };
-
-    // 从菜单数据中获取需要注册的乾坤子项目
-    const menuTreeData = await getMenus() || [];
-    let result = [];
-    const loop = nodes => nodes.forEach(node => {
-        const {_target, children} = node;
-        if (_target === 'qiankun') {
-            const {title, name, entry} = node;
-            result.push({
-                title,
-                name,
-                entry,
-                activeRule: !CONFIG_HOC.keepAlive ? `/${name}` : () => {
-                    // 当前路径是子应用，或者 子应用容器存在
-                    return isActiveApp({name}) || !!document.getElementById(getContainerId(name));
-                },
-                container: `#${getContainerId(name)}`,
-                props,
-            });
-        }
-        if (children?.length) loop(children);
+    const subApps = await api.getSubApps();
+    subApps.forEach(item => {
+        item.activeRule = !CONFIG_HOC.keepAlive ? `/${name}` : () => {
+            // 当前路径是子应用，或者 子应用容器存在
+            return isActiveApp({name}) || !!document.getElementById(getContainerId(name));
+        };
+        item.container = `#${getContainerId(name)}`;
+        item.props = props;
     });
-    loop(menuTreeData);
 
-    return result;
-}
-
-async function getMenuData() {
-    // 登录页面，不加载
-    if (isLoginPage()) return [];
-
-    // 获取服务端数据，并做缓存，防止多次调用接口
-    return getMenuData.__CACHE = getMenuData.__CACHE
-        || ajax.get('/authority/queryUserMenus', {userId: getLoginUser()?.id})
-            .then(res => res.map(item => ({...item, order: item.order || item.ord || item.sort})));
-
-    // 前端硬编码菜单
-    // return [
-    //     {id: 'system', title: '系统管理', order: 900, type: 1},
-    //     {id: 'user', parentId: 'system', title: '用户管理', path: '/users', order: 900, type: 1},
-    //     {id: 'role', parentId: 'system', title: '角色管理', path: '/roles', order: 900, type: 1},
-    //     {id: 'menus', parentId: 'system', title: '菜单管理', path: '/menus', order: 900, type: 1},
-    // ];
+    return subApps;
 }
 
 /**

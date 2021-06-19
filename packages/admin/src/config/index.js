@@ -13,14 +13,19 @@ const envConfig = allEnvConfig[env] || {};
 const getConfigValue = (key, defaultValue, parse) => {
     const val = gc(envConfig, key, defaultValue, parse);
     const cVal = customerConfig[key];
+
     if (typeof val === 'object') {
         if (Array.isArray(val)) return [...val, ...(cVal || [])];
 
         return {...val, ...cVal};
     }
+
+    if (key in customerConfig) return cVal;
+
     return val;
 };
 const C_CONFIG_HOC = customerConfig.CONFIG_HOC || {};
+const C_AJAX = customerConfig.AJAX || {};
 
 /**
  * 所有配置均可通过命令行参数传递，需要添加 REACT_APP_ 前缀，比如：REACT_APP_CONFIG_ENV=test yarn build
@@ -36,8 +41,10 @@ export const CONFIG_ENV = process.env.REACT_APP_CONFIG_ENV;
 export const CONFIG_HOC_STORAGE_KEY = 'CONFIG_HOC_STORAGE_KEY';
 
 // ajax 相关配置
-export const AJAX = getConfigValue('AJAX', {
-    baseURL: window.__POWERED_BY_QIANKUN__ ? `${window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__}api` : '/api',
+let {baseURL = '/api', ...ajaxOthers} = C_AJAX;
+if (baseURL.startsWith('/')) baseURL = baseURL.replace('/', '');
+export const AJAX = {
+    baseURL: window.__POWERED_BY_QIANKUN__ ? `${window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__}${baseURL}` : `/${baseURL}`,
     timeout: 1000 * 60,
     headers: {'USER-TOKEN': getToken()},
     // 错误处理
@@ -49,7 +56,9 @@ export const AJAX = getConfigValue('AJAX', {
     // 请求拦截
     onRequest: req => req,
     // withCredentials: true, // 跨域携带cookie，对应后端 Access-Control-Allow-Origin不可以为 '*'，需要指定为具体域名
-});
+
+    ...ajaxOthers,
+};
 
 // 是否有系统概念，顶级菜单将作为系统，角色有系统概念，默认添加子系统管理员角色
 export const WITH_SYSTEMS = getConfigValue('WITH_SYSTEMS', true);

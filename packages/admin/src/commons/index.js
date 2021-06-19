@@ -1,8 +1,8 @@
 import {match} from 'path-to-regexp';
 // import {getSubApps, isActiveApp} from '../qiankun';
 import {BASE_NAME, HASH_ROUTER} from '../config';
-import pageConfigs from 'src/pages/page-configs';
 import {getMainApp, isLoginPage} from './util';
+import pageConfigs from 'src/pages/page-configs';
 
 /**
  * 浏览器跳转，携带baseName hash等

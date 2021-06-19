@@ -1,14 +1,16 @@
 // create-react-app 配置修改
 // https://github.com/gsoft-inc/craco
-
 const path = require('path');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
-const WebpackBar = require('webpackbar');
-const CracoAntDesignPlugin = require('craco-antd');
-const CracoLessPlugin = require('craco-less'); // include in craco-antd
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const ROOT_PATH = process.cwd();
+const req = name => require(path.join(ROOT_PATH, 'node_modules', name));
+
+const {BundleAnalyzerPlugin} = req('webpack-bundle-analyzer');
+const WebpackBar = req('webpackbar');
+const CracoAntDesignPlugin = req('craco-antd');
+const CracoLessPlugin = req('craco-less'); // include in craco-antd
+const MiniCssExtractPlugin = req('mini-css-extract-plugin');
+
 const packageName = require(path.join(ROOT_PATH, 'package.json')).name;
 
 const SRC_PATH = path.join(ROOT_PATH, 'src');
@@ -162,7 +164,7 @@ module.exports = {
             ['@ra-lib/babel-plugin-attribute-wrapper',
                 { // 三元运算_method(xxx) ? <div> : null
                     importName: 'hasPermission',
-                    packageName: 'src/commons/util',
+                    packageName: '@ra-lib/admin',
                     attributeName: 'r-code',
                     conditional: true,
                 },
@@ -171,7 +173,7 @@ module.exports = {
             ['@ra-lib/babel-plugin-attribute-wrapper',
                 { // 添加disabled={!_method(xxx)}属性
                     importName: 'hasPermission',
-                    packageName: 'src/commons/util',
+                    packageName: '@ra-lib/admin',
                     attributeName: 'd-code',
                     replaceAttributeName: 'disabled',
                     negation: true,

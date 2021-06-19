@@ -10,7 +10,7 @@ function Header(props) {
     let {
         className,
         prefixCls = context.prefixCls,
-        style={},
+        style = {},
 
         height,
         width,
@@ -42,12 +42,14 @@ function Header(props) {
             style={{width: width, flex: `0 0 ${width}px`, ...style}}
             onClick={handleLogoClick}
         >
-            <img
-                className={`${prefixCls}-image`}
-                style={{height: height - 16}}
-                src={logo}
-                alt="logo"
-            />
+            {typeof logo === 'string' ? (
+                <img
+                    className={`${prefixCls}-image`}
+                    style={{height: height - 16}}
+                    src={logo}
+                    alt="logo"
+                />
+            ) : {logo}}
             {sideCollapsed ? null : <h1 className={`${prefixCls}-title`}>{title}</h1>}
         </div>
     );

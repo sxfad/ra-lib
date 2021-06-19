@@ -9,10 +9,10 @@ import AppRouter from './router/AppRouter';
 import {APP_NAME, CONFIG_HOC, IS_MOBILE} from './config';
 import {store} from './models';
 import {Provider} from 'react-redux';
-import theme from 'src/theme.less';
 import {getLoginUser, setLoginUser} from './commons/util';
 import {getMenus, getCollectedMenus, getPermissions} from './api';
-import ajax from './commons/ajax';
+import {saveCollectedMenu} from 'src/api';
+import theme from 'src/theme.less';
 import './App.less';
 
 // 设置语言
@@ -30,9 +30,7 @@ export default function App(props) {
     const [collectedMenus, setCollectedMenus] = useState(CONFIG_HOC.showCollectedMenus ? [] : null);
 
     async function handleMenuCollect(menu, collected) {
-        const loginUser = getLoginUser();
-        console.log(loginUser);
-        await ajax.post('/authority/addUserCollectMenu', {userId: loginUser?.id, menuId: menu.id, collected});
+        await saveCollectedMenu({menuId: menu.id, collected});
 
         const collectedMenus = await getCollectedMenus();
         setCollectedMenus(collectedMenus);

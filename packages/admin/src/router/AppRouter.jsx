@@ -1,8 +1,8 @@
 import {BrowserRouter, HashRouter, Route, Switch} from 'react-router-dom';
 import {Error404, Layout, SubApp} from '../components';
-// import {Footer} from 'src/components';
 import {BASE_NAME, CONFIG_HOC, HASH_ROUTER} from '../config';
 import routes from './routes';
+import {Footer} from 'src/components';
 
 const Router = HASH_ROUTER ? HashRouter : BrowserRouter;
 const baseName = HASH_ROUTER ? '' : BASE_NAME;
@@ -47,7 +47,7 @@ export default function AppRouter(props) {
                 </Switch>
             ) : null}
             <SubApp/>
-            {/*<Footer/>*/}
+            <Footer/>
         </Router>
     );
 }

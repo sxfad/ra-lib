@@ -185,3 +185,26 @@ export function getContainerId(name) {
 export function isActiveApp(app, pathname = window.location.pathname) {
     return pathname.startsWith(`/${app.name}`);
 }
+
+/**
+ * 获取模块名
+ * @param filePath
+ */
+export function getModelName(filePath) {
+    // models/page.js 情况
+    let name = filePath.replace('./', '').replace('.js', '');
+
+    const names = filePath.split('/');
+    const fileName = names[names.length - 1];
+    const folderName = names[names.length - 2];
+
+    // users/model.js 情况
+    if (fileName === 'model.js') name = folderName;
+
+    // users/center.model.js 情况
+    if (fileName.endsWith('.model.js')) {
+        name = fileName.replace('.model.js', '').replace(/\./g, '-');
+    }
+
+    return name.replace(/-(\w)/g, (a, b) => b.toUpperCase());
+}
