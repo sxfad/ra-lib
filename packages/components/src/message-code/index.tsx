@@ -1,11 +1,23 @@
-import React, {useContext, useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import {Input, Button, Spin} from 'antd';
+import React, { useContext, useState, useEffect } from 'react';
+import { Input, Button, ButtonProps, Spin } from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../component-context';
 import './style.less';
 
-export default function MessageCode(props) {
+export interface MessageCodeProps {
+    value?: string,
+    onChange?: () => void,
+    time?: number,
+    buttonType?: ButtonProps['type'],
+    onSend?: () => boolean, // 返回true 或 promise.resolve(true) 则开始倒计时并按钮不可点击 其他不倒计时
+    placeholder?: string,
+    wrapperProps?: object,
+    buttonProps?: object,
+    className?: string,
+    prefixCls?: string,
+}
+
+export default function MessageCode(props: MessageCodeProps) {
     const context = useContext(ComponentContext);
 
     let {
@@ -21,8 +33,8 @@ export default function MessageCode(props) {
         ...others
     } = props;
 
-    const [count, setCount] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [ count, setCount ] = useState(0);
+    const [ loading, setLoading ] = useState(false);
 
     async function handleClick() {
         try {
@@ -50,7 +62,7 @@ export default function MessageCode(props) {
         }, 1000);
 
         return () => clearInterval(st);
-    }, [count]);
+    }, [ count ]);
 
     prefixCls = `${prefixCls}-message-code`;
     const rootClass = classNames(prefixCls, className);
@@ -69,7 +81,8 @@ export default function MessageCode(props) {
         <Spin spinning={loading} size="small">
             <div
                 className={rootClass}
-                style={{...(wrapperProps.style || {})}}
+                // @ts-ignore
+                style={{ ...(wrapperProps.style || {}) }}
                 {...wrapperProps}
             >
                 <Input
@@ -91,16 +104,6 @@ export default function MessageCode(props) {
     );
 }
 
-MessageCode.propTypes = {
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    time: PropTypes.number,
-    buttonType: PropTypes.string,
-    onSend: PropTypes.func, // 返回true 或 promise.resolve(true) 则开始倒计时并按钮不可点击 其他不倒计时
-    placeholder: PropTypes.string,
-    wrapperProps: PropTypes.object,
-    buttonProps: PropTypes.object,
-};
 MessageCode.defaultProps = {
     time: 60,
     buttonType: 'default',

@@ -1,14 +1,21 @@
-import React, {Component} from 'react';
+import React, { Component, CSSProperties } from 'react';
 import PropTypes from 'prop-types';
-import {Spin} from 'antd';
+import { Spin } from 'antd';
 import ComponentContext from '../component-context';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-export default class Loading extends Component {
-    constructor(...props) {
-        super(...props);
-        const {progress} = props;
+export interface LoadingProps {
+    spin?: boolean,
+    progress?: boolean,
+    tip?: string,
+    style?: CSSProperties,
+}
+
+export default class Loading extends Component <LoadingProps, {}> {
+    constructor(props: LoadingProps) {
+        super(props);
+        const { progress } = props;
         if (progress) NProgress.start();
     }
 
@@ -24,7 +31,7 @@ export default class Loading extends Component {
     };
 
     componentWillUnmount() {
-        const {progress} = this.props;
+        const { progress } = this.props;
         if (progress) NProgress.done();
     }
 
@@ -41,7 +48,7 @@ export default class Loading extends Component {
 
         if (!spin) return null;
 
-        const wrapperStyle = {
+        const wrapperStyle: CSSProperties = {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

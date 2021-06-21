@@ -1,13 +1,13 @@
 import React from 'react';
-import {Modal} from 'antd';
-import {QuestionCircleOutlined} from '@ant-design/icons';
+import { Modal } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 /**
  * promise confirm
  * @param options
  * @returns {Promise<unknown>}
  */
-export default async (options) => {
+export default async function confirm(options) {
     if (typeof options === 'string') {
         options = {
             content: options,
@@ -20,11 +20,11 @@ export default async (options) => {
         ...others
     } = options;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         Modal.confirm({
             icon: <QuestionCircleOutlined/>,
             title,
-            content: <div style={{marginTop: 8, fontSize: 14, color}}>{content}</div>,
+            content: <div style={{ marginTop: 8, fontSize: 14, color }}>{content}</div>,
             okText: '确定',
             cancelText: '取消',
             onOk: () => resolve(),

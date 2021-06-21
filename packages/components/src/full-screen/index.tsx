@@ -1,27 +1,48 @@
-import {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import {FullscreenExitOutlined, FullscreenOutlined} from '@ant-design/icons';
-import {Tooltip} from 'antd';
+import React, { useState, useEffect, ReactNode } from 'react';
+import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
+import { Tooltip, TooltipProps } from 'antd';
 
-function FullScreen(props) {
+export interface FullScreenProps {
+    // Tooltip 提示位置
+    placement?: TooltipProps["placement"],
+    // 需要全屏的dom元素，默认document.documentElement
+    element?: HTMLElement,
+    // 进入全屏 Tooltip 提示
+    enterFullTip?: ReactNode,
+    // 退出全屏 Tooltip 提示
+    exitFullTip?: ReactNode,
+    // 全屏后触发事件
+    onFull?: () => void,
+    // 退出全屏触发事件
+    onExit?: () => void,
+    // 函数式子元素，可以自定义图标
+    children?: (fullScreen?: boolean) => ReactNode
+}
+
+export default function FullScreen(props: FullScreenProps) {
     const {
-        element,
-        placement,
-        onFull,
-        onExit,
-        enterFullTip,
-        exitFullTip,
+        element = document.documentElement,
+        enterFullTip = '全屏',
+        exitFullTip = '退出全屏',
+        onFull = () => void 0,
+        onExit = () => void 0,
+        placement = 'bottom',
         children,
     } = props;
     const initFullScreen = document.fullscreenElement
+        // @ts-ignore
         || document.mozFullScreenElement
+        // @ts-ignore
         || document.webkitFullscreenElement
+        // @ts-ignore
         || document.fullScreen
+        // @ts-ignore
         || document.mozFullScreen
+        // @ts-ignore
         || document.webkitIsFullScreen;
 
-    const [fullScreen, setFullScreen] = useState(initFullScreen);
-    const [toolTipVisible, setToolTipVisible] = useState(false);
+    const [ fullScreen, setFullScreen ] = useState(initFullScreen);
+    const [ toolTipVisible, setToolTipVisible ] = useState(false);
 
     useEffect(() => {
         function handleFullScreenChange() {
@@ -43,28 +64,40 @@ function FullScreen(props) {
             window.document.removeEventListener('webkitfullscreenchange', handleFullScreenChange);
             window.document.removeEventListener('msfullscreenchange', handleFullScreenChange);
         };
-    }, [fullScreen]);
+    }, [ fullScreen ]);
 
 
     function handleFullScreen() {
         if (fullScreen) {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
+                // @ts-ignore
             } else if (document.msExitFullscreen) {
+                // @ts-ignore
                 document.msExitFullscreen();
+                // @ts-ignore
             } else if (document.mozCancelFullScreen) {
+                // @ts-ignore
                 document.mozCancelFullScreen();
+                // @ts-ignore
             } else if (document.webkitExitFullscreen) {
+                // @ts-ignore
                 document.webkitExitFullscreen();
             }
         } else {
             if (element.requestFullscreen) {
                 element.requestFullscreen();
+                // @ts-ignore
             } else if (element.mozRequestFullScreen) {
+                // @ts-ignore
                 element.mozRequestFullScreen();
+                // @ts-ignore
             } else if (element.msRequestFullscreen) {
+                // @ts-ignore
                 element.msRequestFullscreen();
+                // @ts-ignore
             } else if (element.webkitRequestFullscreen) {
+                // @ts-ignore
                 element.webkitRequestFullScreen();
             }
         }
@@ -84,31 +117,3 @@ function FullScreen(props) {
         </Tooltip>
     );
 }
-
-FullScreen.propTypes = {
-    // Tooltip 提示位置
-    placement: PropTypes.any,
-    // 需要全屏的dom元素，默认document.documentElement
-    element: PropTypes.any,
-    // 进入全屏 Tooltip 提示
-    enterFullTip: PropTypes.any,
-    // 退出全屏 Tooltip 提示
-    exitFullTip: PropTypes.any,
-    // 全屏后触发事件
-    onFull: PropTypes.func,
-    // 退出全屏触发事件
-    onExit: PropTypes.func,
-    // 函数式子元素，可以自定义图标
-    children: PropTypes.func,
-};
-
-FullScreen.defaultProps = {
-    element: document.documentElement,
-    enterFullTip: '全屏',
-    exitFullTip: '退出全屏',
-    onFull: () => void 0,
-    onExit: () => void 0,
-    placement: 'bottom',
-};
-
-export default FullScreen;

@@ -1,10 +1,35 @@
-import {useRef, useContext} from 'react';
-import PropTypes from 'prop-types';
-import {DownOutlined, LoadingOutlined, CheckCircleOutlined, MinusCircleOutlined} from '@ant-design/icons';
-import {Popconfirm, Dropdown, Menu, Tooltip} from 'antd';
+import React, { useRef, useContext, ReactNode, CSSProperties } from 'react';
+import { DownOutlined, LoadingOutlined, CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Popconfirm, Dropdown, Menu, Tooltip, PopconfirmProps } from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../component-context';
 import './style.less';
+
+
+export interface OperatorProps {
+    // 操作项
+    items: [
+        {
+            label: ReactNode,
+            icon?: string,
+            visible?: boolean,
+            disabled?: boolean,
+            color?: string,
+            loading?: boolean,
+            isMore?: boolean,
+
+            onClick?: () => void,
+            confirm?: PopconfirmProps,
+            statusSwitch: object,
+        }
+    ],
+    // 更多标签文案
+    moreText?: ReactNode,
+    // 更多标签宽度
+    moreContentWidth: string | number,
+    // 显示更多下拉菜单触发方式
+    moreTrigger: string | [ string ],
+}
 
 function Operator(props) {
     const context = useContext(ComponentContext);
@@ -27,14 +52,14 @@ function Operator(props) {
 
     // 获取label
     function getLabel(options, i) {
-        let {label, icon, loading, color, disabled} = options;
+        let { label, icon, loading, color, disabled } = options;
 
         if (loading) {
             const labelWidth = labelRef.current[i] ? labelRef.current[i].offsetWidth : 'auto';
-            return <a className={labelClass} style={{display: 'inline-block', width: labelWidth, textAlign: 'center'}}><LoadingOutlined/></a>;
+            return <a className={labelClass} style={{ display: 'inline-block', width: labelWidth, textAlign: 'center' }}><LoadingOutlined/></a>;
         }
 
-        const labelStyle = {
+        const labelStyle: CSSProperties = {
             transition: 'all 1ms', // 解决拖拽表格，点击无效问题
         };
 
@@ -59,7 +84,7 @@ function Operator(props) {
      * */
     function getConfirm(options, i) {
         let label = getLabel(options, i);
-        const {confirm, withKey = true} = options;
+        const { confirm, withKey = true } = options;
 
         // 配合 alt command ctrl 键使用，不弹出提示
         if (withKey) {
@@ -87,13 +112,13 @@ function Operator(props) {
     }
 
     function getStatusSwitch(opt, i) {
-        const {statusSwitch, disabled = false} = opt;
-        const {status} = statusSwitch;
-        const props = {...statusSwitch};
+        const { statusSwitch, disabled = false } = opt;
+        const { status } = statusSwitch;
+        const props = { ...statusSwitch };
         const icon = status ? <CheckCircleOutlined/> : <MinusCircleOutlined/>;
         const color = status ? 'green' : 'red';
 
-        let label = getLabel({...opt, label: icon, color}, i);
+        let label = getLabel({ ...opt, label: icon, color }, i);
 
         // 如果没有权限，不允许进行操作，只做展示
         if (disabled) return label;
@@ -109,7 +134,7 @@ function Operator(props) {
 
     function getText(options, i) {
         let label = getLabel(options, i);
-        const {onClick} = options;
+        const { onClick } = options;
 
         return <span onClick={onClick}>{label}</span>;
     }
@@ -146,11 +171,11 @@ function Operator(props) {
     let more = [];
 
     if (typeof moreTrigger === 'string') {
-        moreTrigger = [moreTrigger];
+        moreTrigger = [ moreTrigger ];
     }
 
     items.forEach((opt, i) => {
-        const {isMore} = opt;
+        const { isMore } = opt;
         const item = renderItem(opt, i);
 
         if (item) {
@@ -164,7 +189,7 @@ function Operator(props) {
 
     if (more && more.length) { // 更多
         const menu = (
-            <Menu style={{width: moreContentWidth}}>
+            <Menu style={{ width: moreContentWidth }}>
                 {
                     more.map((item, index) => <Menu.Item key={item.label || index}>{item}</Menu.Item>)
                 }
@@ -197,35 +222,6 @@ function Operator(props) {
         </div>
     );
 }
-
-Operator.propTypes = {
-    // 操作项
-    items: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.any.isRequired,
-        icon: PropTypes.string,
-        visible: PropTypes.bool,
-        disabled: PropTypes.bool,
-        color: PropTypes.string,
-        loading: PropTypes.bool,
-        isMore: PropTypes.bool,
-
-        onClick: PropTypes.func,
-        confirm: PropTypes.object,
-        statusSwitch: PropTypes.object,
-    })),
-    // 更多标签文案
-    moreText: PropTypes.any,
-    // 更多标签宽度
-    moreContentWidth: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-    ]),
-    // 显示更多下拉菜单触发方式
-    moreTrigger: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.array,
-    ]),
-};
 
 Operator.defaultProps = {
     items: [],

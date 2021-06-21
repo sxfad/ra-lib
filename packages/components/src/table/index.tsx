@@ -1,23 +1,46 @@
-import {useState, useRef, useEffect, useContext} from 'react';
-import PropTypes from 'prop-types';
-import {Table, ConfigProvider} from 'antd';
-import {useHeight} from '@ra-lib/hooks';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { Table, ConfigProvider } from 'antd';
+import { TableProps } from 'antd/es/table';
+
+import { useHeight } from '@ra-lib/hooks';
 import ComponentContext from '../component-context';
 
-function RATable(props) {
+export interface RATableProps<RecordType> extends TableProps<RecordType> {
+    // 是否适应高度
+    fitHeight?: boolean,
+    // 是否显示序号
+    serialNumber?: boolean,
+    // 序号列是否固定
+    serialNumberFixed?: boolean,
+    // 序号列头名称
+    serialText?: string,
+    // 序号列宽
+    serialNumberWidth?: number,
+    // 如果显示序号，需要传递pageSize
+    pageSize?: number,
+    // 如果显示序号，需要传递pageNum
+    pageNum?: number,
+    // 计算高度使用的额外高度
+    otherHeight?: number,
+    // 计算之后，再做偏移的高度
+    offsetHeight?: number,
+}
+
+export default function RATable<RecordType extends object = any>(props: RATableProps<RecordType>) {
     let {
-        fitHeight,
+        fitHeight = false,
         scroll = {},
         otherHeight,
-        offsetHeight,
+        offsetHeight = 0,
         columns,
-        serialNumber,
-        serialText,
-        serialNumberFixed,
-        serialNumberWidth,
+        serialNumber = false,
+        serialText = '序号',
+        serialNumberFixed = false,
+        serialNumberWidth = 60,
         pageSize,
         pageNum,
         dataSource,
+        pagination = false,
         ...others
     } = props;
 
@@ -25,18 +48,18 @@ function RATable(props) {
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
     const rootRef = useRef(null);
-    const [_otherHeight, setOtherHeight] = useState(otherHeight);
-    const [hasPagination, setHasPagination] = useState(false);
+    const [ _otherHeight, setOtherHeight ] = useState(otherHeight);
+    const [ hasPagination, setHasPagination ] = useState(false);
     const pageContentPadding = 8;
     const pageContentMargin = 8;
-    const {isMobile, mobileColumnDefaultWidth} = context;
+    const { isMobile, mobileColumnDefaultWidth } = context;
 
-    let [height] = useHeight(rootRef);
+    let [ height ] = useHeight(rootRef);
     height = height - (_otherHeight || 0) - (offsetHeight || 0);
 
     if (scroll.y) fitHeight = false;
 
-    const _scroll = {...scroll};
+    const _scroll = { ...scroll };
     if (fitHeight) _scroll.y = height;
 
     useEffect(() => {
@@ -83,7 +106,7 @@ function RATable(props) {
         window.addEventListener('resize', _setOtherHeight);
         return () => window.removeEventListener('resize', _setOtherHeight);
 
-    }, [otherHeight, dataSource]);
+    }, [ otherHeight, dataSource ]);
 
     useEffect(() => {
         if (!fitHeight) return;
@@ -99,7 +122,7 @@ function RATable(props) {
             tablePlaceholder.style.border = 'none';
         }
 
-    }, [fitHeight, height, dataSource]);
+    }, [ fitHeight, height, dataSource ]);
 
     if (serialNumber) {
         if (hasPagination) {
@@ -113,7 +136,7 @@ function RATable(props) {
                 width: serialNumberWidth,
                 dataIndex: '__num',
                 key: '__num',
-                fixed: serialNumberFixed ? 'left' : 'none',
+                fixed: serialNumberFixed ? 'left' : false,
                 render: (value, record, index) => index + 1 + (hasPagination ? pageSize * (pageNum - 1) : 0),
             },
             ...columns,
@@ -129,73 +152,15 @@ function RATable(props) {
     }
 
     return (
-        <div ref={rootRef} style={{borderBottom: '1px solid #e8e8e8'}}>
+        <div ref={rootRef} style={{ borderBottom: '1px solid #e8e8e8' }}>
             <Table
                 scroll={_scroll}
                 columns={columns}
                 size="middle"
                 dataSource={dataSource}
+                pagination={pagination}
                 {...others}
             />
         </div>
     );
 }
-
-RATable.defaultProps = {
-    fitHeight: false,
-    serialNumber: false,
-    serialText: '序号',
-    serialNumberWidth: 60,
-    serialNumberFixed: false,
-    offsetHeight: 0,
-    pagination: false,
-};
-
-RATable.propTypes = {
-    // 是否适应高度
-    fitHeight: PropTypes.bool,
-    // 是否显示序号
-    serialNumber: PropTypes.bool,
-    // 序号列是否固定
-    serialNumberFixed: PropTypes.bool,
-    // 序号列头名称
-    serialText: PropTypes.string,
-    // 序号列宽
-    serialNumberWidth: PropTypes.number,
-    // 如果显示序号，需要传递pageSize
-    pageSize: PropTypes.number,
-    // 如果显示序号，需要传递pageNum
-    pageNum: PropTypes.number,
-    // 计算高度使用的额外高度
-    otherHeight: PropTypes.number,
-    // 计算之后，再做偏移的高度
-    offsetHeight: PropTypes.number,
-
-    // 其他antd属性列出便于IDE提示
-    tableLayout: PropTypes.any,
-    bordered: PropTypes.any,
-    columns: PropTypes.any,
-    components: PropTypes.any,
-    dataSource: PropTypes.any,
-    expandable: PropTypes.any,
-    footer: PropTypes.any,
-    loading: PropTypes.any,
-    locale: PropTypes.any,
-    pagination: PropTypes.any,
-    rowClassName: PropTypes.any,
-    rowKey: PropTypes.any,
-    rowSelection: PropTypes.any,
-    scroll: PropTypes.any,
-    showHeader: PropTypes.any,
-    size: PropTypes.any,
-    summary: PropTypes.any,
-    title: PropTypes.any,
-    onChange: PropTypes.any,
-    onHeaderRow: PropTypes.any,
-    onRow: PropTypes.any,
-    getPopupContainer: PropTypes.any,
-    sortDirections: PropTypes.any,
-    showSorterTooltip: PropTypes.any,
-};
-
-export default RATable;

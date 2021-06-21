@@ -1,11 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {Result, Button, Space} from 'antd';
-import {withRouter} from 'react-router-dom';
+import { Result, Button, Space } from 'antd';
+import { withRouter } from 'react-router-dom';
 import PageContent from '../page-content';
+import { History } from 'history';
 
-function Error404(props) {
-    const {homePath = '/', history} = props;
+export interface Error404Props {
+    homePath?: string,
+    history?: History,
+}
+
+function Error404(props: Error404Props) {
+    const { homePath = '/', history } = props;
     return (
         <PageContent
             fitHeight
@@ -30,9 +35,5 @@ function Error404(props) {
         </PageContent>
     );
 }
-
-Error404.prototype = {
-    homePath: PropTypes.string,
-};
 
 export default withRouter(Error404);

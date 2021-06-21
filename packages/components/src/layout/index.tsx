@@ -4,9 +4,8 @@ import React, {
     useContext,
     useReducer,
     forwardRef,
-    useImperativeHandle,
+    useImperativeHandle, ReactNode,
 } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { getTreeData, findNode, findParentNodes } from '@ra-lib/util';
 import ComponentContext from '../component-context';
@@ -17,8 +16,78 @@ import PageHeader from './PageHeader';
 import Side from './Side';
 import LAYOUT_TYPE from './layout-type';
 import KeepPageAlive from './KeepPageAlive';
+// @ts-ignore
 import logo from './logo.png';
 import './style.less';
+
+export interface LayoutProps {
+    // 头部额外内容
+    headerExtra?: ReactNode,
+    // 网站logo图片
+    logo?: ReactNode,
+    // 网站标题
+    title?: ReactNode,
+    // 头部主题
+    headerTheme?: 'dark' | 'default',
+    // 头部高度
+    headerHeight?: number,
+    // 侧边栏展开宽度
+    sideMaxWidth?: number,
+    // 侧边栏收起宽度
+    sideMinWidth?: number,
+    // 侧边栏是否收起
+    sideCollapsed?: boolean,
+    // 是否显示搜索菜单
+    showSearchMenu?: boolean,
+    // 侧边栏搜索菜单提示文案
+    searchMenuPlaceholder?: string,
+    // 收藏菜单名称
+    collectedMenuTitle?: string,
+    // 侧边栏自定义渲染
+    renderSide?: () => void,
+    // 是否显示侧边栏
+    showSide?: boolean,
+    // 侧边栏主题
+    sideTheme?: 'dark' | 'default',
+    // logo主题
+    logoTheme?: 'dark' | 'default',
+    // 是否显示头部
+    showHeader?: boolean,
+    // 是否显示头部菜单展开收起按钮
+    showHeaderSideToggle?: boolean,
+    // 是否显示页面头部
+    showPageHeader?: boolean,
+    // 页面头部高度
+    pageHeaderHeight?: number,
+    // 菜单数据
+    menus?: [],
+    // 用户收藏菜单数据
+    collectedMenus?: [],
+    // 用户点击收藏事件
+    onMenuCollect?: () => void,
+    // 保持菜单打开状态
+    keepMenuOpen?: boolean,
+    // 布局类型
+    layoutType?: string,
+    // 保持页面状态
+    keepPageAlive?: boolean,
+    // 显示Tab页
+    showTab?: boolean,
+    // Tab持久化
+    persistTab?: boolean,
+    // Tab 页高度
+    tabHeight?: number,
+    // 额外的头部是否显示在tab的右侧
+    showTabHeaderExtra?: boolean,
+    // tab左侧是否显示菜单收起展开按钮
+    showTabSideToggle?: boolean,
+    // 是否使用hash路由
+    hashRouter?: boolean,
+    baseName?: string,
+    className?: ReactNode,
+    routes?: [],
+    render404?: () => ReactNode,
+}
 
 function reducer(state, action) {
     const { type, payload } = action;
@@ -37,7 +106,7 @@ function reducer(state, action) {
     }
 }
 
-const Layout = forwardRef((props, ref) => {
+const Layout = forwardRef<any, LayoutProps>((props, ref) => {
     const context = useContext(ComponentContext);
 
     const initialState = {
@@ -90,7 +159,7 @@ const Layout = forwardRef((props, ref) => {
         render404,
     } = props;
 
-    const [state, dispatch] = useReducer(reducer, { ...initialState });
+    const [ state, dispatch ] = useReducer(reducer, { ...initialState });
 
     const layoutAction = {
         state,
@@ -208,7 +277,7 @@ const Layout = forwardRef((props, ref) => {
     ]);
 
     // 菜单转树状结构
-    useEffect(() => layoutAction.setState({ menuTreeData: getTreeData(menus) }), [menus]);
+    useEffect(() => layoutAction.setState({ menuTreeData: getTreeData(menus) }), [ menus ]);
 
     // 菜单选中状态
     useEffect(() => {
@@ -219,6 +288,7 @@ const Layout = forwardRef((props, ref) => {
             if (item.children) item.children = item.children.filter(item => item.id !== 'collection-menu');
         });
 
+        // @ts-ignore
         const selectedMenu = findNode(menus, selectedMenuPath, 'path');
         const selectedMenuParents = findParentNodes(menus, selectedMenuPath, 'path');
 
@@ -226,7 +296,7 @@ const Layout = forwardRef((props, ref) => {
             selectedMenu,
             selectedMenuParents,
         });
-    }, [menuTreeData, selectedMenuPath]);
+    }, [ menuTreeData, selectedMenuPath ]);
 
     function handleTabClose(key, reload) {
         // tab关闭，keepAlivePages对应删除
@@ -237,7 +307,7 @@ const Layout = forwardRef((props, ref) => {
         if (!keys) return;
         if (!keepAlivePagesRef.current) return;
         if (!keepAlivePagesRef.current.pages) return;
-        if (!Array.isArray(keys)) keys = [keys];
+        if (!Array.isArray(keys)) keys = [ keys ];
 
         const { pages } = keepAlivePagesRef.current;
 
@@ -368,71 +438,6 @@ const Layout = forwardRef((props, ref) => {
     );
 });
 
-Layout.propTypes = {
-    // 头部额外内容
-    headerExtra: PropTypes.any,
-    // 网站logo图片
-    logo: PropTypes.any,
-    // 网站标题
-    title: PropTypes.any,
-    // 头部主题
-    headerTheme: PropTypes.oneOf(['dark', 'default']),
-    // 头部高度
-    headerHeight: PropTypes.number,
-    // 侧边栏展开宽度
-    sideMaxWidth: PropTypes.number,
-    // 侧边栏收起宽度
-    sideMinWidth: PropTypes.number,
-    // 侧边栏是否收起
-    sideCollapsed: PropTypes.bool,
-    // 是否显示搜索菜单
-    showSearchMenu: PropTypes.bool,
-    // 侧边栏搜索菜单提示文案
-    searchMenuPlaceholder: PropTypes.string,
-    // 收藏菜单名称
-    collectedMenuTitle: PropTypes.string,
-    // 侧边栏自定义渲染
-    renderSide: PropTypes.func,
-    // 是否显示侧边栏
-    showSide: PropTypes.bool,
-    // 侧边栏主题
-    sideTheme: PropTypes.oneOf(['dark', 'default']),
-    // logo主题
-    logoTheme: PropTypes.oneOf(['dark', 'default']),
-    // 是否显示头部
-    showHeader: PropTypes.bool,
-    // 是否显示头部菜单展开收起按钮
-    showHeaderSideToggle: PropTypes.bool,
-    // 是否显示页面头部
-    showPageHeader: PropTypes.bool,
-    // 页面头部高度
-    pageHeaderHeight: PropTypes.number,
-    // 菜单数据
-    menus: PropTypes.array,
-    // 用户收藏菜单数据
-    collectedMenus: PropTypes.array,
-    // 用户点击收藏事件
-    onMenuCollect: PropTypes.func,
-    // 保持菜单打开状态
-    keepMenuOpen: PropTypes.bool,
-    // 布局类型
-    layoutType: PropTypes.oneOf(Object.values(LAYOUT_TYPE)),
-    // 保持页面状态
-    keepPageAlive: PropTypes.bool,
-    // 显示Tab页
-    showTab: PropTypes.bool,
-    // Tab持久化
-    persistTab: PropTypes.bool,
-    // Tab 页高度
-    tabHeight: PropTypes.number,
-    // 额外的头部是否显示在tab的右侧
-    showTabHeaderExtra: PropTypes.bool,
-    // tab左侧是否显示菜单收起展开按钮
-    showTabSideToggle: PropTypes.bool,
-    // 是否使用hash路由
-    hashRouter: PropTypes.bool,
-    baseName: PropTypes.string,
-};
 
 Layout.defaultProps = {
     logo: logo,

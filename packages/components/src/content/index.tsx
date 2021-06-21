@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext, forwardRef } from 'react';
+import React, { useRef, useState, useEffect, useContext, forwardRef, ReactNode } from 'react';
 import { Spin } from 'antd';
 import classNames from 'classnames';
 import { useHeight } from '@ra-lib/hooks';
@@ -24,6 +24,7 @@ export interface ContentProps {
     prefixCls?: string,
     // 是否是页面容器
     isRoot?: boolean,
+    children?: ReactNode,
 }
 
 const Content = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
