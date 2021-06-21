@@ -24,7 +24,7 @@
     "homepage": "",
     "gitHead": "7ed12e942b8f952a966c0133eb05d2f803e30b13",
     "dependencies": {
-        "@ra-lib/ajax": "0.1.10",
+        "@ra-lib/ajax": "^0.1.10",
         "@ra-lib/babel-plugin-attribute-wrapper": "^0.0.6",
         "@ra-lib/components": "^0.1.64",
         "@ra-lib/config-loader": "^0.1.6",
