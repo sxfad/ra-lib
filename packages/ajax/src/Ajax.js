@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {stringify} from 'qs';
 
 export default class Ajax {
     /**
@@ -63,6 +64,21 @@ export default class Ajax {
             method = 'get',
             ...otherOptions
         } = options;
+        const defaultsContentType =
+            this.instance.defaults.headers['Content-Type'] ||
+            this.instance.defaults.headers['content-type'] ||
+            this.instance.defaults.headers['contentType'] ||
+            '';
+
+        const contentType =
+            (otherOptions.headers && otherOptions.headers['Content-Type']) ||
+            (otherOptions.headers && otherOptions.headers['content-type']) ||
+            (otherOptions.headers && otherOptions.headers['contentType']) ||
+            '';
+
+        const ct = contentType || defaultsContentType;
+
+        const isFormContentType = ct && ct.indexOf('application/x-www-form-urlencoded') > -1;
 
         // 第一层参数值字符串去空格
         if (trim === true) {
@@ -87,29 +103,9 @@ export default class Ajax {
          * 参见：https://github.com/axios/axios/issues/362
          *
          * */
-        // const defaultsContentType =
-        //     instance.defaults.headers[method]['Content-Type'] ||
-        //     instance.defaults.headers[method]['content-type'] ||
-        //     instance.defaults.headers[method]['contentType'] ||
-        //     '';
-        //
-        // const contentType =
-        //     (otherOptions.headers && otherOptions.headers['Content-Type']) ||
-        //     (otherOptions.headers && otherOptions.headers['content-type']) ||
-        //     (otherOptions.headers && otherOptions.headers['contentType']) ||
-        //     '';
-        //
-        // const ct = contentType || defaultsContentType;
-        //
-        // const isFormType = ct.indexOf('application/x-www-form-urlencoded') > -1;
-        //
-        // console.log(ct, isFormType, data);
-        // console.log(instance.defaults.headers);
-        // console.log(otherOptions.headers);
-        //
-        // if (isFormType) {
-        //     data = stringify(data);
-        // }
+        if (isFormContentType) {
+            data = stringify(data);
+        }
 
         const ajaxPromise = new Promise((resolve, reject) => {
             instance({
@@ -254,6 +250,8 @@ function empty(data) {
 
     if (typeof data !== 'object') return data;
 
+    if (data instanceof FormData) return data;
+
     if (Array.isArray(data)) return data;
 
     return Object.entries(data).reduce((prev, curr) => {
@@ -276,6 +274,8 @@ function trimObject(data) {
     if (!data) return data;
 
     if (typeof data !== 'object') return data;
+
+    if (data instanceof FormData) return data;
 
     if (Array.isArray(data)) return data;
 

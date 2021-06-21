@@ -19,7 +19,7 @@ export interface itemProps {
 const cacheMap = new Map();
 
 export function useOptions(...args) {
-    const [ result, setResult ] = useState([]);
+    const [ result, setResult ] = useState(args.map(() => []));
     useEffect(() => {
         (async () => {
             const promises = args.map(item => {
