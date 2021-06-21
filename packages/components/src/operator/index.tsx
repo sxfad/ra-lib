@@ -1,6 +1,6 @@
 import React, { useRef, useContext, ReactNode, CSSProperties } from 'react';
 import { DownOutlined, LoadingOutlined, CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Popconfirm, Dropdown, Menu, Tooltip, PopconfirmProps } from 'antd';
+import { Popconfirm, Dropdown, DropDownProps, Menu, Tooltip, PopconfirmProps } from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../component-context';
 import './style.less';
@@ -28,10 +28,12 @@ export interface OperatorProps {
     // 更多标签宽度
     moreContentWidth?: string | number,
     // 显示更多下拉菜单触发方式
-    moreTrigger?: string | [ string ],
+    moreTrigger?: DropDownProps['trigger'],
+    className?: string,
+    prefixCls?: string,
 }
 
-function Operator(props) {
+function Operator(props: OperatorProps) {
     const context = useContext(ComponentContext);
 
     let {

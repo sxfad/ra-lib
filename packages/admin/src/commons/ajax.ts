@@ -1,5 +1,5 @@
-import Ajax, {createHooks, createHoc} from '@ra-lib/ajax';
-import {AJAX} from '../config';
+import Ajax, { createHooks, createHoc } from '@ra-lib/ajax';
+import { AJAX } from '../config';
 
 const {
     onResponse = res => res,

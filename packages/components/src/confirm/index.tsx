@@ -1,13 +1,19 @@
-import React from 'react';
-import { Modal } from 'antd';
+import React, { ReactNode } from 'react';
+import { Modal, ModalProps } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+
+export interface confirmOptions extends ModalProps {
+    title?: string,
+    color?: string,
+    content?: string | ReactNode,
+}
 
 /**
  * promise confirm
  * @param options
  * @returns {Promise<unknown>}
  */
-export default async function confirm(options) {
+export default async function confirm(options: string | confirmOptions) {
     if (typeof options === 'string') {
         options = {
             content: options,

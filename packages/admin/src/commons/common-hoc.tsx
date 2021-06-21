@@ -1,5 +1,6 @@
-import {getQuery} from '@ra-lib/util';
-import {getLoginUser} from './util';
+import React from 'react';
+import { getQuery } from '@ra-lib/util';
+import { getLoginUser } from './util';
 
 /**
  * 通用高阶组件
@@ -7,14 +8,16 @@ import {getLoginUser} from './util';
  * @returns {function(*): function(*)}
  */
 export default function commonHoc(options) {
-    const {query, loginUser} = options;
+    const { query, loginUser } = options;
     return WrappedComponent => {
         const componentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
         const WithLayout = props => {
             // 默认添加属性到props中的属性
             const extendProps = {};
+            // @ts-ignore
             if (query !== false) extendProps.query = getQuery();
+            // @ts-ignore
             if (loginUser !== false) extendProps.loginUser = getLoginUser();
 
             return <WrappedComponent {...extendProps} {...props}/>;

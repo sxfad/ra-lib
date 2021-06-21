@@ -6,7 +6,7 @@ export interface ToolBarProps {
     children?: ReactNode,
 }
 
-export default function ToolBar(props) {
+export default function ToolBar(props: ToolBarProps) {
     const { children, style = {}, ...others } = props;
     return <Space style={{ marginBottom: 8, ...style }} {...others}>{children}</Space>;
 }

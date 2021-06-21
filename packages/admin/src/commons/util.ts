@@ -125,8 +125,7 @@ export function isLogin() {
  * @param path
  * @returns {string|*|boolean}
  */
-export function isLoginPage(path) {
-    if (!path) path = window.location.href;
+export function isLoginPage(path = window.location.pathname) {
     return path && path.endsWith('/login');
 }
 

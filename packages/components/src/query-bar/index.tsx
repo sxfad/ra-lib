@@ -12,14 +12,14 @@ export interface QueryBarProps {
     // 默认折叠方式
     defaultCollapsed?: boolean,
     // 展开收起提示
-    collapsedTips?: [ ReactNode ],
+    collapsedTips?: [ ReactNode, ReactNode ],
     // 是否显示折叠bar
     showCollapsedBar?: boolean,
     // 子组件，如果需要展开收起功能，使用 render-props 方式，即：children 为函数：collapsed => {...}
-    children?: () => ReactNode,
+    children?: (collapsed: boolean) => ReactNode,
 }
 
-function QueryBar(props) {
+function QueryBar(props: QueryBarProps) {
     const context = useContext(ComponentContext);
 
     let {
