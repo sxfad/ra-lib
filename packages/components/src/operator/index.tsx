@@ -10,7 +10,7 @@ export interface OperatorProps {
     // 操作项
     items: [
         {
-            label: ReactNode,
+            label?: ReactNode,
             icon?: string,
             visible?: boolean,
             disabled?: boolean,
@@ -20,15 +20,15 @@ export interface OperatorProps {
 
             onClick?: () => void,
             confirm?: PopconfirmProps,
-            statusSwitch: object,
+            statusSwitch?: object,
         }
     ],
     // 更多标签文案
     moreText?: ReactNode,
     // 更多标签宽度
-    moreContentWidth: string | number,
+    moreContentWidth?: string | number,
     // 显示更多下拉菜单触发方式
-    moreTrigger: string | [ string ],
+    moreTrigger?: string | [ string ],
 }
 
 function Operator(props) {

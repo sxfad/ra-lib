@@ -9,8 +9,8 @@ export interface RAPaginationProps extends PaginationProps {
     pageSize?: number,
     pageSizeOptions?: [],
     onPageNumChange?: (pageNum: number) => void,
-    onPageSizeChange: (pageSize: number) => void,
-    onChange: (pageNum: number, pageSize: number) => void,
+    onPageSizeChange?: (pageSize: number) => void,
+    onChange?: (pageNum: number, pageSize: number) => void,
     showSizeChanger?: boolean,
     showQuickJumper?: boolean,
 }
