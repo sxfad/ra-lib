@@ -7,6 +7,7 @@ import React, {
     useImperativeHandle, ReactNode,
 } from 'react';
 import classNames from 'classnames';
+// @ts-ignore
 import { getTreeData, findNode, findParentNodes } from '@ra-lib/util';
 import ComponentContext from '../component-context';
 import Header from './Header';

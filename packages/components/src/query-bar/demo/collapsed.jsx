@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import {Form, Space, Button} from 'antd';
+// @ts-ignore
 import {QueryBar, FormItem} from '@ra-lib/components';
 
 export default function Demo(props) {

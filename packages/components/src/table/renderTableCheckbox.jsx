@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef, useContext} from 'react';
 import {Checkbox} from 'antd';
+// @ts-ignore
 import {findGenerationNodes, findParentNodes} from '@ra-lib/util';
 import ComponentContext from '../component-context';
 import classNames from 'classnames';

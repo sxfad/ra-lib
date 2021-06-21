@@ -3,6 +3,7 @@ import {Drawer} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import classNames from 'classnames';
 import ComponentContext from '../../component-context';
+// @ts-ignore
 import {useHeight} from '@ra-lib/hooks';
 
 import './style.less';

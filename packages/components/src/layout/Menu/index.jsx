@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {ConfigProvider, Empty, Input, Menu, Popconfirm} from 'antd';
 import {HeartOutlined, HeartFilled} from '@ant-design/icons';
 import classNames from 'classnames';
+// @ts-ignore
 import {filterTree, scrollElement} from '@ra-lib/util';
 import ComponentContext from '../../component-context';
 import './style.less';

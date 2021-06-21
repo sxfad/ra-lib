@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import {Form, Space, Button} from 'antd';
+// @ts-ignore
 import {FormItem} from '@ra-lib/components';
 
 const layout = {

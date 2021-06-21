@@ -2,6 +2,7 @@ import { useContext, useMemo } from 'react';
 import { Badge } from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../../component-context';
+// @ts-ignore
 import { findParentNodes, findGenerationNodes } from '@ra-lib/util';
 import Menu from '../Menu';
 import LAYOUT_TYPE from '../layout-type';

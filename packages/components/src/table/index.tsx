@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Table, ConfigProvider } from 'antd';
 import { TableProps } from 'antd/es/table';
-
+// @ts-ignore
 import { useHeight } from '@ra-lib/hooks';
 import ComponentContext from '../component-context';
 

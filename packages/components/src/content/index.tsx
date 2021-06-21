@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useContext, forwardRef, ReactNode } from 'react';
 import { Spin } from 'antd';
 import classNames from 'classnames';
+// @ts-ignore
 import { useHeight } from '@ra-lib/hooks';
 import ComponentContext from '../component-context';
 import './style.less';

@@ -2,6 +2,7 @@
  * title: 基本用法
  * description: 最基本的用法
  */
+// @ts-ignore
 import {Table, Operator} from '@ra-lib/components';
 
 export default () => {

@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef, useContext, ReactNode, CSSProperties } from 'react';
 import { Button, Spin, ConfigProvider } from 'antd';
 import ComponentContext from '../component-context';
+// @ts-ignore
 import { useHeight } from '@ra-lib/hooks';
 
 export interface ModalContentProps {

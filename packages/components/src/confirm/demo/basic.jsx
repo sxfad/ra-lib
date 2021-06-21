@@ -3,6 +3,7 @@
  * description: 最基本的用法
  */
 import {Button} from 'antd';
+// @ts-ignore
 import {confirm} from '@ra-lib/components';
 
 export default () => {

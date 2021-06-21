@@ -3,6 +3,7 @@
  * description: 传递多个参数
  */
 import {Button} from 'antd';
+// @ts-ignore
 import {confirm} from '@ra-lib/components';
 
 export default () => {
