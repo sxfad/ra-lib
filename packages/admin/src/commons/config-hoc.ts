@@ -43,22 +43,22 @@ export interface configOptions {
     // 是否添加withRouter高级组件
     router?: boolean,
     // props是否注入ajax
-    ajax?: object
+    ajax?: boolean
     // 连接models，扩展 props.action
     connect?: (state: object) => object
     // 弹框高阶组件
-    modal?: () => string | {
+    modal?: (props?: any) => string | {
         fullScreen?: boolean,
         top?: number | string,
-        title?: () => string,
-        width?: number,
+        title?: (props?: any) => string,
+        width?: number | string,
     },
     // 抽屉高级组件
-    drawer?: () => string | {
+    drawer?: (props?: any) => string | {
         fullScreen?: boolean,
         top?: number | string,
-        title?: () => string,
-        width?: number,
+        title?: (props?: any) => string,
+        width?: number | string,
     },
 }
 
@@ -68,7 +68,7 @@ export interface WrappedComponentProps {
     onCancel?: () => void,
     fullScreen?: boolean,
     record?: any,
-    width?: number,
+    width?: number | string,
     top?: number | string,
     isEdit?: boolean,
     isDetail?: boolean,
