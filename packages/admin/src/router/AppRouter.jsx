@@ -1,5 +1,5 @@
 import {BrowserRouter, HashRouter, Route, Switch} from 'react-router-dom';
-import {Error404, Layout, SubApp} from '../components';
+import {LayoutError404 as Error404, AdminLayout as Layout, SubApp} from '../components';
 import {BASE_NAME, CONFIG_HOC, HASH_ROUTER} from '../config';
 import routes from './routes';
 import {Footer} from 'src/components';

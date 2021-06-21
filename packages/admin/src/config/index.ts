@@ -1,3 +1,4 @@
+// @ts-ignore
 import { LAYOUT_TYPE } from '@ra-lib/components';
 import * as development from './config.development';
 import * as production from './config.production';
