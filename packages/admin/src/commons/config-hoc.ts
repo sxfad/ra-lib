@@ -76,7 +76,7 @@ export interface WrappedComponentProps {
     onChange?: any,
 }
 
-export default function configHoc(options: configOptions = {}): ReactElement<WrappedComponentProps> {
+export default function configHoc(options: configOptions = {}): () => ReactElement<WrappedComponentProps> {
     let {
         path,
         auth,
