@@ -16,6 +16,10 @@
     &.dark {
         background-color: @layout-header-background;
         color: #fff;
+
+        .@{prefix-cls}-content {
+            border-bottom: none;
+        }
     }
 
     .@{ant-prefix}-menu-horizontal {
@@ -29,5 +33,6 @@
         align-items: center;
         justify-content: space-between;
         padding: 0 8px;
+        border-bottom: 1px solid #e8e8e8;
     }
 }
