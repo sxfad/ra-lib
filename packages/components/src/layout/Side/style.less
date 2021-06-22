@@ -12,6 +12,13 @@
     transition: @layout-transition-duration cubic-bezier(0.2, 0, 0, 1);
     overflow: auto;
     background: #fff;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        width: 0 !important;
+        background: transparent;
+    }
 
     .@{ant-prefix}-menu-inline {
         border-right: 0;
@@ -21,9 +28,7 @@
         background: @layout-header-background;
     }
 
-    &::-webkit-scrollbar {
-        width: 0 !important;
-    }
+
 
     &-footer {
         flex: 0;
