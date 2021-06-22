@@ -256,6 +256,7 @@ export function getPlaceholder({type, placeholder, label}) {
 
 export function getRules(options) {
     let {
+        type,
         noSpace,
         rules,
         required,
@@ -269,10 +270,10 @@ export function getRules(options) {
         rules.push({required: true, message: `${placeholder}！`});
     }
 
-    if (noSpace) {
+    if (noSpace && isInputLikeElement(type)) {
         rules.push({
             validator: (rule, value) => {
-                if (value && value.includes(' ')) return Promise.reject('不允许输入空格！');
+                if (value && (typeof value === 'string') && value.includes(' ')) return Promise.reject('不允许输入空格！');
 
                 return Promise.resolve();
             },
@@ -280,11 +281,11 @@ export function getRules(options) {
     }
 
     if (maxLength !== void 0 && !rules.find(item => 'max' in item)) {
-        rules.push({max: maxLength, message: `最大长度不能超过 ${maxLength} 个字符！`});
+        rules.push({type: 'string', max: maxLength, message: `最大长度不能超过 ${maxLength} 个字符！`});
     }
 
     if (minLength !== void 0 && !rules.find(item => 'min' in item)) {
-        rules.push({min: minLength, message: `最小长度不能低于 ${minLength} 个字符！`});
+        rules.push({type: 'string', min: minLength, message: `最小长度不能低于 ${minLength} 个字符！`});
     }
 
     return rules;

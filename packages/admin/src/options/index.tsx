@@ -162,7 +162,5 @@ export function PromiseChildren(props) {
         })();
     }, [ children ]);
 
-    console.log(result);
-
     return result || null;
 }
