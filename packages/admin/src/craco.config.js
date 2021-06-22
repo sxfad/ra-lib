@@ -89,6 +89,7 @@ module.exports = {
             // 使所有的react 都访问主应用安装的包
             react: path.join(NODE_MODULES_PATH, 'react'),
             antd: path.join(NODE_MODULES_PATH, 'antd'),
+            moment: path.join(NODE_MODULES_PATH, 'moment'),
             'react-dom': path.join(NODE_MODULES_PATH, 'react-dom'),
             'react-redux': path.join(NODE_MODULES_PATH, 'react-redux'),
             'redux': path.join(NODE_MODULES_PATH, 'redux'),
