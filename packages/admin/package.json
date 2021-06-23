@@ -26,9 +26,9 @@
     "dependencies": {
         "@ra-lib/ajax": "^0.1.10",
         "@ra-lib/babel-plugin-attribute-wrapper": "^0.0.6",
-        "@ra-lib/components": "0.1.66",
+        "@ra-lib/components": "^0.1.66",
         "@ra-lib/config-loader": "^0.1.6",
-        "@ra-lib/hoc": "0.1.5",
+        "@ra-lib/hoc": "^0.1.5",
         "@ra-lib/hooks": "^0.1.7",
         "@ra-lib/model": "^0.1.2",
         "@ra-lib/util": "^0.1.18"
