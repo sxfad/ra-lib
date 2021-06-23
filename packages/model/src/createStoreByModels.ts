@@ -1,6 +1,6 @@
-import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
-import {connect as _connect} from 'react-redux';
-import _undoable, {includeAction, excludeAction} from 'redux-undo';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { connect as _connect } from 'react-redux';
+import _undoable, { includeAction, excludeAction } from 'redux-undo';
 import thunk from 'redux-thunk';
 import syncState from './syncState';
 
@@ -16,7 +16,7 @@ function getSyncPaths(modelName, sync, undoable) {
 
     const root = undoable ? `${modelName}.present` : `${modelName}`;
 
-    if (sync === true) return [root];
+    if (sync === true) return [ root ];
 
     if (Array.isArray(sync)) return sync.filter(item => !!item).map(item => `${root}.${item}`);
 
@@ -54,7 +54,8 @@ function getTip(tip, key) {
     return tip[key];
 }
 
-export default function createStoreByModels(models, options) {
+// @ts-ignore
+function createStoreByModels(models, options): any {
     if (!models) {
         console.error('models mast be an object!');
         return;
@@ -92,14 +93,21 @@ export default function createStoreByModels(models, options) {
     let syncSessionPaths = [];
 
     Object.entries(models)
-        .forEach(([modelName, modelConfig = {}]) => {
+        .forEach(([ modelName, modelConfig = {} ]) => {
             const {
+                // @ts-ignore
                 state: initialState = {},
+                // @ts-ignore
                 errorTip = true,
+                // @ts-ignore
                 successTip = false,
+                // @ts-ignore
                 undoable,
+                // @ts-ignore
                 syncLocal,
+                // @ts-ignore
                 syncSession,
+                // @ts-ignore
                 debounce = true,
             } = modelConfig;
             const modelActions = actions[modelName] = {};
@@ -112,7 +120,7 @@ export default function createStoreByModels(models, options) {
             syncSessionPaths = syncSessionPaths.concat(getSyncPaths(modelName, syncSession, undoable));
 
             Object.entries(modelConfig)
-                .forEach(([key, value]) => {
+                .forEach(([ key, value ]) => {
                     if (typeof value === 'function') {
                         const isIncludeUndoable = undoable && undoable.include && undoable.include.includes[key];
                         const isExcludeUndoable = undoable && undoable.exclude && undoable.exclude.includes[key];
@@ -148,7 +156,7 @@ export default function createStoreByModels(models, options) {
                                 value(payload, modelState)
                                     .then(result => {
                                         if (isDebounce && asyncCallTime[resolveActionType] !== callTime) return;
-                                        if (showSuccessTip) onSuccess({data: result, tip: getTip(successTip, key), from: 'model'});
+                                        if (showSuccessTip) onSuccess({ data: result, tip: getTip(successTip, key), from: 'model' });
                                         dispatch({
                                             type: resolveActionType,
                                             payload: result,
@@ -156,7 +164,7 @@ export default function createStoreByModels(models, options) {
                                     })
                                     .catch(err => {
                                         if (isDebounce && asyncCallTime[resolveActionType] !== callTime) return;
-                                        if (showErrorTip) onError({error: err, tip: getTip(errorTip, key), from: 'model'});
+                                        if (showErrorTip) onError({ error: err, tip: getTip(errorTip, key), from: 'model' });
 
                                         dispatch({
                                             type: rejectActionType,
@@ -166,8 +174,8 @@ export default function createStoreByModels(models, options) {
                             };
 
                             const reducer = (state, action) => {
-                                const {payload: newState} = action;
-                                let nextState = {...state};
+                                const { payload: newState } = action;
+                                let nextState = { ...state };
 
                                 if (nextState && (typeof nextState !== 'object' || Array.isArray(nextState))) {
                                     console.error(`model method ${modelName}.${key} should return an object! but got ${nextState}.`);
@@ -176,7 +184,7 @@ export default function createStoreByModels(models, options) {
 
                                 // 返回了一个对象 进行state合并
                                 if (newState && typeof newState === 'object' && !Array.isArray(newState)) {
-                                    nextState = {...state, ...newState};
+                                    nextState = { ...state, ...newState };
                                 }
 
                                 nextState[paddingStateName] = false;
@@ -191,12 +199,12 @@ export default function createStoreByModels(models, options) {
 
                             modelReducers[resolveActionType] = reducer;
                             modelReducers[rejectActionType] = (state, action) => {
-                                const {payload} = action;
-                                return {...state, [rejectStateName]: payload, [paddingStateName]: false};
+                                const { payload } = action;
+                                return { ...state, [rejectStateName]: payload, [paddingStateName]: false };
                             };
                             modelReducers[paddingActionType] = (state, action) => {
-                                const {payload} = action;
-                                return {...state, [rejectStateName]: null, [paddingStateName]: payload};
+                                const { payload } = action;
+                                return { ...state, [rejectStateName]: null, [paddingStateName]: payload };
                             };
                             modelActions[key] = action;
                         } else {
@@ -213,16 +221,16 @@ export default function createStoreByModels(models, options) {
                                 payload,
                             });
                             const reducer = (state, action) => {
-                                const {payload} = action;
+                                const { payload } = action;
 
                                 let nextState;
                                 try {
                                     nextState = value(payload, state);
 
-                                    if (showSuccessTip) onSuccess({data: nextState, tip: getTip(successTip, key), from: 'model'});
+                                    if (showSuccessTip) onSuccess({ data: nextState, tip: getTip(successTip, key), from: 'model' });
                                 } catch (err) {
                                     if (showErrorTip) {
-                                        return onError({error: err, tip: getTip(errorTip, key), from: 'model'});
+                                        return onError({ error: err, tip: getTip(errorTip, key), from: 'model' });
                                     }
                                     throw err;
                                 }
@@ -234,7 +242,7 @@ export default function createStoreByModels(models, options) {
 
                                 // 返回了一个对象 进行state合并
                                 if (nextState && typeof nextState === 'object' && !Array.isArray(nextState)) {
-                                    return {...state, ...nextState};
+                                    return { ...state, ...nextState };
                                 }
 
                                 return state;
@@ -247,7 +255,7 @@ export default function createStoreByModels(models, options) {
                     }
                 });
 
-            reducers[modelName] = function(state = {...initialState}, action) {
+            reducers[modelName] = function(state = { ...initialState }, action) {
                 const type = action.type;
                 const func = modelReducers[type];
                 if (!func) return state;
@@ -270,38 +278,40 @@ export default function createStoreByModels(models, options) {
                     undoableOptions = {};
                 }
                 if (typeof undoable === 'object') {
-                    const {include, exclude, ...others} = undoable;
+                    const { include, exclude, ...others } = undoable;
                     undoableOptions = others;
                 }
 
                 if (excludeUndoableActions && excludeUndoableActions.length) {
+                    // @ts-ignore
                     uOptions.filter = excludeAction(excludeUndoableActions);
                 }
 
                 if (includeUndoableActions && includeUndoableActions.length) {
+                    // @ts-ignore
                     uOptions.filter = includeAction(includeUndoableActions);
                 }
 
-                let options = {...uOptions, ...undoableOptions};
+                let options = { ...uOptions, ...undoableOptions };
 
                 reducers[modelName] = _undoable(reducers[modelName], options);
 
-                actions[modelName][`${modelName}Undo`] = () => ({type: options.undoType});
-                actions[modelName][`${modelName}Redo`] = () => ({type: options.redoType});
-                actions[modelName][`${modelName}Jump`] = () => ({type: options.jumpType});
-                actions[modelName][`${modelName}JumpToPast`] = () => ({type: options.jumpToPastType});
-                actions[modelName][`${modelName}JumpToFuture`] = () => ({type: options.jumpToFutureType});
-                actions[modelName][`${modelName}ClearHistory`] = () => ({type: options.clearHistoryType});
+                actions[modelName][`${modelName}Undo`] = () => ({ type: options.undoType });
+                actions[modelName][`${modelName}Redo`] = () => ({ type: options.redoType });
+                actions[modelName][`${modelName}Jump`] = () => ({ type: options.jumpType });
+                actions[modelName][`${modelName}JumpToPast`] = () => ({ type: options.jumpToPastType });
+                actions[modelName][`${modelName}JumpToFuture`] = () => ({ type: options.jumpToFutureType });
+                actions[modelName][`${modelName}ClearHistory`] = () => ({ type: options.clearHistoryType });
             }
         });
 
     const mapDispatchToProps = (dispatch) => {
         const action = Object.entries(actions)
             .reduce((prev, curr) => {
-                const [modelName, modelActions = {}] = curr;
+                const [ modelName, modelActions = {} ] = curr;
                 prev[modelName] = Object.entries(modelActions)
                     .reduce((p, c) => {
-                        const [funcName, func] = c;
+                        const [ funcName, func ] = c;
                         p[funcName] = (...args) => dispatch(func(...args));
                         return p;
                     }, {});
@@ -328,7 +338,7 @@ export default function createStoreByModels(models, options) {
     // 异步需要中间件
     middlewares.push(thunk);
     const enhancer = compose(applyMiddleware(...middlewares), ...enhancers);
-    const store = createStore(combineReducers({...reducers, ...(_reducers || {})}), enhancer);
+    const store = createStore(combineReducers({ ...reducers, ...(_reducers || {}) }), enhancer);
     const connect = (_mapStateToProps, _mapDispatchToProps = mapDispatchToProps) => _connect(_mapStateToProps, _mapDispatchToProps);
     const _actions = mapDispatchToProps(store.dispatch).action;
 
@@ -338,3 +348,5 @@ export default function createStoreByModels(models, options) {
         connect,            // 连接redux的高阶组件
     };
 }
+
+export default createStoreByModels;

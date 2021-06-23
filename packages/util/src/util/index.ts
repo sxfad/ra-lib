@@ -68,7 +68,7 @@ export function sort(arr, orderBy = (a, b) => a - b) {
  * @param str
  * @returns {{}}
  */
-export function getQuery(str) {
+export function getQuery(str = '') {
     const query = {};
 
     const search = str || window.location.href.split('?')[1];

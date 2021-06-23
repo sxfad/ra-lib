@@ -55,7 +55,7 @@ export function setLoginUser(loginUser = {}) {
     [
         'id',
         'name',
-        'token',
+        // 'token',
         // 'permissions',
     ].forEach(field => {
         if (!loginUser[field]) throw Error(`loginUser must has ${field} property!`);

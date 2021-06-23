@@ -93,11 +93,11 @@ export function findParentNodes(treeData, fieldValue, field = 'id') {
  * @param {Function} [compare] 节点属性所对应的数据比较方式， 默认 === 比对
  * @returns {object} 返回根据 key value查找到的节点
  */
-export function findNode(treeData, fieldValue, field = 'id', compare) {
+export function findNode(treeData, fieldValue, field = 'id', compare = (a, b, item) => a === b) {
     treeData = Array.isArray(treeData) ? treeData : [ treeData ];
 
     if (!treeData || !treeData.length) return null;
-    if (!compare) compare = (a, b) => a === b;
+
     let node = null;
     const loop = (data) => {
         for (let item of data) {
@@ -238,4 +238,45 @@ export function findGenerationNodes(treeData, fieldValue, field = 'id') {
     loop(node.children);
 
     return results;
+}
+
+/**
+ * 删除节点
+ * @param treeData
+ * @param key
+ * @param keyField
+ */
+export function removeNode(treeData, key, keyField = 'id') {
+    if (!treeData) return null;
+
+    if (!Array.isArray(treeData)) treeData = [ treeData ];
+
+    const loop = (data) => {
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            if (item[keyField] === key) {
+                data.splice(i, 1);
+                break;
+            } else if (item.children && item.children.length) {
+                loop(item.children);
+            }
+        }
+    };
+    loop(treeData);
+}
+
+/**
+ * 渲染树，cb(node[, children nodes])
+ * @param {Array} treeData 树的树状结构数据
+ * @param {function} cb 回调函数：cb(node[, children nodes])
+ */
+export function renderNode(treeData, cb) {
+    const loop = data => data.map((item) => {
+        if (item.children) {
+            return cb(item, loop(item.children)); // item children Item
+        }
+
+        return cb(item); // 叶子节点
+    });
+    return loop(treeData);
 }

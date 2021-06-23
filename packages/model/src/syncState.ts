@@ -11,12 +11,12 @@ function slicerState(paths, state) {
 function mergeState(initialState = {}, persistedState) {
     return Object.entries(persistedState || {})
         .reduce((prev, curr) => {
-            const [path, value] = curr;
+            const [ path, value ] = curr;
             const p = path.replace('.present', '');
             set(prev, p, value);
 
             return prev;
-        }, {...initialState});
+        }, { ...initialState });
 }
 
 export default function syncState(paths, config) {
