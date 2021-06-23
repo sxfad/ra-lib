@@ -17,7 +17,7 @@ import {Modal} from 'antd';
  * @param options
  * @returns {function(*): {displayName, new(): ModalComponent, prototype: ModalComponent}}
  */
-export default (options) => WrappedComponent => {
+export default (options, isMobile) => WrappedComponent => {
     const componentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
     return class ModalComponent extends Component {
@@ -42,6 +42,8 @@ export default (options) => WrappedComponent => {
                 width = 800,
                 ...others
             } = {...opt, ...this.props}; // 组件使用时传递的属性优先级高
+
+            if (isMobile && fullScreen === undefined) fullScreen = true;
 
             // 样式合并
             let style = {top, ...(opt.style || {}), ...(this.props.style || {})};

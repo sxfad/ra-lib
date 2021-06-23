@@ -59,6 +59,8 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
         ...others
     } = props;
 
+    if (context.isMobile && fullScreen === undefined) fullScreen = true;
+
     let defaultOtherHeight = 50;
     if (fullScreen) {
         defaultOtherHeight = 0;

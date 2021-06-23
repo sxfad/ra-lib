@@ -7,10 +7,12 @@ import {
 } from '@ra-lib/hoc';
 import { ajaxHoc } from './ajax';
 import { connect as reduxConnect } from '../models';
-import { CONFIG_HOC } from '../config';
+import { CONFIG_HOC, IS_MOBILE } from '../config';
 import { layoutHoc } from '../components/layout';
 import commonHoc from './common-hoc';
 import { ReactElement } from "react";
+
+console.log('IS_MOBILE', IS_MOBILE);
 
 // config 所有可用参数，以及默认值
 export interface configOptions {
@@ -105,7 +107,7 @@ export default function configHoc(options: configOptions = {}): () => ReactEleme
     const hoc = [];
 
     hoc.push(commonHoc(options));
-    if (modal) hoc.push(modalHoc(modal));
+    if (modal) hoc.push(modalHoc(modal, IS_MOBILE));
     if (drawer) hoc.push(drawerHoc(drawer));
     if (connect === true) hoc.push(reduxConnect());
     if (typeof connect === 'function') hoc.push(reduxConnect(connect));

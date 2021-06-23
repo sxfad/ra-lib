@@ -45,6 +45,13 @@ export default function RATable<RecordType extends object = any>(props: RATableP
     } = props;
 
     const context = useContext(ComponentContext);
+
+    if (context.isMobile) {
+        fitHeight = false;
+
+        if (!scroll.x && columns.length > 3) scroll.x = columns.length * 180;
+    }
+
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
     const rootRef = useRef(null);

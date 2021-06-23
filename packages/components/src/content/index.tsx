@@ -45,6 +45,8 @@ const Content = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
         ...others
     } = props;
 
+    if (context.isMobile) fitHeight = false;
+
     prefixCls = `${prefixCls}-content`;
 
     const rootRef = useRef(null);
