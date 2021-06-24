@@ -1,5 +1,5 @@
 // @ts-ignore
-import { queryParse, Storage } from '@ra-lib/util';
+import { checkSameField, convertToTree, queryParse, sort, Storage } from '@ra-lib/util';
 // @ts-ignore
 import appPackage from 'root/package.json';
 
@@ -219,3 +219,58 @@ export function getModelName(filePath) {
 
     return name.replace(/-(\w)/g, (a, b) => b.toUpperCase());
 }
+
+
+/**
+ * 处理菜单数据
+ * @param menus
+ * @returns {*}
+ */
+export function formatMenus(menus) {
+    // 检测是否有重复id
+    const someId = checkSameField(menus, 'id');
+    if (someId) throw Error(`菜单中有重复id 「 ${someId} 」`);
+
+    // 排序 order降序， 越大越靠前
+    return loopMenus(convertToTree(sort(menus, (a, b) => b.order - a.order)));
+}
+
+/**
+ * 菜单数据处理函数{}
+ * @param menus
+ * @param basePath
+ */
+function loopMenus(menus, basePath = '') {
+    menus.forEach(item => {
+        let { path, target, children } = item;
+
+        // 保存原始target数据
+        item._target = target;
+
+        // 树状结构bashPath向下透传
+        if (basePath && !('basePath' in item)) item.basePath = basePath;
+
+        // 乾坤子项目约定
+        if (target === 'qiankun') item.basePath = `/${item.name}`;
+
+        // 拼接基础路径
+        if (basePath && path && (!path.startsWith('http') || !path.startsWith('//'))) {
+            item.path = path = `${basePath}${path}`;
+        }
+
+        // 第三方页面处理，如果target为iframe，内嵌到当前系统中
+        if (target === 'iframe') {
+            // 页面跳转 : 内嵌iFrame
+            item.path = `/iframe_page_/${encodeURIComponent(path)}`;
+        }
+
+        if (![ '_self', '_blank' ].includes(target)) {
+            Reflect.deleteProperty(item, 'target');
+        }
+
+        if (children?.length) loopMenus(children, item.basePath);
+    });
+
+    return menus;
+}
+
