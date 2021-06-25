@@ -216,14 +216,14 @@ export default class Ajax {
             method = 'get',
             originResponse = true,
             fileName,
-            beforeDownLoad = () => true,
+            beforeDownload = () => true,
             ...others
         } = options;
 
         return this.ajax({url, params, method, originResponse, ...others})
             .then(res => {
                 // 现在之前，如果返回false，终止下载操作
-                if (beforeDownLoad(res) === false) return;
+                if (beforeDownload(res) === false) return;
 
                 const errorMessage = 'download fail';
 
