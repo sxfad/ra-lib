@@ -91,6 +91,7 @@ function createStoreByModels(models, options): any {
     // 一堆json path
     let syncLocalPaths = [];
     let syncSessionPaths = [];
+    const allInitialState = {};
 
     Object.entries(models)
         .forEach(([ modelName, modelConfig = {} ]) => {
@@ -255,6 +256,7 @@ function createStoreByModels(models, options): any {
                     }
                 });
 
+            allInitialState[modelName] = { ...initialState };
             reducers[modelName] = function(state = { ...initialState }, action) {
                 const type = action.type;
                 const func = modelReducers[type];
@@ -338,7 +340,11 @@ function createStoreByModels(models, options): any {
     // 异步需要中间件
     middlewares.push(thunk);
     const enhancer = compose(applyMiddleware(...middlewares), ...enhancers);
-    const store = createStore(combineReducers({ ...reducers, ...(_reducers || {}) }), enhancer);
+    const store = createStore(
+        combineReducers({ ...reducers, ...(_reducers || {}) }),
+        allInitialState,
+        enhancer,
+    );
     const connect = (_mapStateToProps, _mapDispatchToProps = mapDispatchToProps) => _connect(_mapStateToProps, _mapDispatchToProps);
     const _actions = mapDispatchToProps(store.dispatch).action;
 

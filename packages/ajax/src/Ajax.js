@@ -212,9 +212,19 @@ export default class Ajax {
      * @returns {Promise<minimist.Opts.unknown>}
      */
     download(url, params, options = {}) {
-        let {method = 'get', originResponse = true, fileName, ...others} = options;
+        let {
+            method = 'get',
+            originResponse = true,
+            fileName,
+            beforeDownLoad = () => true,
+            ...others
+        } = options;
+
         return this.ajax({url, params, method, originResponse, ...others})
             .then(res => {
+                // 现在之前，如果返回false，终止下载操作
+                if (beforeDownLoad(res) === false) return;
+
                 const errorMessage = 'download fail';
 
                 if (!res || !res.headers || !res.data) throw Error(errorMessage);
