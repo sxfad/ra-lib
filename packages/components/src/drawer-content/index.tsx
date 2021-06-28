@@ -35,7 +35,7 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
     const antdPrefixCls = antdContext.getPrefixCls();
 
     let {
-        loading = false,
+        loading: propsLoading = false,
         style = {},
         bodyStyle = {},
         onOk = () => void 0,
@@ -50,6 +50,21 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
         cancelText = context.cancelText,
         ...others
     } = props;
+
+    const [ loading, setLoading ] = useState(propsLoading);
+
+    // 多次连续设置loading时，保值loading不间断显示
+    useEffect(() => {
+        if (propsLoading) {
+            setLoading(true);
+        } else {
+            let timer = setTimeout(() => {
+                setLoading(false);
+            }, 100);
+
+            return () => clearTimeout(timer);
+        }
+    }, [ propsLoading ]);
 
     // 延迟加载内容，解决 内部 input autoFocus 不生效问题
     const [ inMounted, setIsMounted ] = useState(false);

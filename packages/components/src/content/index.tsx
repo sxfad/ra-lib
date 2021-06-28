@@ -35,7 +35,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
         className = '',
         fitHeight = false,
         style = {},
-        loading = false,
+        loading: propsLoading = false,
         isRoot = false,
         offsetHeight = 0,
         children,
@@ -52,8 +52,21 @@ const Content = forwardRef<HTMLDivElement, ContentProps>((props, ref) => {
     const rootRef = useRef(null);
     let [ height ] = useHeight(rootRef, otherHeight || 0);
     const [ loadingStyle, setLoadingStyle ] = useState({});
+    const [ loading, setLoading ] = useState(propsLoading);
     height = height - offsetHeight;
 
+    // 多次连续设置loading时，保值loading不间断显示
+    useEffect(() => {
+        if (propsLoading) {
+            setLoading(true);
+        } else {
+            let timer = setTimeout(() => {
+                setLoading(false);
+            }, 100);
+
+            return () => clearTimeout(timer);
+        }
+    }, [ propsLoading ]);
 
     useEffect(() => {
         handleSetLoadingStyle();

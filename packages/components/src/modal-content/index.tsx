@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useContext, ReactNode, CSSProperties } from 'react';
+import React, { forwardRef, useRef, useState, useContext, ReactNode, CSSProperties, useEffect } from 'react';
 import { Button, Spin, ConfigProvider } from 'antd';
 import ComponentContext from '../component-context';
 // @ts-ignore
@@ -42,7 +42,7 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
 
     let {
         children,
-        loading = false,
+        loading: propsLoading = false,
         style = {},
         bodyStyle = {},
         fitHeight = false,
@@ -58,6 +58,8 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
         cancelText = context.cancelText,
         ...others
     } = props;
+
+    const [ loading, setLoading ] = useState(propsLoading);
 
     if (context.isMobile && fullScreen === undefined) fullScreen = true;
 
@@ -76,6 +78,19 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
         height: fitHeight ? height : 'auto',
         ...style,
     };
+
+    // 多次连续设置loading时，保值loading不间断显示
+    useEffect(() => {
+        if (propsLoading) {
+            setLoading(true);
+        } else {
+            let timer = setTimeout(() => {
+                setLoading(false);
+            }, 100);
+
+            return () => clearTimeout(timer);
+        }
+    }, [ propsLoading ]);
 
     return (
         <Spin spinning={loading} tip={loadingTip}>
