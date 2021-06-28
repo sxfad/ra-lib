@@ -33,7 +33,7 @@ export function useOptions(...args) {
                     return Promise.resolve(res);
                 }
 
-                if (item.then) return item;
+                if (item && item.then) return item;
 
                 // 不是函数，原样返回
                 return Promise.resolve(item);
