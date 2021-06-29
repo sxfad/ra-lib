@@ -273,3 +273,22 @@ function loopMenus(menus, basePath = '') {
     return menus;
 }
 
+/**
+ * 嵌入iframe情况下，获取父级地址
+ */
+export function getParentOrigin() {
+    let url = '';
+    const parent = window.parent;
+    if (parent !== window) {
+        try {
+            url = parent.location.origin;
+        } catch (e) {
+            url = document.referrer;
+        }
+    }
+    if (url.endsWith('/')) {
+        return url.substring(0, url.length - 1);
+    }
+    return url;
+}
+
