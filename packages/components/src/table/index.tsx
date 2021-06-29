@@ -24,6 +24,7 @@ export interface RATableProps<RecordType> extends TableProps<RecordType> {
     otherHeight?: number,
     // 计算之后，再做偏移的高度
     offsetHeight?: number,
+    borderBottom?: boolean,
 }
 
 export default function RATable<RecordType extends object = any>(props: RATableProps<RecordType>) {
@@ -41,6 +42,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
         pageNum,
         dataSource,
         pagination = false,
+        borderBottom = true,
         ...others
     } = props;
 
@@ -159,7 +161,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
     }
 
     return (
-        <div ref={rootRef} style={{ borderBottom: '1px solid #e8e8e8' }}>
+        <div ref={rootRef} style={borderBottom ? { borderBottom: '1px solid #e8e8e8' } : null}>
             <Table
                 scroll={_scroll}
                 columns={columns}
