@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/ajax",
-    "version": "0.1.13",
+    "version": "0.1.14",
     "description": "ajax 封装",
     "main": "lib/index.js",
     "module": "es/index.js",
