@@ -67,7 +67,11 @@ export default function createHooks(ajax) {
                 params = formatParams(params);
                 // 对象参数合并
                 if (!params) params = initParams;
-                if (isObject(params) && isObject(initParams)) {
+                if (
+                    isObject(params)
+                    && isObject(initParams)
+                    && !(params instanceof FormData)
+                ) {
                     params = {...initParams, ...params};
                 }
 
