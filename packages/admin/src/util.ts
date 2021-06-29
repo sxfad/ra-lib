@@ -114,8 +114,7 @@ export function isLogin() {
     // 前端判断是否登录，基于不同项目，可能需要调整
     return !!(
         getLoginUser()
-        || window.sessionStorage.getItem('token')
-        || window.localStorage.getItem('token')
+        || getToken()
         || getMainApp()?.token
     );
 }
