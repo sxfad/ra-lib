@@ -14,6 +14,7 @@ export default class Ajax {
             reject = true,
             noEmpty = true,
             trim = true,
+            deleteUseBody = false,
             ...defaults
         } = options;
 
@@ -42,6 +43,7 @@ export default class Ajax {
         this.reject = reject;
         this.noEmpty = noEmpty;
         this.trim = trim;
+        this.deleteUseBody = deleteUseBody;
     }
 
     /**
@@ -57,6 +59,7 @@ export default class Ajax {
             noEmpty = this.noEmpty, // 过滤掉 值为 null、''、undefined三种参数，不传递给后端
             originResponse = false, // 返回原始相应对象
             trim = this.trim, // 前后去空格
+            deleteUseBody = this.deleteUseBody, // delete请求，参数已body发送
 
             url,
             params = {},
@@ -64,6 +67,8 @@ export default class Ajax {
             method = 'get',
             ...otherOptions
         } = options;
+
+        const isDelete = method === 'delete';
         const defaultsContentType =
             this.instance.defaults.headers['Content-Type'] ||
             this.instance.defaults.headers['content-type'] ||
@@ -105,6 +110,11 @@ export default class Ajax {
          * */
         if (isFormContentType) {
             data = stringify(data);
+        }
+
+        if (isDelete && deleteUseBody) {
+            data = params;
+            params = {};
         }
 
         const ajaxPromise = new Promise((resolve, reject) => {
