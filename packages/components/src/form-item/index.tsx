@@ -142,7 +142,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
     // 处理校验规则
     const rules = getRules({ type, ...props, placeholder });
 
-    if (type === 'switch' && !valuePropName) valuePropName = "checked";
+    if (type === 'switch' && !valuePropName) valuePropName = 'checked';
 
     const elementProps = {
         type,
@@ -183,7 +183,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             valuePropName={valuePropName}
             wrapperCol={wrapperCol}
         >
-            {children ? children : <Element {...elementProps} forwardRef={ref}/>}
+            {children || <Element {...elementProps} forwardRef={ref} />}
         </Item>
     );
 });

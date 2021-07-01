@@ -34,8 +34,8 @@ export default (options, isMobile) => WrappedComponent => {
 
             let {
                 visible,
-                onOk = () => void 0,
-                onCancel = () => void 0,
+                onOk = () => undefined,
+                onCancel = () => undefined,
                 fullScreen,
                 top = 100,
                 title,

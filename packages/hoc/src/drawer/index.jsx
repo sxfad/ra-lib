@@ -33,9 +33,9 @@ export default (options) => WrappedComponent => {
 
             let {
                 visible,
-                onOk = () => void 0,
+                onOk = () => undefined,
                 onCancel,
-                onClose = () => void 0,
+                onClose = () => undefined,
                 fullScreen,
                 top = 0,
                 title,
@@ -119,6 +119,7 @@ function getDrawerProps(props) {
         'zIndex',
         'onClose',
     ].reduce((prev, key) => {
+        // eslint-disable-next-line no-param-reassign
         if (key in props) prev[key] = props[key];
         return prev;
     }, {});

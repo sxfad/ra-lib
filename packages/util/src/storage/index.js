@@ -14,8 +14,8 @@ const globalStorage = {
     getItem: key => globalData[key],
     removeItem: key => Reflect.deleteProperty(globalData, key),
 };
-const localStorage = window.localStorage;
-const sessionStorage = window.sessionStorage;
+const {localStorage} = window;
+const {sessionStorage} = window;
 
 export default class Storage {
     constructor({prefix = ''} = {}) {
@@ -33,7 +33,9 @@ function getStorage(prefix, storage, parse, stringify) {
          * @param {*} value 要存储的数据
          */
         setItem(key, value) {
+            // eslint-disable-next-line no-param-reassign
             key = prefix + key;
+            // eslint-disable-next-line no-param-reassign
             value = stringify(value);
             storage.setItem(key, value);
         },
@@ -43,6 +45,7 @@ function getStorage(prefix, storage, parse, stringify) {
          * @return {json} key 对应的数据
          */
         getItem(key) {
+            // eslint-disable-next-line no-param-reassign
             key = prefix + key;
             let value = storage.getItem(key);
 
@@ -56,6 +59,7 @@ function getStorage(prefix, storage, parse, stringify) {
          * @param key
          */
         removeItem(key) {
+            // eslint-disable-next-line no-param-reassign
             key = prefix + key;
             storage.removeItem(key);
         },

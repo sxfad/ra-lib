@@ -84,7 +84,7 @@ const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
     const imgClass = `${prefixCls}-img`;
 
     return (
-        <Spin spinning={loading} size="small">
+        <Spin spinning={loading} size='small'>
             <div className={rootClass}>
                 <Input
                     className={inputClass}
@@ -98,7 +98,7 @@ const ImageCode = forwardRef<refProps, ImageCodeProps>((props, ref) => {
                     className={imgClass}
                     style={{ width: imageWidth }}
                     src={url}
-                    alt="图片验证码"
+                    alt='图片验证码'
                     onClick={handleClick}
                     onError={handleError}
                 />

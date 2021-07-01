@@ -1,5 +1,4 @@
 import { useContext, useMemo } from 'react';
-import { Badge } from 'antd';
 import classNames from 'classnames';
 import ComponentContext from '../../component-context';
 // @ts-ignore
@@ -40,19 +39,19 @@ export default function Side(props) {
     const showCollectedMenus = !!collectedMenus;
 
     const sideMenus = useMemo(() => {
-        let sideMenus = [];
+        let nextSideMenus = [];
         if (LAYOUT_TYPE.SIDE_MENU === layoutType) {
-            sideMenus = [...menuTreeData];
+            nextSideMenus = [...menuTreeData];
         }
 
         if (LAYOUT_TYPE.TOP_SIDE_MENU === layoutType) {
             const parentNodes = findParentNodes(menuTreeData, selectedMenuPath, 'path');
             if (parentNodes && parentNodes.length) {
-                sideMenus = [...(parentNodes[0].children || [])];
+                nextSideMenus = [...(parentNodes[0].children || [])];
             }
         }
 
-        if (!showCollectedMenus) return sideMenus;
+        if (!showCollectedMenus) return nextSideMenus;
 
         // 添加我的收藏菜单
         const collectionMenu = {
@@ -61,19 +60,20 @@ export default function Side(props) {
         };
         const collectionMenuIds = findGenerationNodes(collectionMenu, collectionMenuId).map(item => `${item.id}`);
         collectionMenu.title = `${collectedMenuTitle}（${collectionMenuIds.length}）`;
-        sideMenus.unshift(collectionMenu);
+        nextSideMenus.unshift(collectionMenu);
 
         // 标记是否已收藏
         const loop = nodes => nodes.forEach(node => {
             const { id, children } = node;
+            // eslint-disable-next-line no-param-reassign
             node.isCollected = collectionMenuIds.includes(`${id}`) && id !== collectionMenuId;
-            children && loop(children);
+            if (children) loop(children);
         });
 
-        loop(sideMenus);
+        loop(nextSideMenus);
 
-        return sideMenus;
-    }, [menuTreeData, collectedMenus, showCollectedMenus, layoutType, selectedMenuPath]);
+        return nextSideMenus;
+    }, [collectedMenuTitle, menuTreeData, collectedMenus, showCollectedMenus, layoutType, selectedMenuPath]);
 
     prefixCls = `${prefixCls}-layout-side`;
     const rootClass = classNames(

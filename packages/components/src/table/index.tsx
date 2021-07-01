@@ -27,7 +27,7 @@ export interface RATableProps<RecordType> extends TableProps<RecordType> {
     borderBottom?: boolean,
 }
 
-export default function RATable<RecordType extends object = any>(props: RATableProps<RecordType>) {
+export default function RATable<RecordType extends Record<string, unknown> = any>(props: RATableProps<RecordType>) {
     let {
         fitHeight = false,
         scroll = {},
@@ -79,7 +79,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
         return () => {
             window.document.body.style.overflowY = oldOverflowY;
         };
-    }, []);
+    }, [ fitHeight ]);
 
     useEffect(() => {
         function _setOtherHeight() {
@@ -94,10 +94,10 @@ export default function RATable<RecordType extends object = any>(props: RATableP
             const tableHead = rootRef.current.querySelector(`.${antdPrefixCls}-table-thead`);
             if (tableHead) headHeight = tableHead.getBoundingClientRect().height;
 
-            const pagination = rootRef.current.nextElementSibling;
-            if (pagination) {
+            const paginationDom = rootRef.current.nextElementSibling;
+            if (paginationDom) {
                 setHasPagination(true);
-                paginationHeight = pagination.getBoundingClientRect().height;
+                paginationHeight = paginationDom.getBoundingClientRect().height;
             }
 
             setOtherHeight(headHeight + paginationHeight + pageContentPadding + pageContentMargin + 1);
@@ -115,7 +115,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
         window.addEventListener('resize', _setOtherHeight);
         return () => window.removeEventListener('resize', _setOtherHeight);
 
-    }, [ otherHeight, dataSource ]);
+    }, [ otherHeight, dataSource, antdPrefixCls ]);
 
     useEffect(() => {
         if (!fitHeight) return;
@@ -131,7 +131,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
             tablePlaceholder.style.border = 'none';
         }
 
-    }, [ fitHeight, height, dataSource ]);
+    }, [ fitHeight, height, dataSource, antdPrefixCls ]);
 
     if (serialNumber) {
         if (hasPagination) {
@@ -155,6 +155,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
     if (isMobile) {
         columns.forEach(item => {
             if (!('width' in item)) {
+                // eslint-disable-next-line no-param-reassign
                 item.width = mobileColumnDefaultWidth;
             }
         });
@@ -165,7 +166,7 @@ export default function RATable<RecordType extends object = any>(props: RATableP
             <Table
                 scroll={_scroll}
                 columns={columns}
-                size="middle"
+                size='middle'
                 dataSource={dataSource}
                 pagination={pagination}
                 {...others}

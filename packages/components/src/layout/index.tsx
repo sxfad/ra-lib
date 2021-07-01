@@ -18,7 +18,7 @@ import Side from './Side';
 import LAYOUT_TYPE from './layout-type';
 import KeepPageAlive from './KeepPageAlive';
 // @ts-ignore
-import logo from './logo.png';
+import logoImage from './logo.png';
 import './style.less';
 
 export interface LayoutProps {
@@ -143,9 +143,9 @@ const Layout = forwardRef<any, LayoutProps>((props, ref) => {
         showTabHeaderExtra: props.showTabHeaderExtra,
         showTabSideToggle: props.showTabSideToggle,
 
-        menuTreeData: void 0,
+        menuTreeData: undefined,
         selectedMenu: null,
-        selectedMenuParents: void 0, // 初始化不能设置为[] 会产生死循环
+        selectedMenuParents: undefined, // 初始化不能设置为[] 会产生死循环
     };
 
     // 初始之后还可变数据，不存到state中
@@ -283,20 +283,18 @@ const Layout = forwardRef<any, LayoutProps>((props, ref) => {
     // 菜单选中状态
     useEffect(() => {
         // 收藏菜单不参与展开
-        const menus = menuTreeData.filter(item => item.id !== 'collection-menu');
-        menus.forEach(item => {
+        const nextMenus = menuTreeData.filter(item => item.id !== 'collection-menu');
+        nextMenus.forEach(item => {
             // 头部加左侧时，我的收藏菜单在children中
-            if (item.children) item.children = item.children.filter(item => item.id !== 'collection-menu');
+            // eslint-disable-next-line no-param-reassign
+            if (item.children) item.children = item.children.filter(it => it.id !== 'collection-menu');
         });
-
-        // @ts-ignore
-        const selectedMenu = findNode(menus, selectedMenuPath, 'path');
-        const selectedMenuParents = findParentNodes(menus, selectedMenuPath, 'path');
 
         layoutAction.setState({
-            selectedMenu,
-            selectedMenuParents,
+            selectedMenu: findNode(nextMenus, selectedMenuPath, 'path'),
+            selectedMenuParents: findParentNodes(nextMenus, selectedMenuPath, 'path'),
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ menuTreeData, selectedMenuPath ]);
 
     function handleTabClose(key, reload) {
@@ -308,6 +306,7 @@ const Layout = forwardRef<any, LayoutProps>((props, ref) => {
         if (!keys) return;
         if (!keepAlivePagesRef.current) return;
         if (!keepAlivePagesRef.current.pages) return;
+        // eslint-disable-next-line no-param-reassign
         if (!Array.isArray(keys)) keys = [ keys ];
 
         const { pages } = keepAlivePagesRef.current;
@@ -324,7 +323,11 @@ const Layout = forwardRef<any, LayoutProps>((props, ref) => {
 
     const side = (
         <Side
-            headerHeight={showHeader ? headerHeight : showTab ? tabHeight : 0}
+            headerHeight={(() => {
+                if (showHeader) return headerHeight;
+                if (showTab) return tabHeight;
+                return 0;
+            })()}
             sideWidth={sideWidth}
             sideMinWidth={sideMinWidth}
             sideCollapsed={sideCollapsed}
@@ -441,7 +444,7 @@ const Layout = forwardRef<any, LayoutProps>((props, ref) => {
 
 
 Layout.defaultProps = {
-    logo: logo,
+    logo: logoImage,
     title: 'React Admin',
     headerTheme: 'dark',
     headerHeight: 50,
@@ -451,7 +454,7 @@ Layout.defaultProps = {
     showSearchMenu: true,
     searchMenuPlaceholder: '搜索菜单',
     collectedMenuTitle: '我的收藏',
-    renderSide: void 0,
+    renderSide: undefined,
     showSide: true,
     sideTheme: 'dark',
     logoTheme: 'dark',

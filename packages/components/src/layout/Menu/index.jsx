@@ -1,10 +1,10 @@
-import {useContext, useRef, useMemo, useState, useEffect} from 'react';
-import {withRouter} from 'react-router-dom';
-import {ConfigProvider, Empty, Input, Menu, Popconfirm} from 'antd';
-import {HeartOutlined, HeartFilled} from '@ant-design/icons';
+import { useContext, useRef, useMemo, useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+import { ConfigProvider, Empty, Input, Menu, Popconfirm } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import classNames from 'classnames';
 // @ts-ignore
-import {filterTree, scrollElement} from '@ra-lib/util';
+import { filterTree, scrollElement } from '@ra-lib/util';
 import ComponentContext from '../../component-context';
 import './style.less';
 
@@ -48,7 +48,7 @@ export default withRouter(function MenuComponent(props) {
     const menuItems = useMemo(() => {
         nodesRef.current = {};
         const loop = (nodes) => nodes.map(item => {
-            let {id, path, icon, title, children, isCollected, isCollectedMenu} = item;
+            let { id, path, icon, title, children, isCollected, isCollectedMenu } = item;
 
             const key = isCollectedMenu ? `collectedMenu-${path || id}` : (path || id);
 
@@ -64,7 +64,7 @@ export default withRouter(function MenuComponent(props) {
                                 title={`您确定${isCollected ? '取消' : '加入'}收藏？`}
                                 onConfirm={() => onMenuCollect(item, !isCollected)}
                             >
-                                <CollectionIcon/>
+                                <CollectionIcon />
                             </Popconfirm>
                         </span>
                     </div>
@@ -86,7 +86,8 @@ export default withRouter(function MenuComponent(props) {
         });
 
         return loop(treeData);
-    }, [treeData, sideCollapsed, showCollectedMenus, collectionMenuId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [treeData, showCollectedMenus, sideCollapsed, collectionMenuId, titleWrapperClass, titleClass, collectionClass]);
 
     function handleChange(e) {
         // 防抖
@@ -97,9 +98,10 @@ export default withRouter(function MenuComponent(props) {
 
     function handleSearch(value) {
         let isAll = true;
+        // eslint-disable-next-line no-param-reassign
         if (value) value = value.toLowerCase();
-        const treeData = filterTree(menuTreeData, node => {
-            let {title, path} = node;
+        const nextTreeData = filterTree(menuTreeData, node => {
+            let { title, path } = node;
             title = (title || '').toLowerCase();
             path = (path || '').toLowerCase();
 
@@ -109,7 +111,7 @@ export default withRouter(function MenuComponent(props) {
             return result;
         });
 
-        setTreeData(treeData);
+        setTreeData(nextTreeData);
 
         if (isAll) {
             setOpenKeys(openKeysRef.current);
@@ -117,30 +119,33 @@ export default withRouter(function MenuComponent(props) {
         }
 
         // 展开所有查询出的结果
-        let openKeys = [];
+        let nextOpenKeys = [];
         const loop = nodes => nodes.forEach(node => {
-            const {id, children} = node;
-            openKeys.push(id);
+            const { id, children } = node;
+            nextOpenKeys.push(id);
             if (children) loop(children);
         });
-        loop(treeData);
+        loop(nextTreeData);
 
-        setOpenKeys(openKeys);
+        setOpenKeys(nextOpenKeys);
     }
 
-    function handleOpenChange(openKeys) {
-        openKeysRef.current = openKeys;
-        setOpenKeys(openKeys);
+    function handleOpenChange(nextOpenKeys) {
+        openKeysRef.current = nextOpenKeys;
+        setOpenKeys(nextOpenKeys);
     }
 
     function handleClick(info) {
-        const {key} = info;
+        const { key } = info;
         const node = nodesRef.current[key];
 
         if (!node) return;
 
-        const {path, target} = node;
-        if (target) return window.open(path, target);
+        const { path, target } = node;
+        if (target) {
+            window.open(path, target);
+            return;
+        }
 
         props.history.push(path);
     }
@@ -153,10 +158,10 @@ export default withRouter(function MenuComponent(props) {
         if (!selectedMenuParents || !selectedMenuParents.length) return;
 
         const parentKeys = selectedMenuParents.map(item => item.key || item.id);
-        const openKeys = keepMenuOpen ? Array.from(new Set([...parentKeys, ...openKeysRef.current])) : parentKeys;
-        setOpenKeys(openKeys);
-        openKeysRef.current = openKeys;
-    }, [sideCollapsed, selectedMenuParents, mode]);
+        const nextOpenKeys = keepMenuOpen ? Array.from(new Set([...parentKeys, ...openKeysRef.current])) : parentKeys;
+        setOpenKeys(nextOpenKeys);
+        openKeysRef.current = nextOpenKeys;
+    }, [sideCollapsed, selectedMenuParents, mode, keepMenuOpen]);
 
     // 菜单改变，滚动到可见区域
     useEffect(() => {
@@ -177,18 +182,7 @@ export default withRouter(function MenuComponent(props) {
                 containerEle: menuContainerRef.current,
             });
         });
-    }, [selectedMenuPath, menuContainerRef.current, treeData, sideCollapsed, mode]);
-
-    // 修改菜单收起高度
-    useEffect(() => {
-        const cls = `.${menuClass} .${antdPrefixCls}-menu-inline${sideCollapsed ? '-collapsed' : ''}`;
-        const dom = document.querySelector(cls);
-        if (dom) dom.style.width = sideCollapsed ? `${sideMinWidth}px` : '100%';
-    }, [treeData, sideCollapsed, sideMinWidth]);
-
-    let menuProps = {};
-    if (mode === 'inline') menuProps.inlineCollapsed = sideCollapsed;
-
+    }, [selectedMenuPath, treeData, sideCollapsed, mode, antdPrefixCls]);
 
     const topClass = classNames(`${prefixCls}-top`);
     const searchClass = `${prefixCls}-search`;
@@ -196,9 +190,19 @@ export default withRouter(function MenuComponent(props) {
     const emptyClass = classNames(
         `${prefixCls}-empty`,
         {
-            ['dark-menu']: theme === 'dark',
+            'dark-menu': theme === 'dark',
         },
     );
+
+    // 修改菜单收起高度
+    useEffect(() => {
+        const cls = `.${menuClass} .${antdPrefixCls}-menu-inline${sideCollapsed ? '-collapsed' : ''}`;
+        const dom = document.querySelector(cls);
+        if (dom) dom.style.width = sideCollapsed ? `${sideMinWidth}px` : '100%';
+    }, [treeData, sideCollapsed, sideMinWidth, antdPrefixCls, menuClass]);
+
+    let menuProps = {};
+    if (mode === 'inline') menuProps.inlineCollapsed = sideCollapsed;
 
     return (
         <>
@@ -217,7 +221,7 @@ export default withRouter(function MenuComponent(props) {
             ) : null}
             <div className={menuClass} ref={menuContainerRef}>
                 {mode === 'inline' && (!menuItems || !menuItems.length) ? (
-                    <Empty className={emptyClass}/>
+                    <Empty className={emptyClass} />
                 ) : (
                     <Menu
                         mode={mode}

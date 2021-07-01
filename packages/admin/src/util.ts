@@ -229,8 +229,7 @@ export function formatMenus(menus) {
 function loopMenus(menus, basePath = '') {
     menus.forEach(it => {
         const item = { ...it };
-        let { path } = item;
-        const { target, children } = item;
+        let { path, target, children } = item;
 
         // 保存原始target数据
         // eslint-disable-next-line no-underscore-dangle

@@ -52,10 +52,6 @@ export default class Ajax {
      * @returns {Promise<unknown>}
      */
     ajax(options) {
-        let {
-            params = {},
-            data = {},
-        } = options;
         const {
             successTip = false, // 默认false，不展示
             errorTip, //  = method === 'get' ? '获取数据失败！' : '操作失败！', // 默认失败提示
@@ -64,7 +60,8 @@ export default class Ajax {
             trim = this.trim, // 前后去空格
             deleteUseBody = this.deleteUseBody, // delete请求，参数已body发送
             reject: _reject = this.reject,
-
+            params = {},
+            data = {},
             url,
             method = 'get',
             ...otherOptions
@@ -229,13 +226,12 @@ export default class Ajax {
      */
     download(url, params, options = {}) {
         const {
+            fileName,
             method = 'get',
             originResponse = true,
             beforeDownload = () => true,
             ...others
         } = options;
-
-        let { fileName } = options;
 
         return this.ajax({ url, params, method, originResponse, ...others })
             .then(res => {

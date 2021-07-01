@@ -24,9 +24,9 @@ export interface DrawerContentProps {
     // 取消事件
     onCancel?: () => void
     // 最外层容器样式
-    style?: object
+    style?: CSSProperties
     // 内容容器样式
-    bodyStyle?: object
+    bodyStyle?: CSSProperties
 }
 
 const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref) => {
@@ -34,12 +34,12 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
     const antdContext = useContext(ConfigProvider.ConfigContext);
     const antdPrefixCls = antdContext.getPrefixCls();
 
-    let {
+    const {
         loading: propsLoading = false,
         style = {},
         bodyStyle = {},
-        onOk = () => void 0,
-        onCancel = () => void 0,
+        onOk = () => undefined,
+        onCancel = () => undefined,
         okHtmlType,
         children,
         loadingTip = context.loadingTip,
@@ -57,13 +57,13 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
     useEffect(() => {
         if (propsLoading) {
             setLoading(true);
-        } else {
-            let timer = setTimeout(() => {
-                setLoading(false);
-            }, 100);
-
-            return () => clearTimeout(timer);
+            return null;
         }
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 100);
+
+        return () => clearTimeout(timer);
     }, [ propsLoading ]);
 
     // 延迟加载内容，解决 内部 input autoFocus 不生效问题
@@ -94,7 +94,7 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
                     >
                         {children}
                         {/* footer 站位 */}
-                        <div style={footer !== false ? { height: 53 } : null}/>
+                        <div style={footer !== false ? { height: 53 } : null} />
                     </div>
                 </div>
             </Spin>
@@ -108,9 +108,9 @@ const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>((props, ref
                         background: '#fff',
                     }}
                 >
-                    {footer ? footer : (
+                    {footer || (
                         <>
-                            <Button type="primary" onClick={onOk} htmlType={okHtmlType}>{okText}</Button>
+                            <Button type='primary' onClick={onOk} htmlType={okHtmlType}>{okText}</Button>
                             <Button onClick={onCancel}>{cancelText}</Button>
                         </>
                     )}

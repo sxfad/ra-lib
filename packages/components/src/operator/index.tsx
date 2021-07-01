@@ -20,7 +20,7 @@ export interface OperatorProps {
 
             onClick?: () => void,
             confirm?: PopconfirmProps,
-            statusSwitch?: object,
+            statusSwitch?: Record<string, unknown>,
         }
     ],
     // 更多标签文案
@@ -58,7 +58,7 @@ function Operator(props: OperatorProps) {
 
         if (loading) {
             const labelWidth = labelRef.current[i] ? labelRef.current[i].offsetWidth : 'auto';
-            return <a className={labelClass} style={{ display: 'inline-block', width: labelWidth, textAlign: 'center' }}><LoadingOutlined/></a>;
+            return <a className={labelClass} style={{ display: 'inline-block', width: labelWidth, textAlign: 'center' }}><LoadingOutlined /></a>;
         }
 
         const labelStyle: CSSProperties = {
@@ -68,13 +68,14 @@ function Operator(props: OperatorProps) {
         if (color) labelStyle.color = color;
 
         if (icon) {
-            label = <Tooltip placement="bottom" title={label}>{icon}</Tooltip>;
+            label = <Tooltip placement='bottom' title={label}>{icon}</Tooltip>;
         }
 
         const cls = classNames(labelClass, {
             disabled,
         });
 
+        // eslint-disable-next-line no-return-assign
         return <a className={cls} style={labelStyle} ref={v => labelRef.current[i] = v}>{label}</a>;
     }
 
@@ -92,7 +93,7 @@ function Operator(props: OperatorProps) {
         if (withKey) {
             label = (
                 <span onClick={(e) => {
-                    e && e.stopPropagation();
+                    if (e) e.stopPropagation();
                     if (e.altKey || e.metaKey || e.ctrlKey) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -107,7 +108,7 @@ function Operator(props: OperatorProps) {
             );
         }
         return (
-            <Popconfirm okType="danger" {...confirm}>
+            <Popconfirm okType='danger' {...confirm}>
                 {label}
             </Popconfirm>
         );
@@ -116,8 +117,8 @@ function Operator(props: OperatorProps) {
     function getStatusSwitch(opt, i) {
         const { statusSwitch, disabled = false } = opt;
         const { status } = statusSwitch;
-        const props = { ...statusSwitch };
-        const icon = status ? <CheckCircleOutlined/> : <MinusCircleOutlined/>;
+        const popConfirmProps = { ...statusSwitch };
+        const icon = status ? <CheckCircleOutlined /> : <MinusCircleOutlined />;
         const color = status ? 'green' : 'red';
 
         let label = getLabel({ ...opt, label: icon, color }, i);
@@ -125,10 +126,10 @@ function Operator(props: OperatorProps) {
         // 如果没有权限，不允许进行操作，只做展示
         if (disabled) return label;
 
-        Reflect.deleteProperty(props, 'status');
+        Reflect.deleteProperty(popConfirmProps, 'status');
 
         return (
-            <Popconfirm {...props}>
+            <Popconfirm {...popConfirmProps}>
                 {label}
             </Popconfirm>
         );
@@ -155,6 +156,7 @@ function Operator(props: OperatorProps) {
             if (disabled && statusSwitch) return getStatusSwitch(opt, i);
 
             if (disabled) {
+                // eslint-disable-next-line no-param-reassign
                 opt.color = '#ccc';
                 return getLabel(opt, i);
             }
@@ -199,7 +201,7 @@ function Operator(props: OperatorProps) {
         );
         operators.push(
             <Dropdown overlay={menu} trigger={moreTrigger}>
-                <a className="operator-label">
+                <a className='operator-label'>
                     {moreText}
                 </a>
             </Dropdown>,
@@ -218,7 +220,7 @@ function Operator(props: OperatorProps) {
             {operators.map((v, i) => (
                 <span key={v.label || `operator-${i}`}>
                     {v}
-                    {operatorsLength === i + 1 ? '' : <span className={dividerClass}/>}
+                    {operatorsLength === i + 1 ? '' : <span className={dividerClass} />}
                 </span>
             ))}
         </div>
@@ -227,7 +229,7 @@ function Operator(props: OperatorProps) {
 
 Operator.defaultProps = {
     items: [],
-    moreText: <span>更多<DownOutlined/></span>,
+    moreText: <span>更多<DownOutlined /></span>,
     moreContentWidth: 'auto',
     moreTrigger: 'click',
 };

@@ -4,7 +4,7 @@ import { Tooltip, TooltipProps } from 'antd';
 
 export interface FullScreenProps {
     // Tooltip 提示位置
-    placement?: TooltipProps["placement"],
+    placement?: TooltipProps['placement'],
     // 需要全屏的dom元素，默认document.documentElement
     element?: HTMLElement,
     // 进入全屏 Tooltip 提示
@@ -24,8 +24,8 @@ export default function FullScreen(props: FullScreenProps) {
         element = document.documentElement,
         enterFullTip = '全屏',
         exitFullTip = '退出全屏',
-        onFull = () => void 0,
-        onExit = () => void 0,
+        onFull = () => undefined,
+        onExit = () => undefined,
         placement = 'bottom',
         children,
     } = props;
@@ -48,6 +48,7 @@ export default function FullScreen(props: FullScreenProps) {
         function handleFullScreenChange() {
             const nextFullScreen = !fullScreen;
 
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             nextFullScreen ? onFull() : onExit();
             setFullScreen(nextFullScreen);
             setToolTipVisible(false);
@@ -84,22 +85,23 @@ export default function FullScreen(props: FullScreenProps) {
                 // @ts-ignore
                 document.webkitExitFullscreen();
             }
-        } else {
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-                // @ts-ignore
-            } else if (element.mozRequestFullScreen) {
-                // @ts-ignore
-                element.mozRequestFullScreen();
-                // @ts-ignore
-            } else if (element.msRequestFullscreen) {
-                // @ts-ignore
-                element.msRequestFullscreen();
-                // @ts-ignore
-            } else if (element.webkitRequestFullscreen) {
-                // @ts-ignore
-                element.webkitRequestFullScreen();
-            }
+            return;
+        }
+
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+            // @ts-ignore
+        } else if (element.mozRequestFullScreen) {
+            // @ts-ignore
+            element.mozRequestFullScreen();
+            // @ts-ignore
+        } else if (element.msRequestFullscreen) {
+            // @ts-ignore
+            element.msRequestFullscreen();
+            // @ts-ignore
+        } else if (element.webkitRequestFullscreen) {
+            // @ts-ignore
+            element.webkitRequestFullScreen();
         }
     }
 
@@ -112,7 +114,7 @@ export default function FullScreen(props: FullScreenProps) {
                 onMouseEnter={() => setToolTipVisible(true)}
                 onMouseLeave={() => setToolTipVisible(false)}
             >
-                {children ? children(fullScreen) : (<Icon/>)}
+                {children ? children(fullScreen) : (<Icon />)}
             </div>
         </Tooltip>
     );

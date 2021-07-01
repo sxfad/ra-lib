@@ -1,9 +1,9 @@
-import React, {useRef, useState, useContext, useEffect} from 'react';
-import {withRouter} from 'react-router-dom';
-import {match} from 'path-to-regexp';
+import React, { useRef, useState, useContext, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+import { match } from 'path-to-regexp';
 import classNames from 'classnames';
-import {SyncOutlined, VerticalRightOutlined, VerticalLeftOutlined} from '@ant-design/icons';
-import {Tabs, Dropdown, Menu} from 'antd';
+import { SyncOutlined, VerticalRightOutlined, VerticalLeftOutlined } from '@ant-design/icons';
+import { Tabs, Dropdown, Menu } from 'antd';
 import ComponentContext from '../../component-context';
 import SideToggle from '../SideToggle';
 import Logo from '../Logo';
@@ -35,7 +35,7 @@ export default withRouter(React.memo(function Tab(props) {
         hashRouter,
     } = props;
 
-    let {pathname, search, hash} = window.location;
+    let { pathname, search, hash } = window.location;
     const routePath = hashRouter ? hash.replace('#', '').split('?')[0] : pathname;
     const key = hashRouter ? hash.replace('#', '') : `${pathname}${search}${hash}`;
 
@@ -46,12 +46,13 @@ export default withRouter(React.memo(function Tab(props) {
         // 防抖处理
         if (refreshRef.current) clearTimeout(refreshRef.current);
         refreshRef.current = setTimeout(() => {
-            const route = routes.find(({path}) => match(path, {decode: decodeURIComponent})(routePath));
+            const route = routes.find(({ path }) => match(path, { decode: decodeURIComponent })(routePath));
             if (route && route.tab === false) return;
 
             let index = -1;
             tabs.forEach((item, i) => {
                 if (item.key === key) index = i;
+                // eslint-disable-next-line no-param-reassign
                 item.active = false;
             });
             // 未找到并且title存在时新增
@@ -71,14 +72,17 @@ export default withRouter(React.memo(function Tab(props) {
             setRefresh({});
             handlePersistTab();
         }, 10);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routes, pathname, search, hash, pageTitle]);
 
     function handlePersistTab() {
-        persistTab && window.localStorage.setItem('layout-tabs', JSON.stringify(tabs));
+        if (persistTab) {
+            window.localStorage.setItem('layout-tabs', JSON.stringify(tabs));
+        }
     }
 
-    function handleClick(key) {
-        props.history.push(key);
+    function handleClick(nextKey) {
+        props.history.push(nextKey);
     }
 
 
@@ -106,10 +110,11 @@ export default withRouter(React.memo(function Tab(props) {
         if (isLast) return props.history.push(tabs[prevIndex].key);
 
         props.history.push(tabs[nextIndex].key);
+        return null;
     }
 
-    function renderMenu(key) {
-        const index = tabs.findIndex(item => item.key === key);
+    function renderMenu(nextKey) {
+        const index = tabs.findIndex(item => item.key === nextKey);
         const tab = tabs[index];
         const disabledRefresh = !tab.active;
         const disabledRight = index === tabs.length - 1;
@@ -118,29 +123,30 @@ export default withRouter(React.memo(function Tab(props) {
         return (
             <div onClick={e => e.stopPropagation()}>
                 <Menu
-                    onClick={({domEvent: e, key: action}) => {
-                        handleMenuClick(key, action);
+                    onClick={({ key: action }) => {
+                        handleMenuClick(nextKey, action);
                     }}
                 >
-                    {keepPageAlive ? <Menu.Item key="refresh" disabled={disabledRefresh} icon={<SyncOutlined/>}>刷新</Menu.Item> : null}
-                    <Menu.Item key="closeRight" disabled={disabledRight} icon={<VerticalLeftOutlined/>}>关闭右侧</Menu.Item>
-                    <Menu.Item key="closeLeft" disabled={disabledLeft} icon={<VerticalRightOutlined/>}>关闭左侧</Menu.Item>
+                    {keepPageAlive ? <Menu.Item key='refresh' disabled={disabledRefresh} icon={<SyncOutlined />}>刷新</Menu.Item> : null}
+                    <Menu.Item key='closeRight' disabled={disabledRight} icon={<VerticalLeftOutlined />}>关闭右侧</Menu.Item>
+                    <Menu.Item key='closeLeft' disabled={disabledLeft} icon={<VerticalRightOutlined />}>关闭左侧</Menu.Item>
                 </Menu>
             </div>
         );
     }
 
-    function handleMenuClick(key, action) {
+    function handleMenuClick(nextKey, action) {
         if (action === 'refresh') {
             // 清除对应页面，并不删除tab
-            onClose(key, true);
+            onClose(nextKey, true);
         }
 
         if (action === 'closeLeft' || action === 'closeRight') {
             const arr = action === 'closeLeft' ? tabs : [...tabs].reverse();
             const keys = [];
+            // eslint-disable-next-line no-restricted-syntax
             for (let tab of arr) {
-                if (tab.key === key) break;
+                if (tab.key === nextKey) break;
                 keys.push(tab.key);
             }
 
@@ -155,9 +161,9 @@ export default withRouter(React.memo(function Tab(props) {
             onClose(keys);
 
             // 非激活页面，进行跳转
-            const tab = tabs.find(item => item.key === key);
+            const tab = tabs.find(item => item.key === nextKey);
             if (!tab.active) {
-                props.history.push(key);
+                props.history.push(nextKey);
             }
 
             // tabs重新渲染
@@ -190,7 +196,7 @@ export default withRouter(React.memo(function Tab(props) {
                 paddingLeft,
             }}
         >
-            <div className={borderBottomClass}/>
+            <div className={borderBottomClass} />
             <div className={leftClass}>
                 {showLogo ? (
                     <Logo
@@ -213,10 +219,10 @@ export default withRouter(React.memo(function Tab(props) {
                 ) : null}
             </div>
             <Tabs
-                size="small"
+                size='small'
                 hideAdd
                 activeKey={tabs.find(item => item.active)?.key}
-                type="editable-card"
+                type='editable-card'
                 onTabClick={handleClick}
                 onEdit={handleEdit}
             >

@@ -12,8 +12,8 @@ export default function useHeight(domRef, otherHeight = 0, deps = []) {
 
         const oHeight = otherHeight + marginBottom + eleTop;
         const windowHeight = document.documentElement.clientHeight;
-        const height = windowHeight - oHeight;
-        setHeight(height);
+        const nextHeight = windowHeight - oHeight;
+        setHeight(nextHeight);
     };
 
     useEffect(() => {

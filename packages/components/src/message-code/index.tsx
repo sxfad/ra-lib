@@ -11,8 +11,8 @@ export interface MessageCodeProps {
     buttonType?: ButtonProps['type'],
     onSend?: () => boolean, // 返回true 或 promise.resolve(true) 则开始倒计时并按钮不可点击 其他不倒计时
     placeholder?: string,
-    wrapperProps?: object,
-    buttonProps?: object,
+    wrapperProps?: Record<string, unknown>,
+    buttonProps?: Record<string, unknown>,
     className?: string,
     prefixCls?: string,
 }
@@ -78,7 +78,7 @@ export default function MessageCode(props: MessageCodeProps) {
     const disabled = count > 0;
 
     return (
-        <Spin spinning={loading} size="small">
+        <Spin spinning={loading} size='small'>
             <div
                 className={rootClass}
                 // @ts-ignore

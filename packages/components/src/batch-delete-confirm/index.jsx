@@ -1,6 +1,6 @@
 import React from 'react';
-import {Modal} from 'antd';
-import {ExclamationCircleOutlined} from '@ant-design/icons';
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 /**
  * 批量删除提示
@@ -11,7 +11,7 @@ export default function batchDeleteConfirm(count) {
     const content = (
         <div>
             您确定删除
-            <span style={{padding: '0 5px', color: 'red', fontSize: 18}}>
+            <span style={{ padding: '0 5px', color: 'red', fontSize: 18 }}>
                 {count}
             </span>
             条记录吗？
@@ -21,12 +21,12 @@ export default function batchDeleteConfirm(count) {
         Modal.confirm({
             title: '温馨提示',
             content,
-            icon: <ExclamationCircleOutlined/>,
+            icon: <ExclamationCircleOutlined />,
             okType: 'danger',
             okText: '确定',
             cancelText: '取消',
             onOk: () => resolve(true),
-            onCancel: () => reject('confirm cancel'),
+            onCancel: () => reject(Error('confirm cancel')),
         });
     });
 }

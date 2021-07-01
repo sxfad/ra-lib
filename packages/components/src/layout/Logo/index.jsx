@@ -1,5 +1,5 @@
-import {useContext} from 'react';
-import {withRouter} from 'react-router-dom';
+import { useContext } from 'react';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import ComponentContext from '../../component-context';
 import './style.less';
@@ -31,7 +31,7 @@ function Header(props) {
         className,
         {
             collapsed: sideCollapsed,
-            ['no-side']: !showSide,
+            'no-side': !showSide,
             dark: theme === 'dark',
         },
     );
@@ -39,17 +39,17 @@ function Header(props) {
     return (
         <div
             className={rootClass}
-            style={{width: width, flex: `0 0 ${width}px`, ...style}}
+            style={{ width, flex: `0 0 ${width}px`, ...style }}
             onClick={handleLogoClick}
         >
             {typeof logo === 'string' ? (
                 <img
                     className={`${prefixCls}-image`}
-                    style={{height: height - 16}}
+                    style={{ height: height - 16 }}
                     src={logo}
-                    alt="logo"
+                    alt='logo'
                 />
-            ) : {logo}}
+            ) : { logo }}
             {sideCollapsed ? null : <h1 className={`${prefixCls}-title`}>{title}</h1>}
         </div>
     );

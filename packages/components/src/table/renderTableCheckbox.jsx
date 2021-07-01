@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useRef, useContext} from 'react';
-import {Checkbox} from 'antd';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import { Checkbox } from 'antd';
 // @ts-ignore
-import {findGenerationNodes, findParentNodes} from '@ra-lib/util';
+import { findGenerationNodes, findParentNodes } from '@ra-lib/util';
 import ComponentContext from '../component-context';
 import classNames from 'classnames';
 import './style.less';
@@ -22,11 +22,13 @@ export default function renderTableCheckbox(WrappedTable) {
             ...otherProps
         } = props;
 
+        const { selectedRowKeys, getCheckboxProps, renderCell: _renderCell, onSelectAll, onChange, ...others } = rowSelection;
+
         let onRow;
         if (rowCheck) {
             onRow = (record, index) => {
                 const result = propsOnRow(record, index);
-                const {onClick = () => null, ...others} = result;
+                const { onClick = () => null, ...ots } = result;
                 const nextOnClick = event => {
                     onClick(event);
                     const checkboxProps = getCheckboxProps && getCheckboxProps(record) || {};
@@ -37,34 +39,33 @@ export default function renderTableCheckbox(WrappedTable) {
                     // 当前节点状态
                     const checked = !_record.___checked;
 
-                    const e = {target: {checked}};
+                    const e = { target: { checked } };
                     handleCheck(e, record);
                 };
 
                 return {
                     onClick: nextOnClick,
-                    ...others,
+                    ...ots,
                 };
 
             };
         }
 
-        const {selectedRowKeys, getCheckboxProps, renderCell: _renderCell, onSelectAll, onChange, ...others} = rowSelection;
 
         let nextColumns = columns;
         if (checkboxIndex !== false) {
             nextColumns = [...columns];
-            const col = {...nextColumns[checkboxIndex]};
+            const col = { ...nextColumns[checkboxIndex] };
             if (!col.render) col.render = value => value;
             const render = (value, record, index) => (
                 <>
                     {renderCell(null, record)}
-                    <span style={{marginLeft: 8}}>
+                    <span style={{ marginLeft: 8 }}>
                         {col.render(value, record, index)}
                     </span>
                 </>
             );
-            nextColumns.splice(checkboxIndex, 1, {...col, render});
+            nextColumns.splice(checkboxIndex, 1, { ...col, render });
         }
 
 
@@ -104,7 +105,7 @@ export default function renderTableCheckbox(WrappedTable) {
         }
 
         function handleCheck(e, record) {
-            const {checked} = e.target;
+            const { checked } = e.target;
             const key = record[rowKey];
             const _record = getStatusRecord(record);
 
@@ -139,10 +140,10 @@ export default function renderTableCheckbox(WrappedTable) {
 
                 // 处理父级半选状态, 从底层向上处理
                 [...parentNodes].reverse().forEach(node => {
-                    const key = node[rowKey];
+                    const nodeKey = node[rowKey];
                     const _node = getStatusRecord(node);
 
-                    const generationNodes = _node.___generationNodes || findGenerationNodes(dataSource, key);
+                    const generationNodes = _node.___generationNodes || findGenerationNodes(dataSource, nodeKey);
                     _node.___generationNodes = generationNodes;
 
                     let allChecked = true;
@@ -163,7 +164,7 @@ export default function renderTableCheckbox(WrappedTable) {
             loop(dataSource);
         }
 
-        function renderCell(_checked, record, index, originNode) {
+        function renderCell(_checked, record) {
             const _record = getStatusRecord(record);
             const checkboxProps = getCheckboxProps && getCheckboxProps(record) || {};
 
@@ -180,11 +181,11 @@ export default function renderTableCheckbox(WrappedTable) {
             );
         }
 
-        function handleSelectAll(selected, selectedRows, changeRows) {
+        function handleSelectAll(selected) {
             const loop = nodes => nodes.forEach(node => {
-                const {children} = node;
+                const { children } = node;
                 const checkboxProps = getCheckboxProps && getCheckboxProps(node) || {};
-                if(!checkboxProps.disabled) {
+                if (!checkboxProps.disabled) {
                     const _node = getStatusRecord(node);
 
                     _node.___checked = selected;
@@ -197,14 +198,16 @@ export default function renderTableCheckbox(WrappedTable) {
             setSelectedKeys(dataSource);
         }
 
-        function setSelectedKeys(dataSource) {
-            const {onChange} = rowSelection;
+        function setSelectedKeys(ds) {
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            const { onChange } = rowSelection;
 
             const selectedRows = [];
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             const selectedRowKeys = [];
 
             const loop = nodes => nodes.forEach(node => {
-                const {children} = node;
+                const { children } = node;
                 const key = node[rowKey];
                 const _node = getStatusRecord(node);
 
@@ -214,9 +217,9 @@ export default function renderTableCheckbox(WrappedTable) {
                 }
                 if (children) loop(children);
             });
-            loop(dataSource);
+            loop(ds);
 
-            onChange && onChange(selectedRowKeys, selectedRows);
+            if (onChange) onChange(selectedRowKeys, selectedRows);
         }
 
         prefixCls = `${prefixCls}-table`;
@@ -238,7 +241,7 @@ export default function renderTableCheckbox(WrappedTable) {
                 rowSelection={{
                     ...others,
                     getCheckboxProps,
-                    selectedRowKeys: selectedRowKeys,
+                    selectedRowKeys,
                     renderCell: checkboxIndex === false ? renderCell : () => null,
                     onSelectAll: handleSelectAll,
                 }}
@@ -246,68 +249,3 @@ export default function renderTableCheckbox(WrappedTable) {
         );
     };
 }
-/*
-
-const testDataSource = [
-    {id: '1', name: '名称1', remark: '备注1'},
-    {id: '11', name: '名称11', remark: '备注11', parentId: '1'},
-    {id: '111', name: '名称111', remark: '备注111', parentId: '11'},
-    {id: '112', name: '名称112', remark: '备注112', parentId: '11'},
-    {id: '113', name: '名称113', remark: '备注113', parentId: '11'},
-    {id: '12', name: '名称12', remark: '备注12', parentId: '1'},
-    {id: '13', name: '名称13', remark: '备注13', parentId: '1'},
-    {id: '14', name: '名称14', remark: '备注14', parentId: '1'},
-    {id: '2', name: '名称2', remark: '备注2'},
-    {id: '3', name: '名称3', remark: '备注3'},
-    {id: '4', name: '名称4', remark: '备注4'},
-];
-
-const CheckboxTable = renderTableCheckbox(Table);
-
-@config({
-    path: '/table/select',
-})
-export default class TableSelect extends React.Component {
-    state = {
-        dataSource: [],
-        selectedRowKeys: ['111', '112', '113', '4'],
-        selectedRows: [],
-    };
-    columns = [
-        {
-            title: '名称', dataIndex: 'name',
-            render: (value, record) => value + 2222,
-        },
-        {title: '备注', dataIndex: 'remark'},
-    ];
-
-    componentDidMount() {
-        this.setState({dataSource: convertToTree(testDataSource)});
-    }
-
-    handleChange = (selectedRowKeys, selectedRows) => {
-
-        this.setState({selectedRowKeys, selectedRows});
-    };
-
-    render() {
-        const {dataSource, selectedRowKeys} = this.state;
-
-        return (
-            <PageContent>
-                <CheckboxTable
-                    fitHeight
-                    rowSelection={{
-                        selectedRowKeys,
-                        onChange: this.handleChange,
-                    }}
-                    columns={this.columns}
-                    dataSource={dataSource}
-                    rowKey="id"
-                    pagination={false}
-                />
-            </PageContent>
-        );
-    }
-}
-*/

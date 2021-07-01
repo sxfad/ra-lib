@@ -22,12 +22,12 @@ function Error404(props: Error404Props) {
             }}
         >
             <Result
-                status="404"
-                title="404"
-                subTitle="您访问的页面不存在"
+                status='404'
+                title='404'
+                subTitle='您访问的页面不存在'
                 extra={
                     <Space>
-                        <Button type="primary" onClick={() => history.replace(homePath)}>返回首页</Button>
+                        <Button type='primary' onClick={() => history.replace(homePath)}>返回首页</Button>
                         <Button onClick={() => history.goBack()}>返回上个页面</Button>
                     </Space>
                 }

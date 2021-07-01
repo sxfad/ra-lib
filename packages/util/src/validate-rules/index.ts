@@ -8,10 +8,12 @@ import * as regexps from './regexp';
 function getStringByteLength(value) {
     if (!value) return 0;
     const s = typeof value !== 'string' ? `${value}` : value;
-    let length = s.length;
+    let { length } = s;
 
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < s.length; i++) {
         if (s.charCodeAt(i) > 127) {
+            // eslint-disable-next-line no-plusplus
             length++;
         }
     }
@@ -38,15 +40,18 @@ function stringFormat(value, ...args) {
         Object.keys(arg).forEach(key => {
             if (arg[key] !== undefined) {
                 const reg = new RegExp(`({${key}})`, 'g');
+                // eslint-disable-next-line no-param-reassign
                 value = value.replace(reg, arg[key]);
             }
         });
         return value;
     }
 
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < args.length; i++) {
         if (args[i] !== undefined) {
             let reg = new RegExp(`({)${i}(})`, 'g');
+            // eslint-disable-next-line no-param-reassign
             value = value.replace(reg, args[i]);
         }
     }
@@ -145,11 +150,16 @@ export function numberRange(min, max, message = '请输入{min}到{max}之间的
         validator(rule, value) {
             if (!value) return Promise.resolve();
 
+            // eslint-disable-next-line no-param-reassign
             value = Number(value);
 
             if (!value && value !== 0) return Promise.resolve();
 
-            (value < min || value > max) ? Promise.reject(stringFormat(message, { min, max })) : Promise.resolve();
+            if ((value < min || value > max)) {
+                Promise.reject(stringFormat(message, { min, max }));
+            } else {
+                Promise.resolve();
+            }
         },
     };
 }
@@ -159,11 +169,16 @@ export function numberMaxRange(max, message = '不能大于{max}') {
         validator(rule, value) {
             if (!value) return Promise.resolve();
 
+            // eslint-disable-next-line no-param-reassign
             value = Number(value);
 
             if (!value && value !== 0) return Promise.resolve();
 
-            value > max ? Promise.reject(stringFormat(message, { max })) : Promise.resolve();
+            if (value > max) {
+                Promise.reject(stringFormat(message, { max }));
+            } else {
+                Promise.resolve();
+            }
         },
     };
 }
@@ -173,11 +188,16 @@ export function numberMinRange(min, message = '不能小于{min}') {
         validator(rule, value) {
             if (!value) return Promise.resolve();
 
+            // eslint-disable-next-line no-param-reassign
             value = Number(value);
 
             if (!value && value !== 0) return Promise.resolve();
 
-            value < min ? Promise.reject(stringFormat(message, { min })) : Promise.resolve();
+            if (value < min) {
+                Promise.reject(stringFormat(message, { min }));
+            } else {
+                Promise.resolve();
+            }
         },
     };
 }
@@ -188,6 +208,7 @@ export function stringByteRangeLength(min, max, message = '请输入 {min}-{max}
             if (!value) return Promise.resolve();
 
             let length = getStringByteLength(value);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             (length < min || length > max) ? Promise.reject(stringFormat(message, { min, max })) : Promise.resolve();
         },
     };
@@ -198,6 +219,7 @@ export function stringByteMinLength(min, message = '最少输入{min}个字符(�
         validator(rule, value) {
             if (!value) return Promise.resolve();
             let length = getStringByteLength(value);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             length < min ? Promise.reject(stringFormat(message, { min })) : Promise.resolve();
         },
     };
@@ -208,6 +230,7 @@ export function stringByteMaxLength(max, message = '最多输入{max}个字符(�
         validator(rule, value) {
             if (!value) return Promise.resolve();
             let length = getStringByteLength(value);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             length > max ? Promise.reject(stringFormat(message, { max })) : Promise.resolve();
         },
     };
@@ -217,7 +240,8 @@ export function arrayMaxLength(max, message = '最多{max}个值') {
     return {
         validator(rule, value) {
             if (!value || !Array.isArray(value)) return Promise.resolve();
-            let length = value.length;
+            let { length } = value;
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             length > max ? Promise.reject(stringFormat(message, { max })) : Promise.resolve();
         },
     };

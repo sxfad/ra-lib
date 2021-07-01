@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import {formElementTypes, isInputLikeElement} from './util';
+import { formElementTypes, isInputLikeElement } from './util';
 
 
 export default function Element(props) {
@@ -18,7 +18,7 @@ export default function Element(props) {
         size: 'default',
     };
 
-    const elementProps = {value, onChange, ...others};
+    const elementProps = { value, onChange, ...others };
 
     if (dateFormat) {
         if (value) {
@@ -29,6 +29,7 @@ export default function Element(props) {
             }
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         elementProps.onChange = value => {
             if (!value) return onChange(value);
 
@@ -41,6 +42,8 @@ export default function Element(props) {
                 val = dateFormat === 'timestamp' ? value.valueOf() : value.format(dateFormat);
             }
             onChange(val);
+
+            return null;
         };
     }
 
@@ -48,15 +51,15 @@ export default function Element(props) {
 
     if (!typeItem) throw new Error(`no such type: ${type}`);
 
-    const {Component, getComponent} = typeItem;
+    const { Component, getComponent } = typeItem;
 
-    if (getComponent) return getComponent({commonProps, props: elementProps});
+    if (getComponent) return getComponent({ commonProps, props: elementProps });
 
     // 类似Input组件 添加type
     if (isInputLikeElement(type)) {
-        return <Component {...commonProps} type={type} {...elementProps}/>;
+        return <Component {...commonProps} type={type} {...elementProps} />;
     }
 
-    return <Component {...commonProps} {...elementProps}/>;
+    return <Component {...commonProps} {...elementProps} />;
 }
 

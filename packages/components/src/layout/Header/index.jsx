@@ -1,8 +1,8 @@
-import {useContext, useState, useEffect} from 'react';
-import {withRouter} from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 // @ts-ignore
-import {getFirstNode, findParentNodes} from '@ra-lib/util';
+import { getFirstNode, findParentNodes } from '@ra-lib/util';
 import ComponentContext from '../../component-context';
 import LAYOUT_TYPE from '../layout-type';
 import Menu from '../Menu';
@@ -54,24 +54,24 @@ function Header(props) {
         }
 
         if (layoutType === LAYOUT_TYPE.TOP_SIDE_MENU) {
-            const topMenus = menuTreeData.map(topNode => {
-                const {path, url, target} = getFirstNode(topNode, 'path') || {};
+            const menus = menuTreeData.map(topNode => {
+                const { path, url, target } = getFirstNode(topNode, 'path') || {};
 
-                return {...topNode, children: [], path, url, target};
+                return { ...topNode, children: [], path, url, target };
             });
 
-            setTopMenus(topMenus);
+            setTopMenus(menus);
         }
     }, [menuTreeData, layoutType]);
 
     prefixCls = `${prefixCls}-layout-header`;
-    const rootClass = classNames(prefixCls, className, {collapsed: sideCollapsed, dark: theme === 'dark'});
+    const rootClass = classNames(prefixCls, className, { collapsed: sideCollapsed, dark: theme === 'dark' });
     const contentClass = classNames(`${prefixCls}-content`);
 
     return (
         <header
             className={rootClass}
-            style={{height}}
+            style={{ height }}
         >
             <Logo
                 logo={logo}
@@ -98,7 +98,7 @@ function Header(props) {
                 <div>
                     {[LAYOUT_TYPE.TOP_MENU, LAYOUT_TYPE.TOP_SIDE_MENU].includes(layoutType) && topMenus.length ? (
                         <Menu
-                            mode="horizontal"
+                            mode='horizontal'
                             theme={theme}
                             keepMenuOpen={false}
                             showSearchMenu={false}

@@ -12,7 +12,6 @@ const isObject = value => value && typeof value === 'object' && !Array.isArray(v
  */
 export default function createHooks(ajax) {
     const create = (method) => (...args) => {
-        // eslint-disable-next-line prefer-const
         let [url, initParams, refreshDeps, initOptions = {}] = args;
         if (!initParams) initParams = {};
 

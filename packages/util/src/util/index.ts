@@ -6,7 +6,7 @@ import qs from 'qs';
  * @param run
  * @returns {*}
  */
-export function loopObject(obj, run = (obj, key, value) => value) {
+export function loopObject(obj, run = (ob, key, value) => value) {
     const loop = record => {
         if (!record) return;
         if (typeof record !== 'object') return;
@@ -38,6 +38,7 @@ export function checkSameField(dataSource, field = 'id') {
     const allFields = dataSource.map(item => item[field]);
     const fields = [];
 
+    // eslint-disable-next-line no-restricted-syntax
     for (let f of allFields) {
         if (fields.includes(f)) return f;
         fields.push(f);
@@ -52,10 +53,13 @@ export function checkSameField(dataSource, field = 'id') {
  * @returns {*[]|*}
  */
 export function sort(arr, orderBy = (a, b) => a - b) {
-    const length = arr.length;
+    const { length } = arr;
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < length - 1; i++) {
+        // eslint-disable-next-line no-plusplus
         for (let j = 0; j < length - i - 1; j++) {
             if (orderBy(arr[j], arr[j + 1]) > 0) {
+                // eslint-disable-next-line no-param-reassign,prefer-destructuring
                 arr[j] = [ arr[j + 1], arr[j + 1] = arr[j] ][0];
             }
         }
@@ -74,6 +78,7 @@ export function getQuery(str = '') {
     const search = str || window.location.href.split('?')[1];
     const urlSearchParams = new URLSearchParams(search);
 
+    // eslint-disable-next-line no-restricted-syntax
     for (let key of urlSearchParams.keys()) {
         query[key] = urlSearchParams.get(key);
     }
@@ -138,7 +143,8 @@ export function getScrollBarWidth() {
 export function hasScrollBar(element, direction = 'vertical') {
     if (direction === 'vertical') {
         return element.scrollHeight > element.clientHeight;
-    } else if (direction === 'horizontal') {
+    }
+    if (direction === 'horizontal') {
         return element.scrollWidth > element.clientWidth;
     }
 }
@@ -203,6 +209,7 @@ export function scrollElement(
     const scroll = () => {
         // 顶部 : 中间
         const scrollTop = toTop ? elementTop : elementTop - containerHeight / 2;
+        // eslint-disable-next-line no-param-reassign
         containerEle.scrollTop = scrollTop + offset;
 
         return true;

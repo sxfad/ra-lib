@@ -9,9 +9,9 @@ import { compose } from '../util';
 export default function createConfigHoc(createOptions): any {
     const {
         hoc = [], // 需要额外添加的高阶组件
-        onConstructor = () => void 0,// 返回值作为 extendProps
-        onDidMount = () => void 0, // 返回值作为 extendProps
-        onUnmount = () => void 0,
+        onConstructor = () => undefined,// 返回值作为 extendProps
+        onDidMount = () => undefined, // 返回值作为 extendProps
+        onUnmount = () => undefined,
     } = createOptions;
 
     // 所有的高阶组件

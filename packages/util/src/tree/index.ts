@@ -6,6 +6,7 @@
 export function getTreeData(dataSource) {
     if (!dataSource) return [];
 
+    // eslint-disable-next-line no-param-reassign
     if (!Array.isArray(dataSource)) dataSource = [ dataSource ];
 
     // 含有children属性，已经是树状结构
@@ -25,6 +26,7 @@ export function convertToTree(rows, keyField = 'id', parentKeyField = 'parentId'
     if (!rows) return [];
 
     // 拷贝，多次执行修改原始的rows会出问题，指定id，parentId
+    // eslint-disable-next-line no-param-reassign
     rows = rows.map(item => ({ id: item[keyField], parentId: item[parentKeyField], ...item }));
 
     // 获取所有的顶级节点
@@ -61,15 +63,19 @@ export function convertToTree(rows, keyField = 'id', parentKeyField = 'parentId'
  * @returns {*|[]}
  */
 export function findParentNodes(treeData, fieldValue, field = 'id') {
+    // eslint-disable-next-line no-param-reassign
     treeData = Array.isArray(treeData) ? treeData : [ treeData ];
 
     // 深度遍历查找
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     function dfs(data, fieldValue, parents) {
+        // eslint-disable-next-line no-plusplus
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             // 找到id则返回父级id
             if (item[field] === fieldValue) return parents;
             // children不存在或为空则不递归
+            // eslint-disable-next-line no-continue
             if (!item.children || !item.children.length) continue;
             // 往下查找时将当前id入栈
             parents.push(item);
@@ -93,13 +99,16 @@ export function findParentNodes(treeData, fieldValue, field = 'id') {
  * @param {Function} [compare] 节点属性所对应的数据比较方式， 默认 === 比对
  * @returns {object} 返回根据 key value查找到的节点
  */
-export function findNode(treeData, fieldValue, field = 'id', compare = (a, b, item) => a === b) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function findNode(treeData, fieldValue, field = 'id', compare = (a, b, item = {}) => a === b) {
+    // eslint-disable-next-line no-param-reassign
     treeData = Array.isArray(treeData) ? treeData : [ treeData ];
 
     if (!treeData || !treeData.length) return null;
 
     let node = null;
     const loop = (data) => {
+        // eslint-disable-next-line no-restricted-syntax
         for (let item of data) {
             if (compare(item[field], fieldValue, item)) {
                 node = { ...item };
@@ -121,9 +130,11 @@ export function findNode(treeData, fieldValue, field = 'id', compare = (a, b, it
  * @returns {*}
  */
 export function getFirstNode(treeData, field) {
+    // eslint-disable-next-line no-param-reassign
     if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const loop = nodes => {
+        // eslint-disable-next-line no-restricted-syntax
         for (let node of nodes) {
             if (node[field]) return node;
 
@@ -144,6 +155,7 @@ export function getFirstNode(treeData, field) {
  * @param keyField
  */
 export function findNextNode(treeData, key, keyField = 'id') {
+    // eslint-disable-next-line no-param-reassign
     if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const parentNode = findParentNode(treeData, key, keyField);
@@ -169,9 +181,11 @@ export function findNextNode(treeData, key, keyField = 'id') {
  * @returns {{children}|*}
  */
 export function findParentNode(treeData, key, keyField = 'id') {
+    // eslint-disable-next-line no-param-reassign
     if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const loop = nodes => {
+        // eslint-disable-next-line no-restricted-syntax
         for (let node of nodes) {
             if (node && node.children) {
                 if (node.children.some(item => item[keyField] === key)) {
@@ -194,9 +208,11 @@ export function findParentNode(treeData, key, keyField = 'id') {
  * @param filter 过滤函数
  * @returns {*[]|*}
  */
-export function filterTree(treeData, filter = node => true) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function filterTree(treeData, filter = (node) => true) {
     if (!treeData) return [];
 
+    // eslint-disable-next-line no-param-reassign
     if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const getNodes = (result, node) => {
@@ -230,9 +246,9 @@ export function findGenerationNodes(treeData, fieldValue, field = 'id') {
     if (!node.children || !node.children.length) return [];
 
     const results = [];
-    const loop = nodes => nodes.forEach(node => {
-        results.push(node);
-        if (node.children && node.children.length) loop(node.children);
+    const loop = nodes => nodes.forEach(item => {
+        results.push(item);
+        if (item.children && item.children.length) loop(item.children);
     });
 
     loop(node.children);
@@ -249,9 +265,11 @@ export function findGenerationNodes(treeData, fieldValue, field = 'id') {
 export function removeNode(treeData, key, keyField = 'id') {
     if (!treeData) return null;
 
+    // eslint-disable-next-line no-param-reassign
     if (!Array.isArray(treeData)) treeData = [ treeData ];
 
     const loop = (data) => {
+        // eslint-disable-next-line no-plusplus
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             if (item[keyField] === key) {

@@ -1,5 +1,4 @@
 import React, { useContext, ReactNode, ReactChildren } from 'react';
-import PropTypes from 'prop-types';
 
 // components公用context，用于设置一些默认值
 // 以变量形式提供配置，很容易时间国际化

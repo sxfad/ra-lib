@@ -2,8 +2,9 @@
 PS：变量不用记忆，只是react组件在AST中的称呼。需要手撸babel插件时打开https://astexplorer.net/ 对照即可。
 types: https://babeljs.io/docs/en/babel-types
 */
+
 // babel部分 对外暴露了一个函数，接受参数types。
-function babelPlugin({types: t}) {
+function babelPlugin({ types: t }) {
     return {
         /*
         功能：可在react jsx中直接使用r-code，进行权限判断
@@ -48,7 +49,7 @@ function babelPlugin({types: t}) {
             // JSXElement => jsx中的组件元素
             JSXElement: function(path, state) {
                 // path.node 可获取到该节点的AST
-                let {node} = path;
+                let { node } = path;
                 const conditional = state.opts.conditional;
                 const negation = state.opts.negation;
                 const attributeName = state.opts.attributeName;
@@ -59,9 +60,9 @@ function babelPlugin({types: t}) {
 
                 // 遍历 JSXElement 上所有的属性并找出带r-code的元素
                 let targetAttr = node.openingElement.attributes
-                    .find(({type, name}) => type === 'JSXAttribute' && name.name === attributeName);
+                    .find(({ type, name }) => type === 'JSXAttribute' && name.name === attributeName);
                 let wrapperAttr = node.openingElement.attributes
-                    .find(({type, name}) => type === 'JSXAttribute' && name.name === wrapperAttributedName);
+                    .find(({ type, name }) => type === 'JSXAttribute' && name.name === wrapperAttributedName);
 
                 // 如果rCodeAttr为undefined则表示该组件没有r-code，则停止访问
                 if (targetAttr == null) {

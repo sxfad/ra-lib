@@ -30,9 +30,9 @@ export interface ModalContentProps {
     // 取消事件
     onCancel?: () => void,
     // 最外层容器样式
-    style?: object,
+    style?: CSSProperties,
     // 内容容器样式
-    bodyStyle?: object,
+    bodyStyle?: CSSProperties,
 }
 
 const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) => {
@@ -47,8 +47,8 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
         bodyStyle = {},
         fitHeight = false,
         okHtmlType = '',
-        onOk = () => void 0,
-        onCancel = () => void 0,
+        onOk = () => undefined,
+        onCancel = () => undefined,
         otherHeight,
         loadingTip = context.loadingTip,
         prefixCls = context.prefixCls,
@@ -99,6 +99,7 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
                 ref={rootDom => {
                     rootRef.current = rootDom;
                     // @ts-ignore
+                    // eslint-disable-next-line no-param-reassign
                     if (ref) ref.current = rootDom;
                 }}
                 style={outerStyle}
@@ -112,7 +113,7 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>((props, ref) 
                 </div>
                 {footer !== false ? (
                     <div className={`${antdPrefixCls}-modal-footer`} style={{ flex: 0 }}>
-                        {footer ? footer : (
+                        {footer || (
                             <>
                                 <Button type="primary" onClick={onOk} htmlType={okHtmlType}>{okText}</Button>
                                 <Button onClick={onCancel}>{cancelText}</Button>

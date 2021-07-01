@@ -12,7 +12,7 @@ export interface LoadingProps {
     style?: CSSProperties,
 }
 
-export default class Loading extends Component <LoadingProps, {}> {
+export default class Loading extends Component <LoadingProps, unknown> {
     constructor(props: LoadingProps) {
         super(props);
         const { progress } = props;
@@ -63,7 +63,7 @@ export default class Loading extends Component <LoadingProps, {}> {
         };
         return (
             <div style={wrapperStyle} {...others}>
-                <Spin spinning tip={tip}/>
+                <Spin spinning tip={tip} />
             </div>
         );
     }

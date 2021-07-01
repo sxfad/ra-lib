@@ -21,9 +21,9 @@ function RAPagination(props: RAPaginationProps) {
         total,
         pageNum = 1,
         pageSize = 10,
-        onPageNumChange = pageNum => void 0,
-        onPageSizeChange = pageSize => void 0,
-        onChange = (pageNum, pageSize) => void 0,
+        onPageNumChange = () => undefined,
+        onPageSizeChange = () => undefined,
+        onChange = () => undefined,
         style = {},
 
         ...others
@@ -45,7 +45,7 @@ function RAPagination(props: RAPaginationProps) {
                 size={isMobile ? 'small' : 'default'}
                 style={{ marginTop: 8, ...style }}
                 total={total}
-                showTotal={total => `共${total}条数据`}
+                showTotal={t => `共${t}条数据`}
                 showSizeChanger
                 showQuickJumper
                 current={pageNum}

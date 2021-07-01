@@ -3,6 +3,7 @@ import set from 'lodash/set';
 
 function slicerState(paths, state) {
     return paths.reduce((prev, path) => {
+        // eslint-disable-next-line no-param-reassign
         prev[path] = get(state, path);
         return prev;
     }, {});
@@ -41,7 +42,9 @@ export default function syncState(paths, config) {
 
     return next => (reducer, initialState, enhancer) => {
         if (typeof initialState === 'function' && typeof enhancer === 'undefined') {
+            // eslint-disable-next-line no-param-reassign
             enhancer = initialState;
+            // eslint-disable-next-line no-param-reassign
             initialState = undefined;
         }
 

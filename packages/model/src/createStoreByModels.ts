@@ -65,8 +65,8 @@ function createStoreByModels(models, options): any {
         middlewares = [], // 中间件
         enhancers = [], // 与 middlewares 进行compose运算的方法： const enhancer = compose(applyMiddleware(...middlewares), ...enhancers);
         reducers: _reducers, // 通过 combineReducers 方式，额外添加到 redux 中的reducers
-        onError = () => void 0, // 错误处理函数
-        onSuccess = () => void 0, // 成功处理函数
+        onError = () => undefined, // 错误处理函数
+        onSuccess = () => undefined, // 成功处理函数
         localStorage = window.localStorage, // syncLocal 处理函数
         sessionStorage = window.sessionStorage, // syncSession 处理函数
         serialize = JSON.stringify,
@@ -111,8 +111,11 @@ function createStoreByModels(models, options): any {
                 // @ts-ignore
                 debounce = true,
             } = modelConfig;
+            // eslint-disable-next-line no-multi-assign
             const modelActions = actions[modelName] = {};
+            // eslint-disable-next-line no-multi-assign
             const modelActionTypes = actionsTypes[modelName] = {};
+            // eslint-disable-next-line no-multi-assign
             const modelReducers = reducers[modelName] = {};
             const includeUndoableActions = [];
             const excludeUndoableActions = [];
@@ -153,6 +156,7 @@ function createStoreByModels(models, options): any {
                                     type: paddingActionType,
                                     payload: true,
                                 });
+                                // eslint-disable-next-line no-multi-assign
                                 const callTime = asyncCallTime[resolveActionType] = Date.now();
                                 value(payload, modelState)
                                     .then(result => {
@@ -174,8 +178,8 @@ function createStoreByModels(models, options): any {
                                     });
                             };
 
-                            const reducer = (state, action) => {
-                                const { payload: newState } = action;
+                            const reducer = (state, rAction) => {
+                                const { payload: newState } = rAction;
                                 let nextState = { ...state };
 
                                 if (nextState && (typeof nextState !== 'object' || Array.isArray(nextState))) {
@@ -199,12 +203,12 @@ function createStoreByModels(models, options): any {
                             modelActionTypes[paddingActionType] = paddingActionType;
 
                             modelReducers[resolveActionType] = reducer;
-                            modelReducers[rejectActionType] = (state, action) => {
-                                const { payload } = action;
+                            modelReducers[rejectActionType] = (state, rAction) => {
+                                const { payload } = rAction;
                                 return { ...state, [rejectStateName]: payload, [paddingStateName]: false };
                             };
-                            modelReducers[paddingActionType] = (state, action) => {
-                                const { payload } = action;
+                            modelReducers[paddingActionType] = (state, rAction) => {
+                                const { payload } = rAction;
                                 return { ...state, [rejectStateName]: null, [paddingStateName]: payload };
                             };
                             modelActions[key] = action;
@@ -221,8 +225,8 @@ function createStoreByModels(models, options): any {
                                 type: actionType,
                                 payload,
                             });
-                            const reducer = (state, action) => {
-                                const { payload } = action;
+                            const reducer = (state, rAction) => {
+                                const { payload } = rAction;
 
                                 let nextState;
                                 try {
@@ -258,7 +262,7 @@ function createStoreByModels(models, options): any {
 
             allInitialState[modelName] = { ...initialState };
             reducers[modelName] = function(state = { ...initialState }, action) {
-                const type = action.type;
+                const {type} = action;
                 const func = modelReducers[type];
                 if (!func) return state;
 
@@ -294,16 +298,16 @@ function createStoreByModels(models, options): any {
                     uOptions.filter = includeAction(includeUndoableActions);
                 }
 
-                let options = { ...uOptions, ...undoableOptions };
+                let nextOptions = { ...uOptions, ...undoableOptions };
 
-                reducers[modelName] = _undoable(reducers[modelName], options);
+                reducers[modelName] = _undoable(reducers[modelName], nextOptions);
 
-                actions[modelName][`${modelName}Undo`] = () => ({ type: options.undoType });
-                actions[modelName][`${modelName}Redo`] = () => ({ type: options.redoType });
-                actions[modelName][`${modelName}Jump`] = () => ({ type: options.jumpType });
-                actions[modelName][`${modelName}JumpToPast`] = () => ({ type: options.jumpToPastType });
-                actions[modelName][`${modelName}JumpToFuture`] = () => ({ type: options.jumpToFutureType });
-                actions[modelName][`${modelName}ClearHistory`] = () => ({ type: options.clearHistoryType });
+                actions[modelName][`${modelName}Undo`] = () => ({ type: nextOptions.undoType });
+                actions[modelName][`${modelName}Redo`] = () => ({ type: nextOptions.redoType });
+                actions[modelName][`${modelName}Jump`] = () => ({ type: nextOptions.jumpType });
+                actions[modelName][`${modelName}JumpToPast`] = () => ({ type: nextOptions.jumpToPastType });
+                actions[modelName][`${modelName}JumpToFuture`] = () => ({ type: nextOptions.jumpToFutureType });
+                actions[modelName][`${modelName}ClearHistory`] = () => ({ type: nextOptions.clearHistoryType });
             }
         });
 
@@ -311,9 +315,11 @@ function createStoreByModels(models, options): any {
         const action = Object.entries(actions)
             .reduce((prev, curr) => {
                 const [ modelName, modelActions = {} ] = curr;
+                // eslint-disable-next-line no-param-reassign
                 prev[modelName] = Object.entries(modelActions)
                     .reduce((p, c) => {
                         const [ funcName, func ] = c;
+                        // eslint-disable-next-line no-param-reassign
                         p[funcName] = (...args) => dispatch(func(...args));
                         return p;
                     }, {});

@@ -15,6 +15,7 @@ export interface confirmOptions extends ModalProps {
  */
 export default async function confirm(options: string | confirmOptions) {
     if (typeof options === 'string') {
+        // eslint-disable-next-line no-param-reassign
         options = {
             content: options,
         };
@@ -28,13 +29,13 @@ export default async function confirm(options: string | confirmOptions) {
 
     return new Promise<void>((resolve, reject) => {
         Modal.confirm({
-            icon: <QuestionCircleOutlined/>,
+            icon: <QuestionCircleOutlined />,
             title,
             content: <div style={{ marginTop: 8, fontSize: 14, color }}>{content}</div>,
             okText: '确定',
             cancelText: '取消',
             onOk: () => resolve(),
-            onCancel: () => reject('confirm cancel'),
+            onCancel: () => reject(Error('confirm cancel')),
             ...others,
         });
     });

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {ConfigProvider} from 'antd';
+import React, { Component } from 'react';
+import { ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import './index.less';
 
 
@@ -20,7 +20,7 @@ let BodyContainer = SortableContainer(props => {
 
     return (
         <tbody {...others}>{children2.map((item, index) => {
-            const {key} = item;
+            const { key } = item;
 
             return (
                 <RowElement
@@ -35,13 +35,9 @@ let BodyContainer = SortableContainer(props => {
 });
 
 function getCss(element, attr) {
-    if (element.currentStyle) {
-        return element.currentStyle[attr];
-    } else {
-        return window.getComputedStyle(element)[attr];
-    }
+    if (element.currentStyle) return element.currentStyle[attr];
+    return window.getComputedStyle(element)[attr];
 }
-
 
 export default function DragRow(OriTable) {
 
@@ -51,10 +47,10 @@ export default function DragRow(OriTable) {
         constructor(props) {
             super(props);
 
-            const {helperClass, onSortStart, onSortEnd, components} = this.props;
+            const { helperClass, onSortStart, onSortEnd, components } = this.props;
 
             const handleSortStart = (...args) => {
-                onSortStart && onSortStart(...args);
+                if (onSortStart) onSortStart(...args);
 
                 // 保持tr样式
                 const helperTds = document.querySelectorAll('.helper-element > td');
@@ -69,24 +65,24 @@ export default function DragRow(OriTable) {
                 });
             };
 
-            const handleSortEnd = (props) => {
-                let {oldIndex, newIndex} = props;
+            const handleSortEnd = (sortProps) => {
+                let { oldIndex, newIndex } = sortProps;
                 const prefixCls = this.context.getPrefixCls();
                 if (this.body.container.querySelector(`.${prefixCls}-table-measure-row`)) {
                     newIndex = (newIndex - 1) < 0 ? 0 : newIndex - 1;
-                    oldIndex = oldIndex - 1;
+                    oldIndex -= 1;
                 }
 
-                onSortEnd({...props, oldIndex, newIndex});
+                onSortEnd({ ...sortProps, oldIndex, newIndex });
             };
 
-            let BodyWrapper = (props) => {
+            let BodyWrapper = (bodyProps) => {
                 const injectProps = {
                     onSortEnd: handleSortEnd,
                     onSortStart: handleSortStart,
                     helperClass: classnames(helperClass, 'helper-element'),
                 };
-                return <BodyContainer ref={node => this.body = node} {...injectProps} {...props}/>;
+                return <BodyContainer ref={node => this.body = node} {...injectProps} {...bodyProps} />;
             };
 
             const body = components?.body || {};
