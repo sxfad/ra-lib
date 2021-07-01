@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import createHooks from './create-hooks';
 
 /**
@@ -13,7 +13,7 @@ import createHooks from './create-hooks';
  * @param ajax
  * @returns {function({propName?: *}=): function(*): WithAjax}
  */
-const createAjaxHoc = ajax => ({propName = 'ajax'} = {}) => WrappedComponent => {
+const createAjaxHoc = ajax => ({ propName = 'ajax' } = {}) => WrappedComponent => {
     // 将hooks也加入组件props中
     const ajaxHooks = createHooks(ajax);
 
@@ -26,7 +26,8 @@ const createAjaxHoc = ajax => ({propName = 'ajax'} = {}) => WrappedComponent => 
             this._$ajaxTokens = [];
             const methods = ['get', 'post', 'put', 'patch', 'del', 'download'];
 
-            for (let method of methods) {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const method of methods) {
                 this._$ajax[method] = (...args) => {
                     const ajaxToken = ajax[method](...args);
                     this._$ajaxTokens.push(ajaxToken);
@@ -45,7 +46,7 @@ const createAjaxHoc = ajax => ({propName = 'ajax'} = {}) => WrappedComponent => 
             const injectProps = {
                 [propName]: this._$ajax,
             };
-            return <WrappedComponent {...injectProps} {...this.props}/>;
+            return <WrappedComponent {...injectProps} {...this.props} />;
         }
     }
 

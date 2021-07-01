@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {stringify} from 'qs';
+import { stringify } from 'qs';
 
 export default class Ajax {
     /**
@@ -9,8 +9,8 @@ export default class Ajax {
      */
     constructor(options = {}) {
         const {
-            onSuccess = () => void 0,
-            onError = () => void 0,
+            onSuccess = () => undefined,
+            onError = () => undefined,
             reject = true,
             noEmpty = true,
             trim = true,
@@ -31,7 +31,7 @@ export default class Ajax {
                 if (Array.isArray(value)) {
                     this.instance.defaults[key] = [...oldValue, ...value];
                 } else {
-                    this.instance.defaults[key] = {...oldValue, ...value};
+                    this.instance.defaults[key] = { ...oldValue, ...value };
                 }
             } else {
                 this.instance.defaults[key] = value;
@@ -53,17 +53,19 @@ export default class Ajax {
      */
     ajax(options) {
         let {
+            params = {},
+            data = {},
+        } = options;
+        const {
             successTip = false, // 默认false，不展示
             errorTip, //  = method === 'get' ? '获取数据失败！' : '操作失败！', // 默认失败提示
-            reject: _reject = this.reject,
             noEmpty = this.noEmpty, // 过滤掉 值为 null、''、undefined三种参数，不传递给后端
             originResponse = false, // 返回原始相应对象
             trim = this.trim, // 前后去空格
             deleteUseBody = this.deleteUseBody, // delete请求，参数已body发送
+            reject: _reject = this.reject,
 
             url,
-            params = {},
-            data = {},
             method = 'get',
             ...otherOptions
         } = options;
@@ -72,13 +74,13 @@ export default class Ajax {
         const defaultsContentType =
             this.instance.defaults.headers['Content-Type'] ||
             this.instance.defaults.headers['content-type'] ||
-            this.instance.defaults.headers['contentType'] ||
+            this.instance.defaults.headers.contentType ||
             '';
 
         const contentType =
             (otherOptions.headers && otherOptions.headers['Content-Type']) ||
             (otherOptions.headers && otherOptions.headers['content-type']) ||
-            (otherOptions.headers && otherOptions.headers['contentType']) ||
+            (otherOptions.headers && otherOptions.headers.contentType) ||
             '';
 
         const ct = contentType || defaultsContentType;
@@ -97,10 +99,10 @@ export default class Ajax {
             params = empty(params);
         }
 
-        const CancelToken = axios.CancelToken;
+        const { CancelToken } = axios;
         let cancel;
 
-        let instance = this.instance;
+        const { instance } = this;
 
         /*
          *
@@ -123,13 +125,15 @@ export default class Ajax {
                 url,
                 data,
                 params,
+                // eslint-disable-next-line no-return-assign
                 cancelToken: new CancelToken((c) => (cancel = c)),
                 ...otherOptions,
             })
                 .then((response) => {
+                    // eslint-disable-next-line @typescript-eslint/no-shadow
                     const data = originResponse ? response : response.data;
 
-                    this.onSuccess({data, tip: successTip, from: 'ajax'});
+                    this.onSuccess({ data, tip: successTip, from: 'ajax' });
 
                     resolve(data);
                 })
@@ -143,12 +147,14 @@ export default class Ajax {
                             tip: errorTip,
                             from: 'ajax',
                         });
-                    _reject
-                        ? reject(err)
-                        : resolve({$type: 'unRejectError', $error: err});
+                    if (_reject) {
+                        reject(err);
+                    } else {
+                        resolve({ $type: 'unRejectError', $error: err });
+                    }
                 });
         });
-        ajaxPromise.cancel = function() {
+        ajaxPromise.cancel = () => {
             cancel({
                 canceled: true,
             });
@@ -164,7 +170,7 @@ export default class Ajax {
      * @returns {Promise}
      */
     get(url, params, options) {
-        return this.ajax({url, params, method: 'get', ...options});
+        return this.ajax({ url, params, method: 'get', ...options });
     }
 
     /**
@@ -175,7 +181,7 @@ export default class Ajax {
      * @returns {Promise}
      */
     post(url, data, options) {
-        return this.ajax({url, data, method: 'post', ...options});
+        return this.ajax({ url, data, method: 'post', ...options });
     }
 
     /**
@@ -186,7 +192,7 @@ export default class Ajax {
      * @returns {Promise}
      */
     put(url, data, options) {
-        return this.ajax({url, data, method: 'put', ...options});
+        return this.ajax({ url, data, method: 'put', ...options });
     }
 
     /**
@@ -197,7 +203,7 @@ export default class Ajax {
      * @returns {Promise}
      */
     patch(url, data, options) {
-        return this.ajax({url, data, method: 'patch', ...options});
+        return this.ajax({ url, data, method: 'patch', ...options });
     }
 
     /**
@@ -208,7 +214,7 @@ export default class Ajax {
      * @returns {Promise}
      */
     del(url, params, options) {
-        return this.ajax({url, params, method: 'delete', ...options});
+        return this.ajax({ url, params, method: 'delete', ...options });
     }
 
     /**
@@ -219,18 +225,19 @@ export default class Ajax {
      * @param url
      * @param params
      * @param options
-     * @returns {Promise<minimist.Opts.unknown>}
+     * @returns {Promise}
      */
     download(url, params, options = {}) {
-        let {
+        const {
             method = 'get',
             originResponse = true,
-            fileName,
             beforeDownload = () => true,
             ...others
         } = options;
 
-        return this.ajax({url, params, method, originResponse, ...others})
+        let { fileName } = options;
+
+        return this.ajax({ url, params, method, originResponse, ...others })
             .then(res => {
                 // 现在之前，如果返回false，终止下载操作
                 if (beforeDownload(res) === false) return;
@@ -247,7 +254,7 @@ export default class Ajax {
 
                 if (!fileName) throw Error('file name can not be null!');
 
-                const blob = new Blob([res.data], {type: res.headers['content-type']});
+                const blob = new Blob([res.data], { type: res.headers['content-type'] });
 
                 const link = document.createElement('a');
                 link.setAttribute('href', window.URL.createObjectURL(blob));
@@ -269,8 +276,8 @@ function getFileName(headers) {
     if (!headers) return null;
 
     let fileName = headers['content-disposition'].split(';')[1].split('filename=')[1];
-    let fileNameUnicode = headers['content-disposition'].split('filename*=')[1];
-    if (fileNameUnicode) {//当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
+    const fileNameUnicode = headers['content-disposition'].split('filename*=')[1];
+    if (fileNameUnicode) { // 当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
         fileName = decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
     }
 
@@ -294,7 +301,8 @@ function empty(data) {
     return Object.entries(data).reduce((prev, curr) => {
         const [key, value] = curr;
 
-        if (value !== null && value !== '' && value !== void 0) {
+        if (value !== null && value !== '' && value !== undefined) {
+            // eslint-disable-next-line no-param-reassign
             prev[key] = value;
         }
 
@@ -320,8 +328,10 @@ function trimObject(data) {
         const [key, value] = curr;
 
         if (typeof value === 'string') {
+            // eslint-disable-next-line no-param-reassign
             prev[key] = value.trim();
         } else {
+            // eslint-disable-next-line no-param-reassign
             prev[key] = value;
         }
 

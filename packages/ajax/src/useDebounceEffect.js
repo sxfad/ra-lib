@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import { useRef, useEffect } from 'react';
 
 export default function useDebounceEffect(effect, deps, mountFire = true, debounce) {
     const mountRef = useRef(false);
@@ -11,17 +11,18 @@ export default function useDebounceEffect(effect, deps, mountFire = true, deboun
         mountRef.current = true;
 
         // 不使用防抖，直接执行
+        // eslint-disable-next-line consistent-return
         if (debounce === false) return effect();
 
         // 防抖时间，默认 0
-        const time = parseInt(debounce) || 0;
+        const time = window.parseInt(debounce) || 0;
 
         // effect函数返回结果
         let result;
         const handler = setTimeout(() => {
             result = effect();
         }, time);
-
+        // eslint-disable-next-line consistent-return
         return () => {
             if (result && typeof result === 'function') result();
 

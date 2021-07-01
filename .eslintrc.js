@@ -6,6 +6,7 @@ module.exports = {
   rules: {
     'import/no-extraneous-dependencies': 0,
     'import/no-unresolved': 0,
+    'no-underscore-dangle': 0,
     '@typescript-eslint/consistent-type-imports': 'off',
     '@typescript-eslint/consistent-type-definitions': 'off',
   },

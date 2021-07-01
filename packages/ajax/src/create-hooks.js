@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, useCallback} from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useDebounceEffect from './useDebounceEffect';
 
 
@@ -12,6 +12,7 @@ const isObject = value => value && typeof value === 'object' && !Array.isArray(v
  */
 export default function createHooks(ajax) {
     const create = (method) => (...args) => {
+        // eslint-disable-next-line prefer-const
         let [url, initParams, refreshDeps, initOptions = {}] = args;
         if (!initParams) initParams = {};
 
@@ -27,10 +28,10 @@ export default function createHooks(ajax) {
 
         if (!initOptions) initOptions = {};
 
-        let formatParams = args => args;
-        let formatResult = args => args;
-        let formatError = args => args;
-        let setLoading = () => void 0;
+        const formatParams = a => a;
+        let formatResult = a => a;
+        let formatError = a => a;
+        let setLoading = () => undefined;
 
         if (typeof initOptions === 'object') {
             formatResult = initOptions.formatResult || formatResult;
@@ -43,9 +44,9 @@ export default function createHooks(ajax) {
             initOptions = {};
         }
 
-        let {debounce = true} = initOptions;
+        const { debounce = true } = initOptions;
 
-        let mountFire = !('mountFire' in initOptions) ? true : !!initOptions.mountFire;
+        const mountFire = !('mountFire' in initOptions) ? true : !!initOptions.mountFire;
 
         // 用于取消ajax
         const ajaxHandler = useRef(null);
@@ -64,15 +65,15 @@ export default function createHooks(ajax) {
          * @returns {Promise}
          */
         const run = useCallback((params, options = {}) => {
-                params = formatParams(params);
+                let myParams = formatParams(params);
                 // 对象参数合并
-                if (!params) params = initParams;
+                if (!myParams) myParams = initParams;
                 if (
-                    isObject(params)
+                    isObject(myParams)
                     && isObject(initParams)
-                    && !(params instanceof FormData)
+                    && !(myParams instanceof FormData)
                 ) {
-                    params = {...initParams, ...params};
+                    myParams = { ...initParams, ...myParams };
                 }
 
                 // 处理url中的参数 「:id」或「{id}」
@@ -85,16 +86,16 @@ export default function createHooks(ajax) {
                         const key = item.replace(':', '').replace('{', '').replace('}', '');
 
                         // 如果参数不是object 直接将params作为value
-                        if (typeof params !== 'object') {
-                            const value = params;
-                            params = null;
+                        if (typeof myParams !== 'object') {
+                            const value = myParams;
+                            myParams = null;
 
                             return value;
                         }
 
-                        if (!(key in params)) throw Error(`缺少「${key}」参数`);
+                        if (!(key in myParams)) throw Error(`缺少「${key}」参数`);
 
-                        return params[key];
+                        return myParams[key];
 
                         // const value = params[key];
                         // Reflect.deleteProperty(params, key);
@@ -103,22 +104,24 @@ export default function createHooks(ajax) {
                     })
                     .join('/');
 
-                const mergedOptions = {...initOptions, ...options};
+                const mergedOptions = { ...initOptions, ...options };
 
-                setResult(result => ({...result, loading: true, error: null}));
+                // eslint-disable-next-line @typescript-eslint/no-shadow
+                setResult(result => ({ ...result, loading: true, error: null }));
 
                 // 多个请求共用一个loading状态， 使用 __count 记录 发起的loading数量，当 __count === 0 时才调用setLoading(false)
                 setLoading(true);
                 setLoading.__count = (setLoading.__count || 0) + 1;
 
                 // 此处真正发起的ajax请求，ajaxToken 是一个promise
-                const ajaxToken = ajaxHandler.current = ajax[method](_url, params, {reject: true, ...mergedOptions});
+                ajaxHandler.current = ajax[method](_url, myParams, { reject: true, ...mergedOptions });
+                const ajaxToken = ajaxHandler.current;
 
                 ajaxToken
                     .then((res) => {
                         const data = formatResult(res);
 
-                        setResult({data, loading: false, error: null});
+                        setResult({ data, loading: false, error: null });
 
                         setLoading.__count = (setLoading.__count || 0) - 1;
                         if (setLoading.__count === 0) setLoading(false);
@@ -128,7 +131,7 @@ export default function createHooks(ajax) {
                     .catch((res) => {
                         const error = formatError(res);
 
-                        setResult({data: undefined, error, loading: false});
+                        setResult({ data: undefined, error, loading: false });
 
                         setLoading.__count = (setLoading.__count || 0) - 1;
                         if (setLoading.__count === 0) setLoading(false);
@@ -141,9 +144,12 @@ export default function createHooks(ajax) {
                     });
                 return ajaxToken;
             },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             [
                 url,
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 JSON.stringify(initParams),
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 JSON.stringify(initOptions),
             ],
         );
@@ -163,7 +169,7 @@ export default function createHooks(ajax) {
             run();
         }, refreshDeps || [], mountFire, debounce);
 
-        return {run, ...result};
+        return { run, ...result };
     };
 
     return {
