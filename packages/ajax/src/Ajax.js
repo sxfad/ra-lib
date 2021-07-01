@@ -52,7 +52,7 @@ export default class Ajax {
      * @returns {Promise<unknown>}
      */
     ajax(options) {
-        const {
+        let {
             successTip = false, // 默认false，不展示
             errorTip, //  = method === 'get' ? '获取数据失败！' : '操作失败！', // 默认失败提示
             noEmpty = this.noEmpty, // 过滤掉 值为 null、''、undefined三种参数，不传递给后端
@@ -225,7 +225,7 @@ export default class Ajax {
      * @returns {Promise}
      */
     download(url, params, options = {}) {
-        const {
+        let {
             fileName,
             method = 'get',
             originResponse = true,
@@ -242,6 +242,7 @@ export default class Ajax {
 
                 if (!res || !res.headers || !res.data) throw Error(errorMessage);
 
+                // eslint-disable-next-line no-const-assign
                 fileName = fileName
                     || res?.headers.filename
                     || res?.headers.fileName

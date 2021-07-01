@@ -119,7 +119,7 @@ export function wrapperOptions(options, cacheTime) {
 }
 
 function extendMethod(item) {
-    const it = { ...item };
+    let it = item;
     it.getOption = (value) => getField(it, value);
     it.getTag = (value) => <PromiseChildren>{getField(it, value, 'tag')}</PromiseChildren>;
     it.getLabel = (value) => <PromiseChildren>{getField(it, value, 'label')}</PromiseChildren>;
