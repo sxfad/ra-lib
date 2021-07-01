@@ -1,4 +1,3 @@
-// @ts-ignore
 import { checkSameField, convertToTree, queryParse, sort, Storage } from '@ra-lib/util';
 // @ts-ignore
 import appPackage from 'root/package.json';
@@ -37,11 +36,8 @@ export function setToken(token) {
  * token来源: queryString > sessionStorage > loginUser
  */
 export function getToken() {
-    // @ts-ignore
-    const query = queryParse();
-    // @ts-ignore
+    const query: any = queryParse();
     if (query?.token) setToken(query.token);
-    // @ts-ignore
     return query?.token
         || window.sessionStorage.getItem(LOGIN_USER_TOKEN_STORAGE_KEY);
 }
@@ -50,7 +46,7 @@ export function getToken() {
  * 设置当前用户信息
  * @param loginUser 当前登录用户信息
  */
-export function setLoginUser(loginUser = {}) {
+export function setLoginUser(loginUser: any = {}) {
     // 必须字段
     [
         'id',
@@ -63,23 +59,16 @@ export function setLoginUser(loginUser = {}) {
 
     // 将用户属性在这里展开，方便查看系统都用到了那些用户属性
     const userStr = JSON.stringify({
-        // @ts-ignore
         id: loginUser.id,                   // 用户id 必须
-        // @ts-ignore
         name: loginUser.name,               // 用户名 必须
-        // @ts-ignore
         avatar: loginUser.avatar,           // 用头像 非必须
-        // @ts-ignore
         token: loginUser.token,             // 登录凭证 非必须 ajax请求有可能会用到，也许是cookie
-        // @ts-ignore
         permissions: loginUser.permissions, // 用户权限 如果控制权限，必传
         ...loginUser,
     });
 
     window.sessionStorage.setItem(LOGIN_USER_STORAGE_KEY, userStr);
-    // @ts-ignore
     window.sessionStorage.setItem(LOGIN_USER_ID_STORAGE_KEY, loginUser.id);
-    // @ts-ignore
     setToken(loginUser.token);
 }
 
@@ -159,7 +148,7 @@ export function getConfigValue(envConfig, key, defaultValue, parse) {
 
     // 命令行参数 优先级最高
     const envValue = process.env[evnKey];
-    if (envValue !== void 0) {
+    if (envValue !== undefined) {
         if (parse) return parse(envValue);
         if (envValue === 'true') return true;
         if (envValue === 'false') return false;
@@ -169,7 +158,7 @@ export function getConfigValue(envConfig, key, defaultValue, parse) {
 
     // 区分环境配置
     const envConfigValue = envConfig[key];
-    if (envConfigValue !== void 0) return envConfigValue;
+    if (envConfigValue !== undefined) return envConfigValue;
 
     // 默认配置
     return defaultValue;
@@ -240,10 +229,13 @@ export function formatMenus(menus) {
  * @param basePath
  */
 function loopMenus(menus, basePath = '') {
-    menus.forEach(item => {
-        let { path, target, children } = item;
+    menus.forEach(it => {
+        const item = { ...it };
+        let { path } = item;
+        const { target, children } = item;
 
         // 保存原始target数据
+        // eslint-disable-next-line no-underscore-dangle
         item._target = target;
 
         // 树状结构bashPath向下透传
@@ -254,7 +246,8 @@ function loopMenus(menus, basePath = '') {
 
         // 拼接基础路径
         if (basePath && path && (!path.startsWith('http') || !path.startsWith('//'))) {
-            item.path = path = `${basePath}${path}`;
+            path = `${basePath}${path}`;
+            item.path = path;
         }
 
         // 第三方页面处理，如果target为iframe，内嵌到当前系统中
@@ -278,7 +271,7 @@ function loopMenus(menus, basePath = '') {
  */
 export function getParentOrigin() {
     let url = '';
-    const parent = window.parent;
+    const { parent } = window;
     if (parent !== window) {
         try {
             url = parent.location.origin;

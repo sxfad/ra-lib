@@ -243,7 +243,7 @@ export default class Ajax {
                     || res?.headers.filename
                     || res?.headers.fileName
                     || res?.headers['file-name']
-                    || res?.headers['content-disposition']?.split('=')[1];
+                    || getFileName(res?.headers);
 
                 if (!fileName) throw Error('file name can not be null!');
 
@@ -258,6 +258,23 @@ export default class Ajax {
                 document.body.removeChild(link);
             });
     }
+}
+
+/**
+ * 从headers中获取文件名
+ * @param headers
+ * @returns {string|null}
+ */
+function getFileName(headers) {
+    if (!headers) return null;
+
+    let fileName = headers['content-disposition'].split(';')[1].split('filename=')[1];
+    let fileNameUnicode = headers['content-disposition'].split('filename*=')[1];
+    if (fileNameUnicode) {//当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
+        fileName = decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
+    }
+
+    return fileName;
 }
 
 /**
