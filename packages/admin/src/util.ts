@@ -164,7 +164,6 @@ export function getConfigValue(envConfig, key, defaultValue, parse) {
     return defaultValue;
 }
 
-
 /**
  * 获取子应用容器id
  * @param name
@@ -173,7 +172,6 @@ export function getConfigValue(envConfig, key, defaultValue, parse) {
 export function getContainerId(name) {
     return `_sub_app_id__${name}`;
 }
-
 
 /**
  * 根据name判断，是否是激活子项目

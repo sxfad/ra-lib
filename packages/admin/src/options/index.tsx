@@ -43,20 +43,21 @@ export function useOptions(...args) {
                     const options = results.map(item => {
                         if (item.status === 'fulfilled') {
                             return item.value;
-                        } else {
-                            console.error(item.reason);
-                            return [];
                         }
+                        // eslint-disable-next-line no-console
+                        console.error(item.reason);
+                        return [];
+
                     });
 
                     // 检测是否只含有 value label meta? 三个参数
                     options.filter(item => !!item).forEach(arr => arr.forEach(obj => {
                         const keys = Object.keys(obj);
                         if (keys.length > 3 || (keys.length === 3 && !keys.includes('meta')))
-                            throw Error('枚举类型数据，只能含有 value,label,meta 三个属性！\n' + JSON.stringify(obj, null, 4));
+                            throw Error(`枚举类型数据，只能含有 value,label,meta 三个属性！\n${JSON.stringify(obj, null, 4)}`);
 
                         if (!keys.includes('value') || !keys.includes('label'))
-                            throw Error('枚举类型数据，必须含有 value,label 属性！\n' + JSON.stringify(obj, null, 4));
+                            throw Error(`枚举类型数据，必须含有 value,label 属性！\n${JSON.stringify(obj, null, 4)}`);
                     }));
 
                     setResult(options);
@@ -84,6 +85,7 @@ export function wrapperOptions(options, cacheTime) {
         Object.entries(options)
             .forEach(([ key, item ]) => {
                 if (typeof item === 'function') {
+                    // eslint-disable-next-line no-param-reassign
                     options[key] = function newItem(...args) {
                         // 如果有参数，不缓存
                         if (args?.length) return item(...args);
@@ -104,6 +106,7 @@ export function wrapperOptions(options, cacheTime) {
     }
 
     // 添加方法
+    // eslint-disable-next-line no-param-reassign
     options.clearCache = () => {
         Object.values(options).forEach(item => cacheMap.delete(item));
     };
@@ -116,13 +119,14 @@ export function wrapperOptions(options, cacheTime) {
 }
 
 function extendMethod(item) {
-    item.getOption = (value) => getField(item, value);
-    item.getTag = (value) => <PromiseChildren>{getField(item, value, 'tag')}</PromiseChildren>;
-    item.getLabel = (value) => <PromiseChildren>{getField(item, value, 'label')}</PromiseChildren>;
-    item.getMeta = (value) => getField(item, value, 'meta');
-    item.clearCache = () => cacheMap.delete(item);
+    const it = { ...item };
+    it.getOption = (value) => getField(it, value);
+    it.getTag = (value) => <PromiseChildren>{getField(it, value, 'tag')}</PromiseChildren>;
+    it.getLabel = (value) => <PromiseChildren>{getField(it, value, 'label')}</PromiseChildren>;
+    it.getMeta = (value) => getField(it, value, 'meta');
+    it.clearCache = () => cacheMap.delete(it);
 
-    return item;
+    return it;
 }
 
 function getField(item, value, field = undefined): any {
@@ -143,6 +147,7 @@ function getField(item, value, field = undefined): any {
             return field ? result[field] : result;
         });
     }
+    return null;
 }
 
 export function PromiseChildren(props) {
