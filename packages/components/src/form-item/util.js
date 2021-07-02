@@ -272,18 +272,18 @@ export function getRules(options) {
     if (noSpace && isInputLikeElement(type)) {
         rules.push({
             validator: (rule, value) => {
-                if (value && (typeof value === 'string') && value.includes(' ')) return Promise.reject('不允许输入空格！');
+                if (value && (typeof value === 'string') && value.includes(' ')) return Promise.reject(Error('不允许输入空格！'));
 
                 return Promise.resolve();
             },
         });
     }
 
-    if (maxLength !== void 0 && !rules.find(item => 'max' in item)) {
+    if (maxLength !== undefined && !rules.find(item => 'max' in item)) {
         rules.push({ type: 'string', max: maxLength, message: `最大长度不能超过 ${maxLength} 个字符！` });
     }
 
-    if (minLength !== void 0 && !rules.find(item => 'min' in item)) {
+    if (minLength !== undefined && !rules.find(item => 'min' in item)) {
         rules.push({ type: 'string', min: minLength, message: `最小长度不能低于 ${minLength} 个字符！` });
     }
 

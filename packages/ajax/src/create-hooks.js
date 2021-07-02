@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import {useState, useEffect, useRef, useCallback} from 'react';
 import useDebounceEffect from './useDebounceEffect';
 
 
@@ -43,7 +43,7 @@ export default function createHooks(ajax) {
             initOptions = {};
         }
 
-        const { debounce = true } = initOptions;
+        const {debounce = true} = initOptions;
 
         const mountFire = !('mountFire' in initOptions) ? true : !!initOptions.mountFire;
 
@@ -72,7 +72,7 @@ export default function createHooks(ajax) {
                     && isObject(initParams)
                     && !(myParams instanceof FormData)
                 ) {
-                    myParams = { ...initParams, ...myParams };
+                    myParams = {...initParams, ...myParams};
                 }
 
                 // 处理url中的参数 「:id」或「{id}」
@@ -103,41 +103,38 @@ export default function createHooks(ajax) {
                     })
                     .join('/');
 
-                const mergedOptions = { ...initOptions, ...options };
+                const mergedOptions = {...initOptions, ...options};
 
                 // eslint-disable-next-line @typescript-eslint/no-shadow
-                setResult(result => ({ ...result, loading: true, error: null }));
+                setResult(result => ({...result, loading: true, error: null}));
 
                 // 多个请求共用一个loading状态， 使用 __count 记录 发起的loading数量，当 __count === 0 时才调用setLoading(false)
                 setLoading(true);
                 setLoading.__count = (setLoading.__count || 0) + 1;
 
                 // 此处真正发起的ajax请求，ajaxToken 是一个promise
-                ajaxHandler.current = ajax[method](_url, myParams, { reject: true, ...mergedOptions });
+                ajaxHandler.current = ajax[method](_url, myParams, {reject: true, ...mergedOptions});
                 const ajaxToken = ajaxHandler.current;
 
                 ajaxToken
                     .then((res) => {
                         const data = formatResult(res);
 
-                        setResult({ data, loading: false, error: null });
-
-                        setLoading.__count = (setLoading.__count || 0) - 1;
-                        if (setLoading.__count === 0) setLoading(false);
+                        setResult({data, loading: false, error: null});
 
                         return data;
                     })
                     .catch((res) => {
                         const error = formatError(res);
 
-                        setResult({ data: undefined, error, loading: false });
+                        setResult({data: undefined, error, loading: false});
 
+                        throw error;
+                    })
+                    .finally(() => {
                         setLoading.__count = (setLoading.__count || 0) - 1;
                         if (setLoading.__count === 0) setLoading(false);
 
-                        return error;
-                    })
-                    .finally(() => {
                         // 结束时清除token
                         ajaxHandler.current = null;
                     });
@@ -168,7 +165,7 @@ export default function createHooks(ajax) {
             run();
         }, refreshDeps || [], mountFire, debounce);
 
-        return { run, ...result };
+        return {run, ...result};
     };
 
     return {

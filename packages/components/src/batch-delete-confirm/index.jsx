@@ -26,7 +26,7 @@ export default function batchDeleteConfirm(count) {
             okText: '确定',
             cancelText: '取消',
             onOk: () => resolve(true),
-            onCancel: () => reject(Error('confirm cancel')),
+            onCancel: () => reject(),
         });
     });
 }

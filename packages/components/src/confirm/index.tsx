@@ -35,7 +35,7 @@ export default async function confirm(options: string | confirmOptions) {
             okText: '确定',
             cancelText: '取消',
             onOk: () => resolve(),
-            onCancel: () => reject(Error('confirm cancel')),
+            onCancel: () => reject(),
             ...others,
         });
     });
