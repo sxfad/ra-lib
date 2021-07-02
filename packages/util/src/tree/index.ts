@@ -298,3 +298,32 @@ export function renderNode(treeData, cb) {
     });
     return loop(treeData);
 }
+
+/**
+ * 查找keys中对应树的叶子节点，如果keys为null或undefined，查找树中所有叶子节点
+ * @param treeData
+ * @param keys
+ * @param keyField
+ */
+export function findLeafNodes(treeData, keys, keyField = 'id') {
+    if (!treeData) return [];
+
+    // eslint-disable-next-line no-param-reassign
+    if (!Array.isArray(treeData)) treeData = [ treeData ];
+
+    const keysIncludes = (node) => {
+        if (!keys || !Array.isArray(keys)) return true; // 查找所有叶子节点
+        return keys.includes(node[keyField]);
+    };
+
+    const result = [];
+    const loop = nodes => nodes.forEach(node => {
+        if (node.children && node.children.length) return loop(node.children);
+
+        if (keysIncludes(node)) result.push(node);
+    });
+
+    loop(treeData);
+
+    return result;
+}
