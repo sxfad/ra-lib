@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react';
 import { checkSameField, convertToTree, queryParse, sort, Storage } from '@ra-lib/util';
 // @ts-ignore
 import appPackage from 'root/package.json';
@@ -22,6 +23,21 @@ const STORAGE_PREFIX = `${PACKAGE_NAME}_${userId || ''}_`;
  * @type {Storage}
  */
 export const storage = new Storage({ prefix: STORAGE_PREFIX });
+
+
+export function useLocalStorage(key: string, defaultValue?: any) {
+    let initState = storage.local.getItem(key);
+    if (initState === undefined) initState = defaultValue;
+
+    const [ state, setInnerState ] = useState(initState);
+
+    const setState = useCallback((value) => {
+        setInnerState(value);
+        storage.local.setItem(key, value);
+    }, [ key ]);
+
+    return [ state, setState ];
+}
 
 /**
  * 存储token到sessionStorage及loginUser中
@@ -227,29 +243,32 @@ export function formatMenus(menus) {
  * @param basePath
  */
 function loopMenus(menus, basePath = '') {
-    menus.forEach(it => {
-        const item = { ...it };
+    menus.forEach(item => {
         let { path, target, children } = item;
-
+        
         // 保存原始target数据
-        // eslint-disable-next-line no-underscore-dangle
+        // eslint-disable-next-line no-underscore-dangle,no-param-reassign
         item._target = target;
 
         // 树状结构bashPath向下透传
+        // eslint-disable-next-line no-param-reassign
         if (basePath && !('basePath' in item)) item.basePath = basePath;
 
         // 乾坤子项目约定
+        // eslint-disable-next-line no-param-reassign
         if (target === 'qiankun') item.basePath = `/${item.name}`;
 
         // 拼接基础路径
         if (basePath && path && (!path.startsWith('http') || !path.startsWith('//'))) {
             path = `${basePath}${path}`;
+            // eslint-disable-next-line no-param-reassign
             item.path = path;
         }
 
         // 第三方页面处理，如果target为iframe，内嵌到当前系统中
         if (target === 'iframe') {
             // 页面跳转 : 内嵌iFrame
+            // eslint-disable-next-line no-param-reassign
             item.path = `/iframe_page_/${encodeURIComponent(path)}`;
         }
 
