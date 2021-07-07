@@ -21,7 +21,7 @@ jsx 属性包装babel插件
 
 babel配置：
 
-```js
+```js | pure
 {
     plugins: [
         [
@@ -38,7 +38,7 @@ babel配置：
 
 jsx源码：
 
-```jsx
+```jsx | pure
 <div>
     <div>包裹classnames</div>
     <div className={[styles.title, {[styles.disabled]: disabled}]}/>
@@ -48,7 +48,7 @@ jsx源码：
 
 转换为：
 
-```jsx
+```jsx | pure
 import _method from "classnames";
 
 <div>
@@ -62,7 +62,7 @@ import _method from "classnames";
 
 babel配置：
 
-```js
+```js | pure
 {
     plugins: [
         [
@@ -81,7 +81,7 @@ babel配置：
 
 jsx源码：
 
-```jsx
+```jsx | pure
 <div>
     <div>三元操作</div>
     <div r-code/>
@@ -92,7 +92,7 @@ jsx源码：
 
 转换为：
 
-```jsx
+```jsx | pure
 import {hasPermission as _method} from "src/commons";
 
 <div>
@@ -107,7 +107,7 @@ import {hasPermission as _method} from "src/commons";
 
 babel配置：
 
-```js
+```js | pure
 {
     plugins: [
         [
@@ -127,7 +127,7 @@ babel配置：
 
 jsx源码：
 
-```jsx
+```jsx | pure
 <div>
     <div>替换为disabled属性</div>
     <div d-code="ADD"/>
@@ -137,7 +137,7 @@ jsx源码：
 
 转换为：
 
-```jsx
+```jsx | pure
 import {hasPermission as _method} from "src/commons";
 
 <div>
@@ -151,7 +151,7 @@ import {hasPermission as _method} from "src/commons";
 
 babel配置：
 
-```js
+```js | pure
 {
     plugins: [
         [
@@ -170,7 +170,7 @@ babel配置：
 
 jsx源码：
 
-```jsx
+```jsx | pure
 <div>
     <div>劫持onClick</div>
     <div r-report={reportToServer}></div>
@@ -182,7 +182,7 @@ jsx源码：
 
 转换为：
 
-```jsx
+```jsx | pure
 import {report as _method} from "src/commons";
 
 <div>劫持onClick</div>

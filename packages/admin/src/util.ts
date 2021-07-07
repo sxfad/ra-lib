@@ -24,17 +24,34 @@ const STORAGE_PREFIX = `${PACKAGE_NAME}_${userId || ''}_`;
  */
 export const storage = new Storage({ prefix: STORAGE_PREFIX });
 
-
+/**
+ * localStorage hook封装
+ * @param key
+ * @param defaultValue
+ */
 export function useLocalStorage(key: string, defaultValue?: any) {
-    let initState = storage.local.getItem(key);
+    return useCreateStorageHook(storage.local, key, defaultValue);
+}
+
+/**
+ * sessionStorage hook封装
+ * @param key
+ * @param defaultValue
+ */
+export function useSessionStorage(key: string, defaultValue?: any) {
+    return useCreateStorageHook(storage.session, key, defaultValue);
+}
+
+function useCreateStorageHook(storageInstance, key, defaultValue) {
+    let initState = storageInstance.getItem(key);
     if (initState === undefined) initState = defaultValue;
 
     const [ state, setInnerState ] = useState(initState);
 
     const setState = useCallback((value) => {
         setInnerState(value);
-        storage.local.setItem(key, value);
-    }, [ key ]);
+        storageInstance.setItem(key, value);
+    }, [ key, storageInstance ]);
 
     return [ state, setState ];
 }
@@ -245,7 +262,7 @@ export function formatMenus(menus) {
 function loopMenus(menus, basePath = '') {
     menus.forEach(item => {
         let { path, target, children } = item;
-        
+
         // 保存原始target数据
         // eslint-disable-next-line no-underscore-dangle,no-param-reassign
         item._target = target;
@@ -285,7 +302,7 @@ function loopMenus(menus, basePath = '') {
 /**
  * 嵌入iframe情况下，获取父级地址
  */
-export function getParentOrigin() {
+export function getParentOrigin(): string {
     let url = '';
     const { parent } = window;
     if (parent !== window) {
