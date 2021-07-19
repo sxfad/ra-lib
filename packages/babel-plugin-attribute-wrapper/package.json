@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/babel-plugin-attribute-wrapper",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "main": "lib/index.js",
     "module": "es/index.js",
     "scripts": {
