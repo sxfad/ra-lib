@@ -147,7 +147,7 @@ export function isLogin() {
  * @returns {string|*|boolean}
  */
 export function isLoginPage(path = window.location.pathname) {
-    return path && path.endsWith('/login');
+    return path && path.endsWith('/login') || window.location.href.includes('/#/login');
 }
 
 /**
