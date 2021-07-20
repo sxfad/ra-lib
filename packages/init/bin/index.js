@@ -45,10 +45,18 @@ const templates = {
                 },
             ]);
 
-            const configPath = path.join(tempDir, 'src', 'config', 'index.js');
-            let content = await fs.readFile(configPath, 'UTF-8');
-            content = content.replace(`'APP_NAME', 'React Admin'`, `'APP_NAME', '${answers.projectName}'`);
-            await fs.writeFile(configPath, content, 'UTF-8');
+            await replaceFileContent(
+                path.join(tempDir, 'src', 'config', 'index.js'),
+                [
+                    [`'APP_NAME', 'React Admin'`, `'APP_NAME', '${answers.projectName}'`],
+                ],
+            );
+            await replaceFileContent(
+                path.join(tempDir, 'package.json'),
+                [
+                    [`"name": "react-admin",`, `"name": "${answers.name}",`],
+                ],
+            );
         },
     },
 };
@@ -177,4 +185,20 @@ async function isDirEmpty(targetDir) {
         if (files.length && files.some(item => !item.startsWith('.'))) return false;
     }
     return true;
+}
+
+/**
+ * 替换文件内容
+ * @param filePath
+ * @param replaces
+ * @returns {Promise<void>}
+ */
+async function replaceFileContent(filePath, replaces) {
+    let content = await fs.readFile(filePath, 'UTF-8');
+    replaces.forEach(item => {
+        const [oldContent, newContent] = item;
+        content = content.replace(oldContent, newContent);
+    });
+
+    await fs.writeFile(filePath, content, 'UTF-8');
 }
