@@ -2,10 +2,10 @@
 const path = require('path');
 const program = require('commander');
 const inquirer = require('inquirer');
-const Git = require('nodegit');
 const ora = require('ora');
 const chalk = require('chalk');
 const spinner = ora();
+const clone = require('git-clone');
 const fs = require('fs-extra');
 
 const templates = {
@@ -149,5 +149,11 @@ async function downloadTemplate(template, gitUrl, tempDir) {
         });
         return;
     }
-    await Git.Clone(gitUrl, tempDir);
+    await new Promise((resolve, reject) => {
+        clone(gitUrl, tempDir, err => {
+            if(err) return reject(err);
+
+            return resolve();
+        })
+    })
 }
