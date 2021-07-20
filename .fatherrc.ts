@@ -4,13 +4,13 @@ import fs from 'fs';
 const packagesPath = path.join(__dirname, 'packages');
 let packageNames = fs.readdirSync(packagesPath).filter(item => !item.startsWith('.'));
 
-const pkgs = [
+const ignorePackages = [
     'util',
     'hooks',
     'admin',
+    'init',
 ];
-packageNames = packageNames.filter(name => !pkgs.includes(name));
-
+packageNames = packageNames.filter(name => !ignorePackages.includes(name));
 
 export default {
     cjs: { type: 'babel', lazy: true },
