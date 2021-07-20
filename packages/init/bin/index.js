@@ -49,11 +49,9 @@ const templates = {
             let content = await fs.readFile(configPath, 'UTF-8');
             content = content.replace(`'APP_NAME', 'React Admin'`, `'APP_NAME', '${answers.projectName}'`);
             await fs.writeFile(configPath, content, 'UTF-8');
-
         },
     },
 };
-
 
 program
     .version(require('../package').version)
@@ -79,17 +77,18 @@ targetDir = path.join(cwd, targetDir);
 
 (async () => {
     // 目标文件夹存在，并且不为空，是否覆盖？
-    const exists = await fs.pathExists(targetDir);
-    if (exists) {
+    const isEmpty = await isDirEmpty(targetDir);
+    if (!isEmpty) {
         const answers = await inquirer.prompt([
             {
                 type: 'confirm',
-                message: '目标目录已存在，是否覆盖？',
+                message: '目标目录已存在，且不为空，是否覆盖？',
                 name: 'replace',
             },
         ]);
         if (answers.replace) {
-            await fs.remove(targetDir);
+            // 不删除，否则会丢失 .git等文件夹
+            // await fs.remove(targetDir);
         } else {
             return;
         }
@@ -118,7 +117,8 @@ targetDir = path.join(cwd, targetDir);
             await deal(tempDir, targetDir);
         }
 
-        await fs.emptyDir(targetDir);
+        // 不删除，否则会丢失 .git 等文件夹
+        // await fs.emptyDir(targetDir);
 
         await fs.copy(tempDir, targetDir);
 
@@ -129,6 +129,13 @@ targetDir = path.join(cwd, targetDir);
     }
 })();
 
+/**
+ * 下载模板
+ * @param template
+ * @param gitUrl
+ * @param tempDir
+ * @returns {Promise<void>}
+ */
 async function downloadTemplate(template, gitUrl, tempDir) {
     // 删除临时文件夹
     await fs.remove(tempDir);
@@ -151,9 +158,23 @@ async function downloadTemplate(template, gitUrl, tempDir) {
     }
     await new Promise((resolve, reject) => {
         clone(gitUrl, tempDir, err => {
-            if(err) return reject(err);
+            if (err) return reject(err);
 
             return resolve();
-        })
-    })
+        });
+    });
+}
+
+/**
+ * 判断目录是否为空，隐藏文件除外
+ * @param targetDir
+ * @returns {Promise<boolean>}
+ */
+async function isDirEmpty(targetDir) {
+    const exists = await fs.pathExists(targetDir);
+    if (exists) {
+        const files = await fs.readdir(targetDir);
+        if (files.length && files.some(item => !item.startsWith('.'))) return false;
+    }
+    return true;
 }
