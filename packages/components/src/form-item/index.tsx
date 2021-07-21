@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactChildren, ReactNode } from 'react';
+import React, { CSSProperties, forwardRef, ReactChildren, ReactNode } from 'react';
 import { Form } from 'antd';
 import { FormItemProps } from 'antd/es/form';
 import { getPlaceholder, getRules } from './util';
@@ -64,7 +64,7 @@ export interface ItemProps extends FormItemProps {
     dateFormat?: dateFormatType,
 
     // 其他为Element 属性
-    style?: object,
+    style?: CSSProperties,
     placeholder?: any,
     options?: [],
     treeData?: [],
@@ -124,6 +124,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
         validateTrigger,
         valuePropName,
         wrapperCol,
+        fieldKey,
         // 其他为Element 属性
         style,
         ...others
@@ -182,6 +183,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             validateTrigger={validateTrigger}
             valuePropName={valuePropName}
             wrapperCol={wrapperCol}
+            fieldKey={fieldKey}
         >
             {children || <Element {...elementProps} forwardRef={ref} />}
         </Item>
