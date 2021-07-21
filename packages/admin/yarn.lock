@@ -12,10 +12,10 @@
   resolved "https://registry.npmjs.org/@ra-lib/babel-plugin-attribute-wrapper/-/babel-plugin-attribute-wrapper-0.0.8.tgz#d870e4630f03ba97683e53460e8bce29b412bc10"
   integrity sha512-BLSuuwQUB5cH0Uiti2/jSowgVxSKqTpVxQQGJhM0/C/DZNGosXN9QQaNCQnTO+/C8drvjWALFZChJ3iqKwfrYg==
 
-"@ra-lib/components@^0.1.72":
-  version "0.1.72"
-  resolved "https://registry.npmjs.org/@ra-lib/components/-/components-0.1.72.tgz#b7c6f139217c5958940ae5b8ce98157eb6b0dd3b"
-  integrity sha512-PhGEZ0/NA6fX2qG7X+KCcOB5CZTGPJ5NjExWz1MizzVCc6/T/FDfxw3Te2wfmr3Iu8WRrQB8tXOZjpJ0Uq5EoA==
+"@ra-lib/components@^0.1.74":
+  version "0.1.74"
+  resolved "https://registry.npmjs.org/@ra-lib/components/-/components-0.1.74.tgz#dc0201e22aa7076aa3a1be9fec392222cdc005ce"
+  integrity sha512-nGSAZ5BUBnFixYh1yUKLhJGYA6VGRwD0PVYr023fjxsZHcTe9OaVD4t3YkW92RKOgdbkCjork+3l23X9xaxXkw==
 
 "@ra-lib/config-loader@^0.1.6":
   version "0.1.6"
