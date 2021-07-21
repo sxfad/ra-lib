@@ -22,11 +22,11 @@
         "url": ""
     },
     "homepage": "",
-    "gitHead": "876594cc820703ac68b0ced7f8d6e622d79b36ba",
+    "gitHead": "6cece5704cfd108f11ce91f9241b752bc1c8059d",
     "dependencies": {
         "@ra-lib/ajax": "^0.1.16",
         "@ra-lib/babel-plugin-attribute-wrapper": "^0.0.8",
-        "@ra-lib/components": "0.1.73",
+        "@ra-lib/components": "^0.1.72",
         "@ra-lib/config-loader": "^0.1.6",
         "@ra-lib/hoc": "^0.1.6",
         "@ra-lib/hooks": "^0.1.8",
