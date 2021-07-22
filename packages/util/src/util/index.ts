@@ -243,3 +243,30 @@ export function getColor(str) {
     if (!str) return colors[0];
     return colors[str.charCodeAt(0) % colors.length];
 }
+
+/**
+ * 基于字符串，获取颜色
+ * @param str
+ * @param defaultRGB
+ */
+export function stringToRGB(str, defaultRGB = 'rgb(255, 0, 0)') {
+    if (!str?.length) return defaultRGB;
+
+    let hash = 0;
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < str.length; i++) {
+        // eslint-disable-next-line no-bitwise
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        // eslint-disable-next-line no-bitwise
+        hash &= hash;
+    }
+
+    const rgb = [ 0, 0, 0 ];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < 3; i++) {
+        // eslint-disable-next-line no-bitwise
+        rgb[i] = (hash >> (i * 8)) & 255;
+    }
+
+    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+}
