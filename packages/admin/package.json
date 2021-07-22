@@ -31,6 +31,6 @@
         "@ra-lib/hoc": "^0.1.6",
         "@ra-lib/hooks": "^0.1.8",
         "@ra-lib/model": "^0.1.5",
-        "@ra-lib/util": "0.1.21"
+        "@ra-lib/util": "^0.1.21"
     }
 }

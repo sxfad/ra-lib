@@ -37,7 +37,7 @@
   resolved "https://registry.npmjs.org/@ra-lib/model/-/model-0.1.5.tgz#9ea614f629127fc3d037ddbd5e48ab79791172fe"
   integrity sha512-2TwKyD6VS23pGEgqIaYFnzn7PV50od3Cb4bgcmi8swLYTm/MmKQh/uG4ZN7V+p5QzhMg4wR88gU0wAKi29BXXw==
 
-"@ra-lib/util@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.npmjs.org/@ra-lib/util/-/util-0.1.20.tgz#b6ceaf5342eae584d778c05a2c5d51bcafb410cc"
-  integrity sha512-Xt4hmFpW2gbLlr5HMCTYC1eXMUpTZfAFDDhxmyCFXhVW/DupJjEutLz20OMnL4vVoxAVz/988jIV2X3+Y/Me2g==
+"@ra-lib/util@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.npmjs.org/@ra-lib/util/-/util-0.1.21.tgz#b2ddf41abe95b0249a6cc27bb3e3a09985e5e3cd"
+  integrity sha512-7E8KDVQ5JQww4oA4krI+2iVDxVe99Cxl6toPKmgMHZwKne7s14sevmpBi81fTbtWgn4XzxaUvPVCW8Ag/fxBYQ==
