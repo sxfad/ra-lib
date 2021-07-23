@@ -234,34 +234,37 @@ export default class Ajax {
             ...others
         } = options;
 
-        return this.ajax({url, params, method, originResponse, responseType, ...others})
-            .then(res => {
-                // 现在之前，如果返回false，终止下载操作
-                if (beforeDownload(res) === false) return;
+        const ajaxPromise = this.ajax({url, params, method, originResponse, responseType, ...others});
 
-                const errorMessage = 'download fail';
+        ajaxPromise.then(res => {
+            // 现在之前，如果返回false，终止下载操作
+            if (beforeDownload(res) === false) return;
 
-                if (!res || !res.headers || !res.data) throw Error(errorMessage);
+            const errorMessage = 'download fail';
 
-                // eslint-disable-next-line no-const-assign
-                fileName = fileName
-                    || res?.headers.filename
-                    || res?.headers.fileName
-                    || res?.headers['file-name']
-                    || getFileName(res?.headers);
+            if (!res || !res.headers || !res.data) throw Error(errorMessage);
 
-                if (!fileName) throw Error('file name can not be null!');
+            // eslint-disable-next-line no-const-assign
+            fileName = fileName
+                || res?.headers.filename
+                || res?.headers.fileName
+                || res?.headers['file-name']
+                || getFileName(res?.headers);
 
-                const blob = new Blob([res.data], {type: res.headers['content-type']});
+            if (!fileName) throw Error('file name can not be null!');
 
-                const link = document.createElement('a');
-                link.setAttribute('href', window.URL.createObjectURL(blob));
-                link.setAttribute('download', decodeURIComponent(fileName));
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
+            const blob = new Blob([res.data], {type: res.headers['content-type']});
+
+            const link = document.createElement('a');
+            link.setAttribute('href', window.URL.createObjectURL(blob));
+            link.setAttribute('download', decodeURIComponent(fileName));
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        return ajaxPromise;
     }
 }
 
