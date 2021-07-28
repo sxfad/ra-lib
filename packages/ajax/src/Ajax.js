@@ -234,6 +234,7 @@ export default class Ajax {
             ...others
         } = options;
 
+        // 区分开方法，进行不同的传参方式
         let data = {};
         let para = params;
         if (['patch', 'post', 'put'].includes(method.toLowerCase())) {

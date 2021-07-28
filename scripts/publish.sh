@@ -3,7 +3,9 @@ acp
 npm run build
 npm run publish --yes
 
+echo '开始等待。。。'
 sleep 5s
+eche '等待结束。。。'
 
 cd ./packages/admin || exit
 
