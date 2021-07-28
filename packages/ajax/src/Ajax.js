@@ -4,7 +4,6 @@ import {stringify} from 'qs';
 export default class Ajax {
     /**
      * 构造函数传入的是自定义的一些配置，一级axios相关默认配置
-     *
      * @param options 默认配置
      */
     constructor(options = {}) {

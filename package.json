@@ -6,6 +6,7 @@
         "start": "node scripts/build-watch.js",
         "build": "father-build",
         "publish": "lerna publish",
+        "publish:yes": "lerna publish --yes",
         "publish:all": "sh scripts/publish.sh",
         "release": "npm run build && npm run publish",
         "version": "lerna ls",
