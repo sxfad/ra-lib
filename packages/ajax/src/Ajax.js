@@ -234,7 +234,14 @@ export default class Ajax {
             ...others
         } = options;
 
-        const ajaxPromise = this.ajax({url, params, method, originResponse, responseType, ...others});
+        let data = {};
+        let para = params;
+        if (['patch', 'post', 'put'].includes(method.toLowerCase())) {
+            data = params;
+            para = {};
+        }
+
+        const ajaxPromise = this.ajax({url, params: para, data, method, originResponse, responseType, ...others});
 
         ajaxPromise.then(res => {
             // 现在之前，如果返回false，终止下载操作

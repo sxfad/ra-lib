@@ -83,7 +83,7 @@ const token = getLoginUser()?.token || window.sessionStorage.getItem('token');
 const ajax = new Ajax({
     baseURL: AJAX_PREFIX,
     timeout: AJAX_TIMEOUT,
-    headers: {token},
+    headers: {token}, // 全局headers设置
     onError: handleError,
     onSuccess: handleSuccess,
 });
@@ -210,3 +210,38 @@ async function handleDownload() {
     props.ajax.download('/download', null, {method: 'post', fileName: 'README.md'});
 }
 ```
+
+### headers设置
+
+#### 全局headers设置
+
+创建ajax实例时（一般在src/commons/ajax.js文件中），进行headers全局设置
+
+```js
+
+// 创建Ajax实例，设置默认值
+const ajax = new Ajax({
+    baseURL: AJAX_PREFIX,
+    timeout: AJAX_TIMEOUT,
+    headers: { // 全局headers设置
+        token: 'token string',
+        'Content-Type': 'application/json',
+    },
+    onError: handleError,
+    onSuccess: handleSuccess,
+});
+```
+
+#### 单次请求设置
+通过options参数设置
+
+````js
+// 直接使用方法
+props.ajax.get('/some/url', {/*请求参数*/}, {headers: {'Content-Type': 'applicadtion/json'}})
+
+// hooks 定义时设置
+const {data, loading, run} = props.ajax.useGet('/some/url', {/*请求参数*/}, {successTip: '操作成功', headers: {'Content-Type': 'applicadtion/json'}});
+// hooks 使用时设置
+await run({/*请求参数*/}, {headers: {'Content-Type': 'applicadtion/json'}})
+
+````
