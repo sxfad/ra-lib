@@ -9,6 +9,7 @@ const ignorePackages = [
     'hooks',
     'admin',
     'init',
+    'rancher-deploy',
 ];
 packageNames = packageNames.filter(name => !ignorePackages.includes(name));
 
