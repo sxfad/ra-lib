@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const __cwd = process.cwd();
+
 const appName = require(path.join(__cwd, 'package.json')).name;
 const execSync = require('child_process').execSync; // 同步子进程
 
@@ -9,8 +11,6 @@ const GIT_URL = process.env.GIT_URL || getGitUrl(); // 'https://gitee.com/sxfad/
 const GIT_BRANCH = process.env.GIT_BRANCH || getGitBranch(); // 'master';
 const RANCHER_NAME_SPACE = process.env.RANCHER_NAME_SPACE || 'front-center';
 const FRONT_FOLDER = process.env.FRONT_FOLDER || getFrontFolder();
-
-const __cwd = process.cwd();
 
 const jenkins = require('jenkins')({
     baseUrl: JENKINS_BASE_URL,
