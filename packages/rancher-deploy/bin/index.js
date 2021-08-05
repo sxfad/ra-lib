@@ -149,7 +149,12 @@ async function modifyJobConfig(options) {
  * @returns {*}
  */
 function getGitUrl() {
-    const gitConfigPath = path.join(__cwd, '.git', 'config');
+    let gitConfigPath;
+    if (fs.existsSync(path.join(__cwd, '.git'))) {
+        gitConfigPath = path.join(__cwd, '.git', 'config');
+    } else {
+        gitConfigPath = path.join(__cwd, '..', '.git', 'config');
+    }
     const configContent = fs.readFileSync(gitConfigPath, 'UTF-8');
 
     const arr = configContent.split('\n\t');
