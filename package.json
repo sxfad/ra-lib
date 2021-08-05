@@ -73,5 +73,7 @@
         "shelljs": "^0.8.4",
         "yorkie": "^2.0.0"
     },
-    "dependencies": {}
+    "dependencies": {
+        "jenkins": "^0.28.1"
+    }
 }
