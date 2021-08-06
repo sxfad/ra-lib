@@ -155,7 +155,7 @@ async function downloadTemplate(template, gitUrl, tempDir) {
         await fs.ensureDir(tempDir);
         await fs.copy(templateLocalPath, tempDir, {
             filter: (src) => {
-                if (src === '.gitignore') return true;
+                if (src.startsWith(path.join(templateLocalPath, '.gitignore'))) return true;
 
                 const ignoreDirs = ['node_modules', '.git', '.idea'];
                 for (let p of ignoreDirs) {
