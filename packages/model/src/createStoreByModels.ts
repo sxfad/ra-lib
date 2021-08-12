@@ -234,15 +234,12 @@ function createStoreByModels(models, options): any {
 
                                     if (showSuccessTip) onSuccess({ data: nextState, tip: getTip(successTip, key), from: 'model' });
                                 } catch (err) {
-                                    if (showErrorTip) {
-                                        return onError({ error: err, tip: getTip(errorTip, key), from: 'model' });
-                                    }
+                                    if (showErrorTip) onError({ error: err, tip: getTip(errorTip, key), from: 'model' });
                                     throw err;
                                 }
 
                                 if (nextState && (typeof nextState !== 'object' || Array.isArray(nextState))) {
-                                    console.error(`model method ${modelName}.${key} should return an object! but got ${nextState}.`);
-                                    return state;
+                                    throw new Error(`model method ${modelName}.${key} should return an object! but got ${nextState}.`);
                                 }
 
                                 // 返回了一个对象 进行state合并
@@ -262,7 +259,7 @@ function createStoreByModels(models, options): any {
 
             allInitialState[modelName] = { ...initialState };
             reducers[modelName] = function(state = { ...initialState }, action) {
-                const {type} = action;
+                const { type } = action;
                 const func = modelReducers[type];
                 if (!func) return state;
 
