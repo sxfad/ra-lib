@@ -32,10 +32,10 @@
   resolved "https://registry.npmjs.org/@ra-lib/hooks/-/hooks-0.1.8.tgz#d386ecd6ef297d0ea501f5570967bf9f1f55d935"
   integrity sha512-ue67jnIxzc+0/e7dV+UUvGJirYjgnMjC8IDLv58HKDAyCYm/nDBrSjWrgwqJBA9HLCZRpQg2EtIVeZUHt060zg==
 
-"@ra-lib/model@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.npmjs.org/@ra-lib/model/-/model-0.1.5.tgz#9ea614f629127fc3d037ddbd5e48ab79791172fe"
-  integrity sha512-2TwKyD6VS23pGEgqIaYFnzn7PV50od3Cb4bgcmi8swLYTm/MmKQh/uG4ZN7V+p5QzhMg4wR88gU0wAKi29BXXw==
+"@ra-lib/model@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.npmjs.org/@ra-lib/model/-/model-0.1.6.tgz#64bb4b6932befdafc72d4cc44890ce36e0183b4b"
+  integrity sha512-fud0mDorlaGKDBEqifPMM/RyzTX61Hw6Y3gAqcMKVl5bHjk5PA3+OQhspRAe97F78XRW/1Oil0f7/Efsi9Sh7Q==
 
 "@ra-lib/util@^0.1.21":
   version "0.1.21"
