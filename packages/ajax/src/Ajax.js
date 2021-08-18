@@ -59,8 +59,8 @@ export default class Ajax {
             trim = this.trim, // 前后去空格
             deleteUseBody = this.deleteUseBody, // delete请求，参数已body发送
             reject: _reject = this.reject,
-            params = {},
-            data = {},
+            params,
+            data,
             url,
             method = 'get',
             ...otherOptions
@@ -107,13 +107,16 @@ export default class Ajax {
          *
          * */
         if (isFormContentType) {
-            data = stringify(data);
+            data = data && stringify(data);
         }
 
         if (isDelete && deleteUseBody) {
             data = params;
-            params = {};
+            params = undefined;
         }
+
+        // if(!Object.keys(params).length) params = undefined;
+        // if(!Object.keys(data).length) data = undefined;
 
         const ajaxPromise = new Promise((resolve, reject) => {
             instance({
