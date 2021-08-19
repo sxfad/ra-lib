@@ -31,6 +31,8 @@
             <command>
                 # 进入前端目录
                 cd .
+                # 输出node版本
+                node -v
                 # 安装依赖
                 yarn
 

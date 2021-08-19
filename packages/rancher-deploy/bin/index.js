@@ -34,7 +34,7 @@ const jenkins = require('jenkins')({
         await createJob(options);
         console.log('create job', JENKINS_JOB_NAME);
     } else {
-        // 存在，修改项目分支
+        // 存在，修改项目配置
         await modifyJobConfig(options);
     }
 
