@@ -80,6 +80,7 @@ export function getToken() {
  * @param loginUser 当前登录用户信息
  */
 export function setLoginUser(loginUser: any = {}) {
+    if (!loginUser) return;
     // 必须字段
     [
         'id',
@@ -156,7 +157,7 @@ export function isLoginPage(path = window.location.pathname) {
  */
 export function setMainApp(mainApp) {
     storage.global.setItem(MAIN_APP_KEY, mainApp);
-    setLoginUser(mainApp?.loginUser || null);
+    setLoginUser(mainApp?.loginUser);
     setToken(mainApp?.token || mainApp?.loginUser?.token);
 }
 
@@ -269,15 +270,17 @@ function loopMenus(menus, basePath = '') {
 
         // 树状结构bashPath向下透传
         // eslint-disable-next-line no-param-reassign
-        if (basePath && !('basePath' in item)) item.basePath = basePath;
+        if (basePath && !item.basePath) item.basePath = basePath;
 
         // 乾坤子项目约定
         // eslint-disable-next-line no-param-reassign
         if (target === 'qiankun') item.basePath = `/${item.name}`;
 
+        const _basePath = item.basePath;
+
         // 拼接基础路径
-        if (basePath && path && (!path.startsWith('http') || !path.startsWith('//'))) {
-            path = `${basePath}${path}`;
+        if (_basePath && path && (!path.startsWith('http') || !path.startsWith('//'))) {
+            path = `${_basePath}${path}`;
             // eslint-disable-next-line no-param-reassign
             item.path = path;
         }
@@ -293,7 +296,7 @@ function loopMenus(menus, basePath = '') {
             Reflect.deleteProperty(item, 'target');
         }
 
-        if (children?.length) loopMenus(children, item.basePath);
+        if (children?.length) loopMenus(children, _basePath);
     });
 
     return menus;
