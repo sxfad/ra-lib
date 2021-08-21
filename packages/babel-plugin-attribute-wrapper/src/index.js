@@ -84,10 +84,22 @@ function babelPlugin({ types: t }) {
 
                 // t.conditionalExpression 创建一个三元表达式 ，参数分别为：条件，为真时执行，为假时执行
                 // 等于：expression = r-code === true? <div></div> : null
-                const valueExpression = getValueExpression(targetAttr, t);
+                let valueExpression = getValueExpression(targetAttr, t);
                 const wrapperValueExpression = getValueExpression(wrapperAttr, t);
 
                 if (!valueExpression) return;
+
+                // classnames 时
+                // <div className={{[s.a]:true [s.b]: true}}/>
+                // 转换成
+                //<div className={[{[s.a]:true [s.b]: true}]}/>
+                // 开发时没有问题，生成构建后访问页面报错
+                if (
+                    state.opts.packageName === 'classnames'
+                    && t.isObjectExpression(valueExpression)
+                ) {
+                    valueExpression = t.arrayExpression([valueExpression]);
+                }
 
                 let methodCallExpression = t.callExpression(
                     state.methodUidIdentifier,
