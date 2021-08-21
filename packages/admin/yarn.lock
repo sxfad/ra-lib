@@ -7,10 +7,10 @@
   resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.22.tgz#8986fd142e3ff684dee3a931f3106dabcef0c954"
   integrity sha512-x9EkemI302Nd2D9MRz/gDq06n8WVyWk/XxglvSdyGG9XNhAZqYMYg6vNzmwBuCBNU7Ayw7G55DPH9Afi2dExaQ==
 
-"@ra-lib/babel-plugin-attribute-wrapper@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.npmjs.org/@ra-lib/babel-plugin-attribute-wrapper/-/babel-plugin-attribute-wrapper-0.0.8.tgz#d870e4630f03ba97683e53460e8bce29b412bc10"
-  integrity sha512-BLSuuwQUB5cH0Uiti2/jSowgVxSKqTpVxQQGJhM0/C/DZNGosXN9QQaNCQnTO+/C8drvjWALFZChJ3iqKwfrYg==
+"@ra-lib/babel-plugin-attribute-wrapper@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.npmjs.org/@ra-lib/babel-plugin-attribute-wrapper/-/babel-plugin-attribute-wrapper-0.0.12.tgz#d92ecfc24cb8bf6cb40e06c16b6f36691617e66a"
+  integrity sha512-yg8jPqSTYw9AROWYkSRPoFwMQDibs0MKMISCaCWrFr3lPQlU57YksTTsi/PIEZ7mcr12x9mVB9hYP5chs5l5ww==
 
 "@ra-lib/components@^0.1.74":
   version "0.1.74"
