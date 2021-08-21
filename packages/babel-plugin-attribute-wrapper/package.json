@@ -7,5 +7,5 @@
         "build": "father-build",
         "test": "node src/test.js"
     },
-    "gitHead": "3dcec15d99b02144ab3bfa183f835a19c2949591"
+    "gitHead": "e4858223c80cecd53e2f90e23eabecad15e37ba6"
 }

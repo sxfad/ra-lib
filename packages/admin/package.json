@@ -22,7 +22,7 @@
         "url": ""
     },
     "homepage": "",
-    "gitHead": "3dcec15d99b02144ab3bfa183f835a19c2949591",
+    "gitHead": "e4858223c80cecd53e2f90e23eabecad15e37ba6",
     "dependencies": {
         "@ra-lib/ajax": "^0.1.22",
         "@ra-lib/babel-plugin-attribute-wrapper": "0.0.14",
