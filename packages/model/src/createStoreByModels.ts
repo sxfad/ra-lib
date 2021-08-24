@@ -233,10 +233,8 @@ function createStoreByModels(models, options): any {
 
                                     if (showSuccessTip) onSuccess({ data: nextState, tip: getTip(successTip, key), from: 'model' });
                                 } catch (err) {
-                                    if (showErrorTip) {
-                                        onError({ error: err, tip: getTip(errorTip, key), from: 'model' });
-                                        return state;
-                                    }
+                                    if (showErrorTip) onError({ error: err, tip: getTip(errorTip, key), from: 'model' });
+
                                     throw err;
                                 }
 
