@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ra-lib/ajax@^0.1.22":
-  version "0.1.22"
-  resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.22.tgz#8986fd142e3ff684dee3a931f3106dabcef0c954"
-  integrity sha512-x9EkemI302Nd2D9MRz/gDq06n8WVyWk/XxglvSdyGG9XNhAZqYMYg6vNzmwBuCBNU7Ayw7G55DPH9Afi2dExaQ==
+"@ra-lib/ajax@^0.1.23":
+  version "0.1.23"
+  resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.23.tgz#2d9e8aa86d1c5ebb650b0b6ee3995b8b8e3b6f4e"
+  integrity sha512-h9LB/i/35adg0W5dA1LrtYk9xx5ky+SV+PqRsm13RQw7k//3DZKp+AYS5KIFMegyoB5jThd/1A0u9HCrce5U5w==
 
 "@ra-lib/babel-plugin-attribute-wrapper@^0.0.12":
   version "0.0.12"
@@ -32,10 +32,10 @@
   resolved "https://registry.npmjs.org/@ra-lib/hooks/-/hooks-0.1.8.tgz#d386ecd6ef297d0ea501f5570967bf9f1f55d935"
   integrity sha512-ue67jnIxzc+0/e7dV+UUvGJirYjgnMjC8IDLv58HKDAyCYm/nDBrSjWrgwqJBA9HLCZRpQg2EtIVeZUHt060zg==
 
-"@ra-lib/model@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.npmjs.org/@ra-lib/model/-/model-0.1.7.tgz#36f0eb2e4141d1ae471f704de34602ca62ce4849"
-  integrity sha512-RZ/PN5BckCc/bRPQ+aRTAbnTmGPXL8OdkLN7CIY7SL4KnjAsxnxyLxIy5lVDuj7jI2nquVqvPBMbTu4pF2DzPQ==
+"@ra-lib/model@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.npmjs.org/@ra-lib/model/-/model-0.1.8.tgz#34d8614741a281cb742cde6f74eb5be7c2022952"
+  integrity sha512-rZ+bV90Hsl01XbkovJ85Uv71xI28Yi2hSgm3cQWuGL6vnsFFpJdUKS36p/6NlBt1vZzw9GuZoFDkedPHYz7afA==
 
 "@ra-lib/util@^0.1.21":
   version "0.1.21"
