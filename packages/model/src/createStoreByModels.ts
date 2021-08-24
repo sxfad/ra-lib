@@ -57,8 +57,7 @@ function getTip(tip, key) {
 // @ts-ignore
 function createStoreByModels(models, options): any {
     if (!models) {
-        console.error('models mast be an object!');
-        return;
+        throw new Error('models mast be an object!');
     }
 
     const {
@@ -343,9 +342,13 @@ function createStoreByModels(models, options): any {
         deserialize,
     }));
 
+    // redux devtools 支持
+    // https://github.com/zalmoxisus/redux-devtools-extension
+    const composeEnhancers = (typeof window !== 'undefined' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
     // 异步需要中间件
     middlewares.push(thunk);
-    const enhancer = compose(applyMiddleware(...middlewares), ...enhancers);
+    const enhancer = composeEnhancers(applyMiddleware(...middlewares), ...enhancers);
     const store = createStore(
         combineReducers({ ...reducers, ...(_reducers || {}) }),
         allInitialState,
