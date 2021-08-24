@@ -343,9 +343,16 @@ function createStoreByModels(models, options): any {
         deserialize,
     }));
 
+    const composeEnhancers =
+        typeof window === "object" && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+            ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+                // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+            })
+            : compose
+
     // 异步需要中间件
     middlewares.push(thunk);
-    const enhancer = compose(applyMiddleware(...middlewares), ...enhancers);
+    const enhancer = composeEnhancers(applyMiddleware(...middlewares), ...enhancers);
     const store = createStore(
         combineReducers({ ...reducers, ...(_reducers || {}) }),
         allInitialState,
