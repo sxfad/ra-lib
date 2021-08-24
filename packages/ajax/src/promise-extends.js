@@ -1,5 +1,5 @@
 /**
- * 扩展两个Promise方法：
+ * 扩展Promise方法：
  * <br/>
  * finally：
  * Promise对象的回调链，不管以then方法或catch方法结尾，要是最后一个方法抛出错误，都有可能无法捕捉到
@@ -36,4 +36,17 @@ if (!Promise.prototype.done) {
                 }, 0);
             });
     };
+}
+
+if (!Promise.allSettled) {
+    Promise.allSettled = (promises) => Promise.all(promises.map(p => p
+        .then(value => ({
+            status: 'fulfilled',
+            value,
+        }))
+        .catch(reason => ({
+            status: 'rejected',
+            reason,
+        })),
+    ));
 }
