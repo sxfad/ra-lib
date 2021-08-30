@@ -119,8 +119,9 @@ function getConfigXml(options = {}) {
         .replace('<url>https://gitee.com/sxfad/react-admin.git</url>', `<url>${gitUrl}</url>`)
         // 替换分支
         .replace('<name>*/master</name>', `<name>*/${branch}</name>`)
-        // 替换前端构建分支
-        .replace('rm -rf deploy/rancher/build && cp -r build/ deploy/rancher/build', `rm -rf deploy/rancher/${buildPath} && cp -r ${buildPath}/ deploy/rancher/${buildPath}`)
+        // 替换前端构建目录
+        .replace('rm -rf deploy/rancher/build', `rm -rf deploy/rancher/${buildPath}`)
+        .replace('cp -r build/ deploy/rancher/build', `cp -r ${buildPath}/ deploy/rancher/${buildPath}`)
         // 替换rancher命名空间
         .replace('/NAMESPACE_NAME/front-center', `/NAMESPACE_NAME/${nameSpace}`)
         // 替换前端目录
