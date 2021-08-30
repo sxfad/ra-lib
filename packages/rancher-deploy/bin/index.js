@@ -12,6 +12,7 @@ const GIT_URL = process.env.GIT_URL || getGitUrl(); // 'https://gitee.com/sxfad/
 const GIT_BRANCH = process.env.GIT_BRANCH || getGitBranch(); // 'master';
 const RANCHER_NAME_SPACE = process.env.RANCHER_NAME_SPACE || 'front-center';
 const FRONT_FOLDER = process.env.FRONT_FOLDER || getFrontFolder();
+const BUILD_PATH = process.env.BUILD_PATH || 'build';
 
 const jenkins = require('jenkins')({
     baseUrl: JENKINS_BASE_URL,
@@ -28,6 +29,7 @@ const jenkins = require('jenkins')({
         branch: GIT_BRANCH,
         nameSpace: RANCHER_NAME_SPACE,
         fontFolder: FRONT_FOLDER,
+        buildPath: BUILD_PATH,
     };
 
     if (!exist) {
@@ -102,9 +104,10 @@ function showLog(jobName, buildNumber) {
 function getConfigXml(options = {}) {
     const {
         gitUrl,
-        branch = 'master',
-        nameSpace = 'front-center',
-        fontFolder = '.',
+        branch,
+        nameSpace,
+        fontFolder,
+        buildPath,
     } = options;
 
     if (!gitUrl) throw Error('git 地址不能为空！');
@@ -112,9 +115,15 @@ function getConfigXml(options = {}) {
     const xmlTemplate = fs.readFileSync(path.join(__dirname, 'job.xml'), 'UTF-8');
 
     return xmlTemplate
+        // 替换git仓库地址
         .replace('<url>https://gitee.com/sxfad/react-admin.git</url>', `<url>${gitUrl}</url>`)
+        // 替换分支
         .replace('<name>*/master</name>', `<name>*/${branch}</name>`)
+        // 替换前端构建分支
+        .replace('rm -rf deploy/rancher/build && cp -r build/ deploy/rancher/build', `rm -rf deploy/rancher/${buildPath} && cp -r ${buildPath}/ deploy/rancher/${buildPath}`)
+        // 替换rancher命名空间
         .replace('/NAMESPACE_NAME/front-center', `/NAMESPACE_NAME/${nameSpace}`)
+        // 替换前端目录
         .replace('cd .', `cd ${fontFolder}`);
 }
 
