@@ -19,10 +19,16 @@ export interface itemProps {
 const cacheMap = new Map();
 
 export function useOptions(...args) {
-    const [ result, setResult ] = useState(args.map(() => []));
+    // useOptions([a, b, c])  useOptions(a, b, c) 两种写法都支持
+    let allOptions = args;
+    if (allOptions.length === 1 && Array.isArray(allOptions[0])) {
+        allOptions = [ ...allOptions[0] ];
+    }
+
+    const [ result, setResult ] = useState(allOptions.map(() => []));
     useEffect(() => {
         (async () => {
-            const promises = args.map(item => {
+            const promises = allOptions.map(item => {
                 if (typeof item === 'function') {
 
                     const res = item();
@@ -53,8 +59,6 @@ export function useOptions(...args) {
                     // 检测是否只含有 value label meta? 三个参数
                     options.filter(item => !!item).forEach(arr => arr.forEach(obj => {
                         const keys = Object.keys(obj);
-                        if (keys.length > 3 || (keys.length === 3 && !keys.includes('meta')))
-                            throw Error(`枚举类型数据，只能含有 value,label,meta 三个属性！\n${JSON.stringify(obj, null, 4)}`);
 
                         if (!keys.includes('value') || !keys.includes('label'))
                             throw Error(`枚举类型数据，必须含有 value,label 属性！\n${JSON.stringify(obj, null, 4)}`);
