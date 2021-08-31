@@ -160,7 +160,7 @@ export function PromiseChildren(props) {
 
     useEffect(() => {
         (async () => {
-            if (children.then) {
+            if (children && children.then) {
                 const label = await children;
 
                 setResult(label);
