@@ -189,7 +189,7 @@ function getFrontFolder() {
     if (currentPath === __cwd) return '.';
 
     if (currentPath) {
-        return path.relative(currentPath, __cwd);
+        return path.relative(currentPath, __cwd).split(path.sep).join('/'); // 服务器是linux，直接改成 '/'
     }
 
     throw new Error('非git仓库，或 非仓库中直接子文件夹');
