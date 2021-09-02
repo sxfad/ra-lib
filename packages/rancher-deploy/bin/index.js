@@ -176,11 +176,21 @@ function getGitUrl() {
  * 获取前端在仓库中的文件夹
  */
 function getFrontFolder() {
-    // 仓库直接就是前端项目
-    if (fs.existsSync(path.join(__cwd, '.git'))) return '.';
+    let currentPath = __cwd;
 
-    // 前端作为仓库的子文件夹
-    if (fs.existsSync(path.join(__cwd, '..', '.git'))) return __cwd.split(path.sep).pop();
+    while (currentPath) {
+        if (fs.existsSync(path.join(currentPath, '.git'))) {
+            break;
+        }
+        const paths = currentPath.split(path.sep);
+        currentPath = paths.slice(0, paths.length - 1).join(path.sep);
+    }
+
+    if (currentPath === __cwd) return '.';
+
+    if (currentPath) {
+        return path.relative(currentPath, __cwd);
+    }
 
     throw new Error('非git仓库，或 非仓库中直接子文件夹');
 }
