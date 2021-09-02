@@ -168,6 +168,10 @@ function getGitUrl() {
     return url.replace('url = ', '');
 }
 
+/**
+ * 获取git根目录
+ * @returns {string}
+ */
 function getGitRoot() {
     let rootPath = __cwd;
 
@@ -191,11 +195,7 @@ function getGitRoot() {
 function getFrontFolder() {
     const gitRoot = getGitRoot();
 
-    if (gitRoot === __cwd) return '.';
-
-    if (gitRoot) {
-        return path.relative(gitRoot, __cwd).split(path.sep).join('/'); // 服务器是linux，直接改成 '/'
-    }
+    return path.relative(gitRoot, __cwd).split(path.sep).join('/'); // 服务器是linux，直接改成 '/'
 }
 
 function getGitBranch() {
