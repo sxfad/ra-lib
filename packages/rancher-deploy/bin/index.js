@@ -182,7 +182,6 @@ function getGitRoot() {
         const paths = rootPath.split(path.sep);
         rootPath = paths.slice(0, paths.length - 1).join(path.sep);
     }
-    if (rootPath === __cwd) return '.';
 
     if (rootPath) return rootPath;
 
@@ -195,7 +194,11 @@ function getGitRoot() {
 function getFrontFolder() {
     const gitRoot = getGitRoot();
 
-    return path.relative(gitRoot, __cwd).split(path.sep).join('/'); // 服务器是linux，直接改成 '/'
+    if (gitRoot === __cwd) return '.';
+
+    if (gitRoot) {
+        return path.relative(gitRoot, __cwd).split(path.sep).join('/'); // 服务器是linux，直接改成 '/'
+    }
 }
 
 function getGitBranch() {
