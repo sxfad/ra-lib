@@ -1,9 +1,9 @@
-import React, { useRef, useState, useContext, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { match } from 'path-to-regexp';
+import React, {useRef, useState, useContext, useEffect, useCallback} from 'react';
+import {withRouter} from 'react-router-dom';
+import {match} from 'path-to-regexp';
 import classNames from 'classnames';
-import { SyncOutlined, VerticalRightOutlined, VerticalLeftOutlined } from '@ant-design/icons';
-import { Tabs, Dropdown, Menu } from 'antd';
+import {SyncOutlined, VerticalRightOutlined, VerticalLeftOutlined} from '@ant-design/icons';
+import {Tabs, Dropdown, Menu} from 'antd';
 import ComponentContext from '../../component-context';
 import SideToggle from '../SideToggle';
 import Logo from '../Logo';
@@ -33,20 +33,29 @@ export default withRouter(React.memo(function Tab(props) {
         logoTheme,
         keepPageAlive,
         hashRouter,
+        baseName,
     } = props;
 
-    let { pathname, search, hash } = window.location;
+    let {pathname, search, hash} = window.location;
     const routePath = hashRouter ? hash.replace('#', '').split('?')[0] : pathname;
-    const key = hashRouter ? hash.replace('#', '') : `${pathname}${search}${hash}`;
+    let key = hashRouter ? hash.replace('#', '') : `${pathname}${search}${hash}`;
+    if (baseName) key = key.replace(baseName, '');
+
 
     const [, setRefresh] = useState({});
     const refreshRef = useRef(0);
+
+    const handlePersistTab = useCallback(() => {
+        if (persistTab) {
+            window.localStorage.setItem('layout-tabs', JSON.stringify(tabs));
+        }
+    }, [persistTab, tabs]);
 
     useEffect(() => {
         // 防抖处理
         if (refreshRef.current) clearTimeout(refreshRef.current);
         refreshRef.current = setTimeout(() => {
-            const route = routes.find(({ path }) => match(path, { decode: decodeURIComponent })(routePath));
+            const route = routes.find(({path}) => match(path, {decode: decodeURIComponent})(routePath));
             if (route && route.tab === false) return;
 
             let index = -1;
@@ -72,14 +81,8 @@ export default withRouter(React.memo(function Tab(props) {
             setRefresh({});
             handlePersistTab();
         }, 10);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [routes, pathname, search, hash, pageTitle]);
+    }, [routePath, tabs, handlePersistTab, routes, pathname, key, search, hash, pageTitle]);
 
-    function handlePersistTab() {
-        if (persistTab) {
-            window.localStorage.setItem('layout-tabs', JSON.stringify(tabs));
-        }
-    }
 
     function handleClick(nextKey) {
         props.history.push(nextKey);
@@ -123,13 +126,13 @@ export default withRouter(React.memo(function Tab(props) {
         return (
             <div onClick={e => e.stopPropagation()}>
                 <Menu
-                    onClick={({ key: action }) => {
+                    onClick={({key: action}) => {
                         handleMenuClick(nextKey, action);
                     }}
                 >
-                    {keepPageAlive ? <Menu.Item key='refresh' disabled={disabledRefresh} icon={<SyncOutlined />}>刷新</Menu.Item> : null}
-                    <Menu.Item key='closeRight' disabled={disabledRight} icon={<VerticalLeftOutlined />}>关闭右侧</Menu.Item>
-                    <Menu.Item key='closeLeft' disabled={disabledLeft} icon={<VerticalRightOutlined />}>关闭左侧</Menu.Item>
+                    {keepPageAlive ? <Menu.Item key="refresh" disabled={disabledRefresh} icon={<SyncOutlined/>}>刷新</Menu.Item> : null}
+                    <Menu.Item key="closeRight" disabled={disabledRight} icon={<VerticalLeftOutlined/>}>关闭右侧</Menu.Item>
+                    <Menu.Item key="closeLeft" disabled={disabledLeft} icon={<VerticalRightOutlined/>}>关闭左侧</Menu.Item>
                 </Menu>
             </div>
         );
@@ -196,7 +199,7 @@ export default withRouter(React.memo(function Tab(props) {
                 paddingLeft,
             }}
         >
-            <div className={borderBottomClass} />
+            <div className={borderBottomClass}/>
             <div className={leftClass}>
                 {showLogo ? (
                     <Logo
@@ -219,10 +222,10 @@ export default withRouter(React.memo(function Tab(props) {
                 ) : null}
             </div>
             <Tabs
-                size='small'
+                size="small"
                 hideAdd
                 activeKey={tabs.find(item => item.active)?.key}
-                type='editable-card'
+                type="editable-card"
                 onTabClick={handleClick}
                 onEdit={handleEdit}
             >

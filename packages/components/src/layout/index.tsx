@@ -409,6 +409,7 @@ const Layout = forwardRef<any, LayoutProps>((props, ref) => {
                         persistTab={persistTab}
                         keepPageAlive={keepPageAlive}
                         hashRouter={hashRouter}
+                        baseName={baseName}
                     />
                 ) : null}
                 {showPageHeader ? (
