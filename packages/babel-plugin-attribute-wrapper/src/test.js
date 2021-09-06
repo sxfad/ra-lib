@@ -2,6 +2,7 @@ const assert = require('assert');
 const transform = require('@babel/core').transform;
 const plugin = require('./');
 
+
 transform(`
 <div>
     <div>包裹classnames</div>
