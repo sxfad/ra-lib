@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 // @ts-ignore
-import { getFirstNode, findParentNodes } from '@ra-lib/util';
+import { getFirstNode } from '@ra-lib/util';
 import ComponentContext from '../../component-context';
 import LAYOUT_TYPE from '../layout-type';
 import Menu from '../Menu';
@@ -35,18 +35,7 @@ function Header(props) {
         logoTheme,
     } = props;
 
-    const [topSelectedMenuPath, setTopSelectedMenuPath] = useState(selectedMenuPath);
     const [topMenus, setTopMenus] = useState(menuTreeData);
-
-    useEffect(() => {
-        const parentNodes = findParentNodes(menuTreeData, selectedMenuPath, 'path');
-        if (parentNodes && parentNodes.length) {
-            const node = topMenus.find(item => item.id === parentNodes[0].id);
-            if (node) {
-                setTopSelectedMenuPath(node.path);
-            }
-        }
-    }, [topMenus, menuTreeData, selectedMenuPath]);
 
     useEffect(() => {
         if (layoutType === LAYOUT_TYPE.TOP_MENU) {
@@ -103,7 +92,7 @@ function Header(props) {
                             keepMenuOpen={false}
                             showSearchMenu={false}
                             menuTreeData={topMenus}
-                            selectedMenuPath={topSelectedMenuPath}
+                            selectedMenuPath={selectedMenuPath}
                         />
                     ) : null}
                 </div>
