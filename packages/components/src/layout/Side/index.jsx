@@ -28,10 +28,7 @@ export default function Side(props) {
         layoutType,
         selectedMenuParents,
         theme,
-        collectedMenus = [
-            { id: '2', title: '用户管理', path: '/users' },
-            { id: '3', title: '角色管理', path: '/roles' },
-        ],
+        collectedMenus,
         onMenuCollect,
     } = props;
 
