@@ -469,7 +469,6 @@ Layout.defaultProps = {
     persistTab: true,
     tabHeight: 40,
     menus: [],
-    collectedMenus: [],
     onMenuCollect: () => undefined,
     layoutType: LAYOUT_TYPE.SIDE_MENU,
     keepPageAlive: false,
