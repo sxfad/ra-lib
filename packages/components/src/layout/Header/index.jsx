@@ -1,8 +1,8 @@
-import { useContext, useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import {useContext, useState, useEffect, useMemo} from 'react';
+import {withRouter} from 'react-router-dom';
 import classNames from 'classnames';
 // @ts-ignore
-import { getFirstNode } from '@ra-lib/util';
+import {getFirstNode, findParentNodes} from '@ra-lib/util';
 import ComponentContext from '../../component-context';
 import LAYOUT_TYPE from '../layout-type';
 import Menu from '../Menu';
@@ -36,31 +36,40 @@ function Header(props) {
     } = props;
 
     const [topMenus, setTopMenus] = useState(menuTreeData);
+    const [selectedPath, setSelectedPath] = useState(null);
 
     useEffect(() => {
         if (layoutType === LAYOUT_TYPE.TOP_MENU) {
             setTopMenus(menuTreeData);
+            setSelectedPath(selectedMenuPath);
         }
 
         if (layoutType === LAYOUT_TYPE.TOP_SIDE_MENU) {
             const menus = menuTreeData.map(topNode => {
-                const { path, url, target } = getFirstNode(topNode, 'path') || {};
+                const {path, url, target} = getFirstNode(topNode, 'path') || {};
 
-                return { ...topNode, children: [], path, url, target };
+                return {...topNode, children: [], path, url, target};
             });
+
+            const parentNodes = findParentNodes(menuTreeData, selectedMenuPath, 'path');
+
+            if (parentNodes && parentNodes.length) {
+                const topNode = menus.find(item => item.id === parentNodes[0].id);
+                setSelectedPath(topNode?.path);
+            }
 
             setTopMenus(menus);
         }
-    }, [menuTreeData, layoutType]);
+    }, [menuTreeData, layoutType, selectedMenuPath]);
 
     prefixCls = `${prefixCls}-layout-header`;
-    const rootClass = classNames(prefixCls, className, { collapsed: sideCollapsed, dark: theme === 'dark' });
+    const rootClass = classNames(prefixCls, className, {collapsed: sideCollapsed, dark: theme === 'dark'});
     const contentClass = classNames(`${prefixCls}-content`);
 
     return (
         <header
             className={rootClass}
-            style={{ height }}
+            style={{height}}
         >
             <Logo
                 logo={logo}
@@ -87,12 +96,12 @@ function Header(props) {
                 <div>
                     {[LAYOUT_TYPE.TOP_MENU, LAYOUT_TYPE.TOP_SIDE_MENU].includes(layoutType) && topMenus.length ? (
                         <Menu
-                            mode='horizontal'
+                            mode="horizontal"
                             theme={theme}
                             keepMenuOpen={false}
                             showSearchMenu={false}
                             menuTreeData={topMenus}
-                            selectedMenuPath={selectedMenuPath}
+                            selectedMenuPath={selectedPath}
                         />
                     ) : null}
                 </div>
