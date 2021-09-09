@@ -1,4 +1,4 @@
-import {useContext, useState, useEffect, useMemo} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
 import classNames from 'classnames';
 // @ts-ignore

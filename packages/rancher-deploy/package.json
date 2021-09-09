@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "bin": {
-        "ra-rancher": "bin/index.js"
+        "ra-rancher": "bin/index.js",
+        "rancher-deploy": "bin/index.js"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
