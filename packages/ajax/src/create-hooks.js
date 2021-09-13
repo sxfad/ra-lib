@@ -31,11 +31,13 @@ export default function createHooks(ajax) {
         let formatResult = a => a;
         let formatError = a => a;
         let setLoading = () => undefined;
+        let trigger = a => a;
 
         if (typeof initOptions === 'object') {
             formatResult = initOptions.formatResult || formatResult;
             formatError = initOptions.formatError || formatError;
             setLoading = initOptions.setLoading || setLoading;
+            trigger = initOptions.trigger || trigger;
         }
 
         if (typeof initOptions === 'function') {
@@ -161,7 +163,10 @@ export default function createHooks(ajax) {
 
         // 监听 refreshDeps 自动触发请求
         useDebounceEffect(() => {
+            // 依赖不存在，不触发
             if (!refreshDeps) return;
+            // trigger 函数返回false，不触发
+            if (trigger() === false) return;
             run();
         }, refreshDeps || [], mountFire, debounce);
 

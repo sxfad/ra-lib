@@ -64,6 +64,7 @@ ajax.get('/url', params, options)
 | successTip | 成功提示，默认不触发onSuccess | `string` | `false` |
 | errorTip | 失败提示，默认触发onError | `string` | - |
 | originResponse | 是否返回相应的原始对象，一般用到完整的响应结果场景会用到 | `boolean` | `false` |
+| fileName | download方法专用，下载文件名称 | `string` | - |
 
 ### ajax初始化
 
