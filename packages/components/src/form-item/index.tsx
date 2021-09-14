@@ -59,7 +59,7 @@ export interface ItemProps extends FormItemProps {
     minLength?: number, // 允许输入最小字符数
     // type: PropTypes.oneOf(formElementTypes.map(item => item.type)),
     type?: ItemType,
-    children?: ReactChildren,
+    children?: ReactChildren | ReactNode,
     noSpace?: boolean,
     dateFormat?: dateFormatType,
 
@@ -143,7 +143,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
     // 处理校验规则
     const rules = getRules({ type, ...props, placeholder });
 
-    if (type === 'switch' && !valuePropName) valuePropName = 'checked';
+    if (['switch', 'checkbox'].includes(type) && !valuePropName) valuePropName = 'checked';
 
     const elementProps = {
         type,

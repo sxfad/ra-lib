@@ -25,7 +25,6 @@ export interface RATableProps<RecordType> extends TableProps<RecordType> {
     // 计算之后，再做偏移的高度
     offsetHeight?: number,
     borderBottom?: boolean,
-    rowKey?: () => string,
 }
 
 export default function RATable<RecordType extends Record<string, unknown> = any>(props: RATableProps<RecordType>) {

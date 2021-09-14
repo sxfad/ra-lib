@@ -16,7 +16,7 @@ export interface QueryBarProps {
     // 是否显示折叠bar
     showCollapsedBar?: boolean,
     // 子组件，如果需要展开收起功能，使用 render-props 方式，即：children 为函数：collapsed => {...}
-    children?: (collapsed: boolean) => ReactNode,
+    children?: ((collapsed: boolean) => ReactNode) | ReactNode,
 }
 
 function QueryBar(props: QueryBarProps) {
@@ -44,12 +44,10 @@ function QueryBar(props: QueryBarProps) {
     const collapsedBarClass = `${prefixCls}-collapsed-bar`;
     const tipClass = `${prefixCls}-tip`;
 
-    const childrenIsFunction = typeof children === 'function';
-
     return (
         <div {...others} className={rootClass}>
-            {childrenIsFunction ? children(collapsed) : children}
-            {showCollapsedBar && childrenIsFunction ? (
+            {typeof children === 'function' ? children(collapsed) : children}
+            {showCollapsedBar && typeof children === 'function' ? (
                 <div className={collapsedBarClass} onClick={() => setCollapsed(!collapsed)}>
                     {collapsed ? <DoubleRightOutlined rotate={90}/> : <DoubleLeftOutlined rotate={90}/>}
                     <span className={tipClass}>{collapsedTips[collapsed ? 0 : 1]}</span>
