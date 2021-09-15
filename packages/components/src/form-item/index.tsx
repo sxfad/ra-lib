@@ -85,8 +85,11 @@ export interface ItemProps extends FormItemProps {
     unCheckedChildren?: ReactNode,
 
 
-    // 允许任意属性
-    [propName: string]: any;
+    // 允许任意属性 会导致 IDE 提示失效
+    // declare const FormItem: React.ForwardRefExoticComponent<Pick<ItemProps, string | number> & React.RefAttributes<any>>;
+    // [propName: string]: any;
+
+    // declare const FormItem: React.ForwardRefExoticComponent<ItemProps & React.RefAttributes<any>>;
 }
 
 const { Item } = Form;
