@@ -66,7 +66,7 @@ export interface ItemProps extends FormItemProps {
     // 其他为Element 属性
     style?: CSSProperties,
     placeholder?: any,
-    options?: [],
+    options?: any,
     treeData?: [],
     onChange?: () => void,
     onSelect?: () => void,
@@ -83,6 +83,10 @@ export interface ItemProps extends FormItemProps {
     // switch
     checkedChildren?: ReactNode,
     unCheckedChildren?: ReactNode,
+
+
+    // 允许任意属性
+    [propName: string]: any;
 }
 
 const { Item } = Form;
