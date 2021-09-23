@@ -125,7 +125,7 @@ export default {
     },
 
     /**
-     * 异步方法，返回promise
+     * 异步方法，返回promise 注意不支持箭头函数写法：testAsync: async (time) => {...},
      * 数据中自动添加 state.getUserLoading、state.getUserError 数据
      * 内部ActionType: action_user_getUser_resolve action_user_getUser_reject action_user_getUser_padding
      * 设置debounce，进行防抖：连续多次调用，如果上次未结束，结果将被抛弃，最后一次调用结果将合并到state中。
@@ -139,13 +139,6 @@ export default {
             setTimeout(() => {
                 Math.random() > 0.5 ? resolve({user: {name: 123, age: 23}}) : reject(new Error('获取用户失败！'))
             }, 2000)
-        })
-    },
-    testAsync: async (time) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve({asyncResult: `${time}秒执行结果`});
-            }, time)
         })
     },
 };

@@ -54,6 +54,19 @@ function getTip(tip, key) {
     return tip[key];
 }
 
+/**
+ * 判断是否是异步函数
+ */
+function isAsyncFunction(fn) {
+    let fnStr = fn.toString();
+    return (
+        Object.prototype.toString.call(fn) === '[object AsyncFunction]'
+        // babel 转换之后的， 不同babel版本有可能不同，根据一些字符特征判断
+        || fnStr.includes("return _regenerator.default.async(function")
+        || (fnStr.includes("return Object(") && fnStr.includes('.mark(') && fnStr.includes('.wrap('))
+    );
+}
+
 // @ts-ignore
 function createStoreByModels(models, options): any {
     if (!models) {
@@ -129,7 +142,7 @@ function createStoreByModels(models, options): any {
                         const isExcludeUndoable = undoable && undoable.exclude && undoable.exclude.includes[key];
 
                         // 异步方法 async
-                        if (Object.prototype.toString.call(value) === '[object AsyncFunction]') {
+                        if (isAsyncFunction(value)) {
                             const resolveActionType = `action_${modelName}_${key}_resolve`;
                             const rejectActionType = `action_${modelName}_${key}_reject`;
                             const paddingActionType = `action_${modelName}_${key}_padding`;
