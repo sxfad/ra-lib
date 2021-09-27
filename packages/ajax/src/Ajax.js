@@ -288,7 +288,9 @@ function getFileName(headers) {
 
     let fileName = headers['content-disposition'].split(';')[1].split('filename=')[1];
     const fileNameUnicode = headers['content-disposition'].split('filename*=')[1];
-    if (fileNameUnicode) { // 当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
+
+    // 当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
+    if (fileNameUnicode) {
         fileName = decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
     }
 
@@ -312,12 +314,18 @@ function empty(data) {
     return Object.entries(data).reduce((prev, curr) => {
         const [key, value] = curr;
 
-        if (value !== null && value !== '' && value !== undefined) {
-            // eslint-disable-next-line no-param-reassign
-            prev[key] = value;
+        if ([
+            '',
+            null,
+            undefined,
+        ].includes(value)) {
+            return prev;
         }
 
-        return prev;
+        return {
+            ...prev,
+            [key]: value,
+        };
     }, {});
 }
 
@@ -338,14 +346,9 @@ function trimObject(data) {
     return Object.entries(data).reduce((prev, curr) => {
         const [key, value] = curr;
 
-        if (typeof value === 'string') {
-            // eslint-disable-next-line no-param-reassign
-            prev[key] = value.trim();
-        } else {
-            // eslint-disable-next-line no-param-reassign
-            prev[key] = value;
-        }
-
-        return prev;
+        return {
+            ...prev,
+            [key]: typeof value === 'string' ? value.trim() : value,
+        };
     }, {});
 }

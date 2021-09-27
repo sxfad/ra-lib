@@ -61,6 +61,7 @@ export interface ItemProps extends FormItemProps {
     type?: ItemType,
     children?: ReactChildren | ReactNode,
     noSpace?: boolean,
+    pattern?: [RegExp, string?],
     dateFormat?: dateFormatType,
 
     // 其他为Element 属性
@@ -102,6 +103,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
         children,
         noSpace,
         dateFormat,
+        pattern,
 
         // Form.Item属性
         colon,

@@ -74,7 +74,7 @@ export const formElementTypes = [
         type: 'select',
         Component: Select,
         componentName: 'Select',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return (
                 <Select optionFilterProp="label" {...commonProps} {...props}/>
             );
@@ -82,7 +82,7 @@ export const formElementTypes = [
     },
     {
         type: 'select-tree',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return (
                 <TreeSelect treeNodeFilterProp="title" {...commonProps} {...props} treeData={props.treeData || props.options}/>
             );
@@ -106,8 +106,8 @@ export const formElementTypes = [
     },
     {
         type: 'radio-button',
-        getComponent: ({ commonProps, props }) => {
-            const { options = [], ...others } = props;
+        getComponent: ({commonProps, props}) => {
+            const {options = [], ...others} = props;
             return (
                 <Radio.Group buttonStyle="solid" {...commonProps} {...others}>
                     {options.map(opt => <Radio.Button key={opt.value} {...opt}>{opt.label}</Radio.Button>)}
@@ -133,28 +133,28 @@ export const formElementTypes = [
     },
     {
         type: 'week',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker {...commonProps} picker="week" {...props}/>;
         },
         componentName: 'DatePicker',
     },
     {
         type: 'month',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker {...commonProps} picker="month" {...props}/>;
         },
         componentName: 'DatePicker',
     },
     {
         type: 'quarter',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker {...commonProps} picker="quarter" {...props}/>;
         },
         componentName: 'DatePicker',
     },
     {
         type: 'year',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker {...commonProps} picker="year" {...props}/>;
         },
         componentName: 'DatePicker',
@@ -166,28 +166,28 @@ export const formElementTypes = [
     },
     {
         type: 'week-range',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker.RangePicker {...commonProps} picker="week" {...props}/>;
         },
         componentName: 'DatePicker.RangePicker',
     },
     {
         type: 'month-range',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker.RangePicker {...commonProps} picker="month" {...props}/>;
         },
         componentName: 'DatePicker.RangePicker',
     },
     {
         type: 'quarter-range',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker.RangePicker {...commonProps} picker="quarter" {...props}/>;
         },
         componentName: 'DatePicker.RangePicker',
     },
     {
         type: 'year-range',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker.RangePicker {...commonProps} picker="year" {...props}/>;
         },
         componentName: 'DatePicker.RangePicker',
@@ -204,14 +204,14 @@ export const formElementTypes = [
     },
     {
         type: 'date-time',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker {...commonProps} showTime {...props}/>;
         },
         componentName: 'DatePicker',
     },
     {
         type: 'date-time-range',
-        getComponent: ({ commonProps, props }) => {
+        getComponent: ({commonProps, props}) => {
             return <DatePicker.RangePicker {...commonProps} showTime {...props}/>;
         },
         componentName: 'DatePicker.RangePicker',
@@ -242,10 +242,10 @@ export function isInputLikeElement(type) {
     return types.includes(type);
 }
 
-export function getPlaceholder({ type, placeholder, label }) {
+export function getPlaceholder({type, placeholder, label}) {
     if (placeholder !== undefined) return placeholder;
 
-    if (type === 'time-range') return [ '开始时间', '结束时间' ];
+    if (type === 'time-range') return ['开始时间', '结束时间'];
 
     if (type && type.endsWith('-range')) return undefined;
 
@@ -257,16 +257,18 @@ export function getRules(options) {
     let {
         type,
         noSpace,
+        pattern,
         rules,
         required,
         placeholder,
         maxLength,
         minLength,
+        label,
     } = options;
     if (!rules) rules = [];
 
     if (required && !rules.some(item => typeof item === 'object' && 'required' in item)) {
-        rules.push({ required: true, message: `${placeholder}！` });
+        rules.push({required: true, message: `${placeholder}！`});
     }
 
     if (noSpace && isInputLikeElement(type)) {
@@ -280,11 +282,16 @@ export function getRules(options) {
     }
 
     if (maxLength !== undefined && !rules.find(item => 'max' in item)) {
-        rules.push({ type: 'string', max: maxLength, message: `最大长度不能超过 ${maxLength} 个字符！` });
+        rules.push({type: 'string', max: maxLength, message: `最大长度不能超过 ${maxLength} 个字符！`});
     }
 
     if (minLength !== undefined && !rules.find(item => 'min' in item)) {
-        rules.push({ type: 'string', min: minLength, message: `最小长度不能低于 ${minLength} 个字符！` });
+        rules.push({type: 'string', min: minLength, message: `最小长度不能低于 ${minLength} 个字符！`});
+    }
+
+    if (pattern) {
+        const [regexp, message = `${label}不合法！`] = pattern;
+        rules.push({pattern: regexp, message});
     }
 
     return rules;

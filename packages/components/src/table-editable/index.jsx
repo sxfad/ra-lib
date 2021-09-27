@@ -44,7 +44,6 @@ const EditableCell = (options) => {
         childNode = (
             <FormItem
                 label={title}
-                showLabel={false}
                 colon={false}
                 name={dataIndex}
                 {...eleProps}
