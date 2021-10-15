@@ -27,6 +27,7 @@ group:
 | --- | --- | --- | --- |
 | type | 表单元素类型，详见[type类型](#type类型) | `string` | `input` |
 | noSpace | 不允许输入空格 | `boolean` | - |
+| pattern | 正则校验 | `[RegExp, string?]` | - |
 | maxLength | 可输入最大字符数 | `number` | - |
 | minLength | 可输入最小字符数 | `number` | - |
 | dateFormat | 日期字符串与moment对象自动互转 recognized RFC2822 or ISO format | `string` | - |

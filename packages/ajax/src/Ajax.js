@@ -132,7 +132,7 @@ export default class Ajax {
                     // eslint-disable-next-line @typescript-eslint/no-shadow
                     const data = originResponse ? response : response.data;
 
-                    this.onSuccess({data, tip: successTip, from: 'ajax'});
+                    this.onSuccess({data, tip: successTip, from: 'ajax', options});
 
                     resolve(data);
                 })
@@ -142,6 +142,7 @@ export default class Ajax {
                     if (isCanceled) return; // 如果是用户主动cancel，不做任何处理，不会触发任何函数
                     if (errorTip !== false)
                         this.onError({
+                            options,
                             error: err,
                             tip: errorTip,
                             from: 'ajax',
