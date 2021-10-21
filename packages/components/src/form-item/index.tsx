@@ -61,7 +61,7 @@ export interface ItemProps extends FormItemProps {
     type?: ItemType,
     children?: ReactChildren | ReactNode,
     noSpace?: boolean,
-    pattern?: [RegExp, string?],
+    pattern?: [ RegExp, string? ],
     dateFormat?: dateFormatType,
 
     // 其他为Element 属性
@@ -150,9 +150,9 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
     const placeholder = getPlaceholder({ type, ...props });
 
     // 处理校验规则
-    const rules = getRules({ type, ...props, placeholder });
+    const rules = getRules({ type, ...props });
 
-    if (['switch', 'checkbox'].includes(type) && !valuePropName) valuePropName = 'checked';
+    if ([ 'switch', 'checkbox' ].includes(type) && !valuePropName) valuePropName = 'checked';
 
     const elementProps = {
         type,
@@ -194,7 +194,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             wrapperCol={wrapperCol}
             fieldKey={fieldKey}
         >
-            {children || <Element {...elementProps} forwardRef={ref} />}
+            {children || <Element {...elementProps} forwardRef={ref}/>}
         </Item>
     );
 });

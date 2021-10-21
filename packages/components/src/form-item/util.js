@@ -260,15 +260,16 @@ export function getRules(options) {
         pattern,
         rules,
         required,
-        placeholder,
         maxLength,
         minLength,
         label,
     } = options;
     if (!rules) rules = [];
 
+    const requiredMessage = isInputLikeElement(type) ? `请输入${label}！` : `请选择${label}！`;
+
     if (required && !rules.some(item => typeof item === 'object' && 'required' in item)) {
-        rules.push({required: true, message: `${placeholder}！`});
+        rules.push({required: true, message: requiredMessage});
     }
 
     if (noSpace && isInputLikeElement(type)) {
