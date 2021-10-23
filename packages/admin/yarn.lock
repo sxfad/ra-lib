@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ra-lib/ajax@^0.1.26":
-  version "0.1.26"
-  resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.26.tgz#be212c79b5ec5caa3901e96fa91f9853c44c2b34"
-  integrity sha512-j+Y4L5KoB/mRv9lonS9m3Jzz3SngA/RSN56nPD3AEpv3rLNwI14V3P4UQceC3utrXm5P0brSBnykrTmKMGRw5A==
+"@ra-lib/ajax@^0.1.27":
+  version "0.1.27"
+  resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.27.tgz#f408f59788fa3b193a8461e46d09b9f4925dee39"
+  integrity sha512-KJ3+hfdZEs75XeA2vSyiCv/s2jGm2qEpafse+oBjNXIE84MUo1iyRNCzIiMzUUc2Wm5LNqX1qck7bWY0g54Czw==
 
 "@ra-lib/babel-plugin-attribute-wrapper@^0.0.17":
   version "0.0.17"
