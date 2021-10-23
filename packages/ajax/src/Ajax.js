@@ -63,6 +63,7 @@ export default class Ajax {
             data,
             url,
             method = 'get',
+            setLoading = () => undefined,
             ...otherOptions
         } = options;
 
@@ -119,6 +120,11 @@ export default class Ajax {
         // if(!Object.keys(data).length) data = undefined;
 
         const ajaxPromise = new Promise((resolve, reject) => {
+
+            // 多个请求共用一个loading状态， 使用 __count 记录 发起的loading数量，当 __count === 0 时才调用setLoading(false)
+            setLoading(true);
+            setLoading.__count = (setLoading.__count || 0) + 1;
+
             instance({
                 method,
                 url,
@@ -152,6 +158,10 @@ export default class Ajax {
                     } else {
                         resolve({$type: 'unRejectError', $error: err});
                     }
+                })
+                .finally(() => {
+                    setLoading.__count = (setLoading.__count || 0) - 1;
+                    if (setLoading.__count === 0) setLoading(false);
                 });
         });
         ajaxPromise.cancel = () => {

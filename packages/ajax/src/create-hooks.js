@@ -30,13 +30,11 @@ export default function createHooks(ajax) {
         const formatParams = a => a;
         let formatResult = a => a;
         let formatError = a => a;
-        let setLoading = () => undefined;
         let trigger = a => a;
 
         if (typeof initOptions === 'object') {
             formatResult = initOptions.formatResult || formatResult;
             formatError = initOptions.formatError || formatError;
-            setLoading = initOptions.setLoading || setLoading;
             trigger = initOptions.trigger || trigger;
         }
 
@@ -110,10 +108,6 @@ export default function createHooks(ajax) {
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 setResult(result => ({...result, loading: true, error: null}));
 
-                // 多个请求共用一个loading状态， 使用 __count 记录 发起的loading数量，当 __count === 0 时才调用setLoading(false)
-                setLoading(true);
-                setLoading.__count = (setLoading.__count || 0) + 1;
-
                 // 此处真正发起的ajax请求，ajaxToken 是一个promise
                 ajaxHandler.current = ajax[method](_url, myParams, {reject: true, ...mergedOptions});
                 const ajaxToken = ajaxHandler.current;
@@ -134,9 +128,6 @@ export default function createHooks(ajax) {
                         throw error;
                     })
                     .finally(() => {
-                        setLoading.__count = (setLoading.__count || 0) - 1;
-                        if (setLoading.__count === 0) setLoading(false);
-
                         // 结束时清除token
                         ajaxHandler.current = null;
                     });
