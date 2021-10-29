@@ -25,13 +25,13 @@
     "homepage": "",
     "gitHead": "7c3855d911b1a559983c5f47359fa629c3475546",
     "dependencies": {
-        "@ra-lib/ajax": "0.1.29",
-        "@ra-lib/babel-plugin-attribute-wrapper": "0.0.18",
-        "@ra-lib/components": "0.1.89",
-        "@ra-lib/config-loader": "0.1.7",
-        "@ra-lib/hoc": "0.1.7",
-        "@ra-lib/hooks": "0.1.9",
-        "@ra-lib/model": "0.1.11",
-        "@ra-lib/util": "0.1.22"
+        "@ra-lib/ajax": "^0.1.29",
+        "@ra-lib/babel-plugin-attribute-wrapper": "^0.0.18",
+        "@ra-lib/components": "^0.1.89",
+        "@ra-lib/config-loader": "^0.1.7",
+        "@ra-lib/hoc": "^0.1.7",
+        "@ra-lib/hooks": "^0.1.9",
+        "@ra-lib/model": "^0.1.11",
+        "@ra-lib/util": "^0.1.22"
     }
 }
