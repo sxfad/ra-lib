@@ -3,6 +3,7 @@
     "version": "0.0.17",
     "main": "lib/index.js",
     "module": "es/index.js",
+    "typings": "lib/index.d.ts",
     "scripts": {
         "build": "father-build",
         "test": "node src/test.js"

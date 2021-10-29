@@ -4,6 +4,7 @@
     "description": "redux封装",
     "main": "lib/index.js",
     "module": "es/index.js",
+    "typings": "lib/index.d.ts",
     "scripts": {
         "build": "father-build",
         "test": "umi-test"

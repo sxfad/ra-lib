@@ -4,6 +4,7 @@
     "description": "通用公共组件",
     "main": "lib/index.js",
     "module": "es/index.js",
+    "typings": "lib/index.d.ts",
     "sideEffects": [
         "dist/*",
         "*.less"
