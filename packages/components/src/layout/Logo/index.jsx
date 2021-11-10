@@ -49,7 +49,7 @@ function Header(props) {
                     src={logo}
                     alt='logo'
                 />
-            ) : { logo }}
+            ) : logo}
             {sideCollapsed ? null : <h1 className={`${prefixCls}-title`}>{title}</h1>}
         </div>
     );
