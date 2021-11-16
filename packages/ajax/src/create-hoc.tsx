@@ -17,40 +17,36 @@ const createAjaxHoc = ajax => ({ propName = 'ajax' } = {}) => WrappedComponent =
     // 将hooks也加入组件props中
     const ajaxHooks = createHooks(ajax);
 
-    class WithAjax extends Component {
+    return class WithAjax extends Component {
+        static displayName = `WithAjax(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+        readonly _$ajax;
+        readonly _$ajaxTokens;
+
         constructor(props) {
             super(props);
-            this._$ajax = {
-                ...ajaxHooks,
-            };
+            this._$ajax = { ...ajaxHooks };
             this._$ajaxTokens = [];
-            const methods = ['get', 'post', 'put', 'patch', 'del', 'download'];
+            const methods = [ 'get', 'post', 'put', 'patch', 'del', 'download' ];
 
-            // eslint-disable-next-line no-restricted-syntax
-            for (const method of methods) {
+            methods.forEach(method => {
                 this._$ajax[method] = (...args) => {
                     const ajaxToken = ajax[method](...args);
                     this._$ajaxTokens.push(ajaxToken);
                     return ajaxToken;
                 };
-            }
+            });
         }
-
-        static displayName = `WithAjax(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
 
         componentWillUnmount() {
             this._$ajaxTokens.forEach(item => item.cancel());
         }
 
         render() {
-            const injectProps = {
-                [propName]: this._$ajax,
-            };
-            return <WrappedComponent {...injectProps} {...this.props} />;
+            const { props, _$ajax } = this;
+            const injectProps = { [propName]: _$ajax };
+            return <WrappedComponent {...injectProps} {...props} />;
         }
-    }
-
-    return WithAjax;
+    };
 };
 
 export default createAjaxHoc;

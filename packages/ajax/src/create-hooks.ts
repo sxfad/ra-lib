@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, useCallback} from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useDebounceEffect from './useDebounceEffect';
 
 
@@ -12,7 +12,7 @@ const isObject = value => value && typeof value === 'object' && !Array.isArray(v
  */
 export default function createHooks(ajax) {
     const create = (method) => (...args) => {
-        let [url, initParams, refreshDeps, initOptions = {}] = args;
+        let [ url, initParams, refreshDeps, initOptions = {} ] = args;
         if (!initParams) initParams = {};
 
         if (args.length === 3) {
@@ -30,7 +30,7 @@ export default function createHooks(ajax) {
         const formatParams = a => a;
         let formatResult = a => a;
         let formatError = a => a;
-        let trigger = a => a;
+        let trigger = (a?: any) => a;
 
         if (typeof initOptions === 'object') {
             formatResult = initOptions.formatResult || formatResult;
@@ -43,7 +43,7 @@ export default function createHooks(ajax) {
             initOptions = {};
         }
 
-        const {debounce = true} = initOptions;
+        const { debounce = true } = initOptions;
 
         const mountFire = !('mountFire' in initOptions) ? true : !!initOptions.mountFire;
 
@@ -51,7 +51,7 @@ export default function createHooks(ajax) {
         const ajaxHandler = useRef(null);
 
         // 合并成一个对象，一次性进行setState，减少render次数
-        const [result, setResult] = useState({
+        const [ result, setResult ] = useState({
             loading: false,
             data: undefined,
             error: null,
@@ -63,7 +63,7 @@ export default function createHooks(ajax) {
          * @param options
          * @returns {Promise}
          */
-        const run = useCallback((params, options = {}) => {
+        const run = useCallback((params?: any, options?: any) => {
                 let myParams = formatParams(params);
                 // 对象参数合并
                 if (!myParams) myParams = initParams;
@@ -72,7 +72,7 @@ export default function createHooks(ajax) {
                     && isObject(initParams)
                     && !(myParams instanceof FormData)
                 ) {
-                    myParams = {...initParams, ...myParams};
+                    myParams = { ...initParams, ...myParams };
                 }
 
                 // 处理url中的参数 「:id」或「{id}」
@@ -95,35 +95,30 @@ export default function createHooks(ajax) {
                         if (!(key in myParams)) throw Error(`缺少「${key}」参数`);
 
                         return myParams[key];
-
-                        // const value = params[key];
-                        // Reflect.deleteProperty(params, key);
-                        //
-                        // return value;
                     })
                     .join('/');
 
-                const mergedOptions = {...initOptions, ...options};
+                const mergedOptions = { ...initOptions, ...options };
 
                 // eslint-disable-next-line @typescript-eslint/no-shadow
-                setResult(result => ({...result, loading: true, error: null}));
+                setResult(result => ({ ...result, loading: true, error: null }));
 
                 // 此处真正发起的ajax请求，ajaxToken 是一个promise
-                ajaxHandler.current = ajax[method](_url, myParams, {reject: true, ...mergedOptions});
+                ajaxHandler.current = ajax[method](_url, myParams, { reject: true, ...mergedOptions });
                 const ajaxToken = ajaxHandler.current;
 
                 ajaxToken
                     .then((res) => {
                         const data = formatResult(res);
 
-                        setResult({data, loading: false, error: null});
+                        setResult({ data, loading: false, error: null });
 
                         return data;
                     })
                     .catch((res) => {
                         const error = formatError(res);
 
-                        setResult({data: undefined, error, loading: false});
+                        setResult({ data: undefined, error, loading: false });
 
                         throw error;
                     })
@@ -161,7 +156,7 @@ export default function createHooks(ajax) {
             run();
         }, refreshDeps || [], mountFire, debounce);
 
-        return {run, ...result};
+        return { run, ...result };
     };
 
     return {
