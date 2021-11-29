@@ -27,6 +27,7 @@ export default function routerLoader() {
         if (config.indexOf('path:') !== -1) {
             component = `component: ()=> import('${filePath}'),`;
         }
+
         // 拼接额外的数据
         config = `{
             filePath: '${filePath}',
