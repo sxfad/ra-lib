@@ -96,7 +96,7 @@ const templates = {
             await replaceFileContent(
                 path.join(tempDir, '_coverpage.md'),
                 [
-                    ['我是大标题', ${answers.projectName}],
+                    ['我是大标题', answers.projectName],
                 ],
             );
             await replaceFileContent(
