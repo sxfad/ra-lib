@@ -154,9 +154,7 @@ targetDir = path.join(cwd, targetDir);
         type: 'list',
         name: 'template',
         message: '请选择模版:',
-        choices: [
-            'react-admin',
-        ],
+        choices: Object.keys(templates),
         default: 0,
     }]);
     const {template} = answers;
