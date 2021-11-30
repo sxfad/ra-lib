@@ -59,6 +59,54 @@ const templates = {
             );
         },
     },
+    'docsify-template': {
+        git: 'https://github.com/sxfad/docsify-template.git',
+        async deal(tempDir, targetDir) {
+            const deleteDirs = [
+                '.git',
+            ];
+
+            for (let p of deleteDirs) {
+                await fs.remove(path.join(tempDir, p));
+            }
+
+            const defaultProjectName = targetDir.split(path.sep).pop();
+
+            const answers = await inquirer.prompt([
+                {
+                    type: 'input',
+                    message: '项目名称(英文):',
+                    name: 'name',
+                    default: defaultProjectName,
+                    validate: function(val) {
+                        if (val.match(/^[A-Za-z0-9_-]+$/)) {
+                            return true;
+                        }
+                        return '只能输入字母、数字、下划线、连字符';
+                    },
+                },
+                {
+                    type: 'input',
+                    message: '项目名称(中文):',
+                    name: 'projectName',
+                    default: defaultProjectName,
+                },
+            ]);
+
+            await replaceFileContent(
+                path.join(tempDir, '_coverpage.md'),
+                [
+                    ['我是大标题', ${answers.projectName}],
+                ],
+            );
+            await replaceFileContent(
+                path.join(tempDir, 'package.json'),
+                [
+                    [`"name": "react-admin",`, `"name": "${answers.name}",`],
+                ],
+            );
+        },
+    },
 };
 
 program
