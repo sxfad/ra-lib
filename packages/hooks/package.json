@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/hooks",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "通用hooks",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -10,8 +10,8 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "peerDependencies": {
-        "react": "^17.0.2",
         "query-string": "^7.0.1",
+        "react": "^17.0.2",
         "react-router-dom": "^5.2.0"
     },
     "author": "zkboys",
