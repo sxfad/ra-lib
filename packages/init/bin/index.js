@@ -60,7 +60,7 @@ const templates = {
         },
     },
     'docsify-template': {
-        git: 'https://github.com/sxfad/docsify-template.git',
+        git: 'https://gitee.com/sxfad/docsify-template.git',
         async deal(tempDir, targetDir) {
             const deleteDirs = [
                 '.git',
