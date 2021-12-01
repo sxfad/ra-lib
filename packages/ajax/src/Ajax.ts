@@ -69,7 +69,7 @@ export interface AjaxOptions extends AxiosRequestConfig {
 }
 
 export default class Ajax {
-    private readonly instance: AxiosInstance;
+    public readonly instance: AxiosInstance;
     private onSuccess: (options: successOptions) => any;
     private onError: (options: errorOptions) => any;
     private readonly reject: boolean;
