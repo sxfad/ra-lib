@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/admin",
-    "version": "0.1.19",
+    "version": "0.1.20",
     "description": "管理系统整合库",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -32,6 +32,6 @@
         "@ra-lib/hoc": "^0.1.7",
         "@ra-lib/hooks": "0.1.10",
         "@ra-lib/model": "^0.1.11",
-        "@ra-lib/util": "^0.1.22"
+        "@ra-lib/util": "0.1.23"
     }
 }
