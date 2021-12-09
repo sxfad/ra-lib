@@ -65,6 +65,7 @@ function Header(props) {
     prefixCls = `${prefixCls}-layout-header`;
     const rootClass = classNames(prefixCls, className, { collapsed: sideCollapsed, dark: theme === 'dark' });
     const contentClass = classNames(`${prefixCls}-content`);
+    const menuWrapperClass = classNames(`${prefixCls}-menu-wrapper`);
 
     return (
         <header
@@ -93,7 +94,7 @@ function Header(props) {
                 />
             ) : null}
             <div className={contentClass}>
-                <div style={{flex: 1, overflow: 'hidden'}}>
+                <div className={menuWrapperClass}>
                     {[LAYOUT_TYPE.TOP_MENU, LAYOUT_TYPE.TOP_SIDE_MENU].includes(layoutType) && topMenus.length ? (
                         <Menu
                             mode='horizontal'
