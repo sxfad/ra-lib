@@ -21,7 +21,7 @@ export interface methodOptions extends AxiosRequestConfig {
     // 获取cancel方法
     cancelRef?: (c: any) => any;
     // 设置loading函数
-    setLoading?: (loading?: boolean) => undefined;
+    setLoading?: any;
     // 下载文件名
     fileName?: string;
     // 下载之钱回调函数，返回false 不执行下载
