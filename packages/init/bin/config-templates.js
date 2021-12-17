@@ -16,6 +16,7 @@ module.exports = {
          * clone下来之后对文件进行处理
          * @param sourceDir
          * @param targetDir
+         * @param program
          * @returns {Promise<void>}
          */
         async deal(sourceDir, targetDir, program) {
@@ -33,9 +34,7 @@ module.exports = {
             // 替换文件内容
             await replaceFileContent(
                 path.join(sourceDir, 'src', 'config', 'index.js'),
-                [
-                    [`'APP_NAME', 'React Admin'`, `'APP_NAME', '${chineseName}'`],
-                ],
+                [`'APP_NAME', 'React Admin'`, `'APP_NAME', '${chineseName}'`],
             );
 
             // 修改package.json 文件
@@ -56,11 +55,7 @@ module.exports = {
 
             const { chineseName, englishName } = await getProjectNames(targetDir, program);
 
-            await replaceFileContent(
-                path.join(sourceDir, '_coverpage.md'),
-                [
-                    ['我是大标题', chineseName],
-                ],
+            await replaceFileContent(path.join(sourceDir, '_coverpage.md'), ['我是大标题', chineseName],
             );
             await modifyPackageJson(path.join(sourceDir, 'package.json'), {
                 name: englishName,

@@ -1,34 +1,61 @@
-#!/usr/bin/env node
 const path = require('path');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const chalk = require('chalk');
-const spinner = ora();
 const clone = require('git-clone');
 const fs = require('fs-extra');
 const spawn = require('cross-spawn');
 
+const spinner = ora();
+
+/**
+ * 脚手架执行入口函数
+ * @param TEMPLATES
+ * @param program
+ * @returns {Promise<void>}
+ */
 async function run(TEMPLATES, program) {
-    const targetDir = getTargetDir(program);
-    let { yes, template } = program.opts();
-    // 目标文件夹存在，并且不为空，是否覆盖？
-    const isEmpty = await isDirEmpty(targetDir);
+    try {
+        // 获取目标目录
+        const targetDir = await getTargetDir(program);
 
-    if (!isEmpty && !yes) {
-        const { replace } = await inquirer.prompt([
-            {
-                type: 'confirm',
-                message: '目标目录已存在，且不为空，是否覆盖？',
-                name: 'replace',
-            },
-        ]);
+        // 获取模版配置
+        const options = await getTemplateOptions(TEMPLATES, program);
 
-        if (replace) {
-            // TODO 删除原目标目录文件？但是要保留.git文件夹
-        }
-        // 用户不覆盖，直接结束
-        if (!replace) return;
+        const { git: gitUrl, deal, templateKey } = options;
+        const sourceDir = path.join(__dirname, 'temp', templateKey);
+
+        // 复制模版
+        spinner.start(chalk.yellow(`cloning ${templateKey} ...\n`));
+        await downloadTemplate(templateKey, gitUrl, sourceDir);
+        spinner.succeed(chalk.green(`${templateKey} clone success! 👏👏👏`));
+
+        // 处理模版
+        if (deal) await deal(sourceDir, targetDir, program);
+
+        // copy 到目标目录
+        await fs.copy(sourceDir, targetDir);
+
+        // 是否安装依赖
+        await installDependencies(targetDir, program);
+
+        spinner.succeed(chalk.green(`init ${templateKey} to ${path.relative(process.cwd(), targetDir)} success! 👏👏👏`));
+    } catch (e) {
+        spinner.fail(chalk.red(e));
+    } finally {
+        // 删除临时文件夹
+        await fs.remove(path.join(__dirname, 'temp'));
     }
+}
+
+/**
+ * 获取模版配置
+ * @param TEMPLATES
+ * @param program
+ * @returns {Promise<*&{templateKey}>}
+ */
+async function getTemplateOptions(TEMPLATES, program) {
+    let { template } = program.opts();
 
     // 提示用户选择模版
     const keys = Object.keys(TEMPLATES);
@@ -51,42 +78,27 @@ async function run(TEMPLATES, program) {
 
     const templateKey = template.split(' ')[0];
     const options = TEMPLATES[templateKey];
+
     if (!options) {
-        spinner.info(chalk.yellow(`template ${templateKey} is not exist!!!, you can use:
+        spinner.info(chalk.yellow(`template ${templateKey} is not exist !!!, you can use:
 ${chalk.green(`   → ${keys.map(item => item.split(' ')[0]).join('\n   → ')}`)}`));
-        return;
+
+        throw Error(`no such template ${templateKey} !`);
     }
 
-    const { git: gitUrl, deal } = options;
-    const sourceDir = path.join(__dirname, 'temp', templateKey);
-
-    spinner.start(chalk.yellow(`cloning ${templateKey} ...\n`));
-    try {
-        await downloadTemplate(templateKey, gitUrl, sourceDir);
-        spinner.succeed(chalk.green(`${templateKey} clone success! 👏👏👏`));
-
-        if (deal) await deal(sourceDir, targetDir, program);
-
-        await fs.copy(sourceDir, targetDir);
-
-        // 是否安装依赖
-        await installDependencies(targetDir, program);
-
-        // 删除临时文件
-        await fs.remove(sourceDir);
-
-        spinner.succeed(chalk.green(`init ${templateKey} to ${path.relative(process.cwd(), targetDir)} success! 👏👏👏`));
-    } catch (e) {
-        spinner.fail(chalk.red(e));
-    }
+    return {
+        ...options,
+        templateKey,
+    };
 }
 
 
 /**
  * 获取目标目录，基于 cwd 的绝对路径
- * @returns {string}
+ * @param program
+ * @returns {Promise<string>}
  */
-function getTargetDir(program) {
+async function getTargetDir(program) {
     let targetDir;
 
     // 获取命令行参数
@@ -101,6 +113,28 @@ function getTargetDir(program) {
 
     const cwd = process.cwd();
     targetDir = path.join(cwd, targetDir);
+
+    let { yes } = program.opts();
+
+    // 目标文件夹存在，并且不为空，是否覆盖？
+    const isEmpty = await isDirEmpty(targetDir);
+
+    if (!isEmpty && !yes) {
+        const { replace } = await inquirer.prompt([
+            {
+                type: 'confirm',
+                message: '目标目录已存在，且不为空，是否覆盖？',
+                name: 'replace',
+            },
+        ]);
+
+        if (replace) {
+            // TODO 删除原目标目录文件？但是要保留.git文件夹
+            return targetDir;
+        }
+        // 用户不覆盖，直接结束
+        if (!replace) throw Error('no target dir');
+    }
 
     return targetDir;
 }
@@ -249,13 +283,14 @@ async function isDirEmpty(targetDir) {
 }
 
 /**
- * 替换文件内容
+ * * 替换文件内容
  * @param filePath
- * @param replaces
+ * @param replaces [[oldStr, newStr], [oldStr, newStr], ...]
  * @returns {Promise<void>}
  */
-async function replaceFileContent(filePath, replaces) {
+async function replaceFileContent(filePath, ...replaces) {
     let content = await fs.readFile(filePath, 'UTF-8');
+
     replaces.forEach(item => {
         const [oldContent, newContent] = item;
         content = content.replace(oldContent, newContent);
