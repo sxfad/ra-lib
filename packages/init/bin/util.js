@@ -42,6 +42,7 @@ async function run(TEMPLATES, program) {
         spinner.succeed(chalk.green(`init ${templateKey} to ${path.relative(process.cwd(), targetDir)} success! 👏👏👏`));
     } catch (e) {
         spinner.fail(chalk.red(e));
+        console.error(e);
     } finally {
         // 删除临时文件夹
         await fs.remove(path.join(__dirname, 'temp'));
@@ -258,7 +259,6 @@ async function downloadTemplate(template, gitUrl, tempDir) {
     // 本机复制
     const isLocal = await downloadFromLocal(template, tempDir);
     if (isLocal) return;
-
     await new Promise((resolve, reject) => {
         clone(gitUrl, tempDir, err => {
             if (err) return reject(err);
