@@ -19,7 +19,7 @@ module.exports = {
          * @param program
          * @returns {Promise<void>}
          */
-        async deal(sourceDir, targetDir, program) {
+        async beforeCopy(sourceDir, targetDir, program) {
             // 删除目录或文件
             await removeDirOrFiles(sourceDir, [
                 '.idea',    // webstorm 配置文件
@@ -48,7 +48,7 @@ module.exports = {
     'docsify': {
         description: '文档编写模版，基于Docsify',
         git: 'https://gitee.com/sxfad/docsify-template.git',
-        async deal(sourceDir, targetDir, program) {
+        async beforeCopy(sourceDir, targetDir, program) {
             await removeDirOrFiles(sourceDir, [
                 '.idea',    // webstorm 配置文件
                 '.vscode',  // vscode 配置文件
@@ -68,7 +68,7 @@ module.exports = {
     'eggjs-ts': {
         description: 'NodeJS 后端模板，基于eggjs、TypeScript',
         git: 'https://gitee.com/zkboys/eggjs-ts-template.git',
-        async deal(sourceDir, targetDir, program) {
+        async beforeCopy(sourceDir, targetDir, program) {
             await removeDirOrFiles(sourceDir, [
                 '.idea',    // webstorm 配置文件
                 '.vscode',  // vscode 配置文件
@@ -80,7 +80,7 @@ module.exports = {
 
             const { chineseName, englishName } = await getProjectNames(targetDir, program);
 
-            await replaceFileContent(path.join(sourceDir, '_coverpage.md'), ['我是大标题', chineseName]);
+            await replaceFileContent(path.join(sourceDir, 'README.md'), ['# NodeJS 后端模板', `# ${chineseName}`]);
             await modifyPackageJson(path.join(sourceDir, 'package.json'), {
                 name: englishName,
             });

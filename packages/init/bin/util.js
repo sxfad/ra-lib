@@ -22,7 +22,7 @@ async function run(TEMPLATES, program) {
         // 获取模版配置
         const options = await getTemplateOptions(TEMPLATES, program);
 
-        const { git: gitUrl, deal, templateKey } = options;
+        const { git: gitUrl, beforeCopy, templateKey } = options;
         const sourceDir = path.join(__dirname, 'temp', templateKey);
 
         // 复制模版
@@ -31,7 +31,7 @@ async function run(TEMPLATES, program) {
         spinner.succeed(chalk.green(`${templateKey} clone success! 👏👏👏`));
 
         // 处理模版
-        if (deal) await deal(sourceDir, targetDir, program);
+        if (beforeCopy) await beforeCopy(sourceDir, targetDir, program);
 
         // copy 到目标目录
         await fs.copy(sourceDir, targetDir);
