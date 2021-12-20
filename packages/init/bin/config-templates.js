@@ -93,4 +93,16 @@ module.exports = {
             });
         },
     },
+    'jquery': {
+        description: 'jquery模版，通过bower下载依赖',
+        git: 'https://gitee.com/zkboys/jquery-template.git',
+        async beforeCopy(sourceDir, targetDir, program) {
+            const { chineseName, englishName } = await getProjectNames(targetDir, program);
+
+            await replaceFileContent(path.join(sourceDir, 'README.md'), ['# jQuery 模版', `# ${chineseName}`]);
+            await modifyPackageJson(path.join(sourceDir, 'package.json'), {
+                name: englishName,
+            });
+        },
+    },
 };
