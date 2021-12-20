@@ -22,9 +22,6 @@ module.exports = {
         async beforeCopy(sourceDir, targetDir, program) {
             // 删除目录或文件
             await removeDirOrFiles(sourceDir, [
-                '.idea',    // webstorm 配置文件
-                '.vscode',  // vscode 配置文件
-                '.git',     // git配置文件
                 'docs',     // 文档目录
                 'build',    // 构建文件
             ]);
@@ -50,9 +47,6 @@ module.exports = {
         git: 'https://gitee.com/sxfad/docsify-template.git',
         async beforeCopy(sourceDir, targetDir, program) {
             await removeDirOrFiles(sourceDir, [
-                '.idea',    // webstorm 配置文件
-                '.vscode',  // vscode 配置文件
-                '.git',     // git配置文件
                 'build',    // 构建文件
             ]);
 
@@ -70,9 +64,6 @@ module.exports = {
         git: 'https://gitee.com/zkboys/eggjs-ts-template.git',
         async beforeCopy(sourceDir, targetDir, program) {
             await removeDirOrFiles(sourceDir, [
-                '.idea',    // webstorm 配置文件
-                '.vscode',  // vscode 配置文件
-                '.git',     // git配置文件
                 'build',    // 构建文件
                 'run',      // 临时文件
                 'logs',     // 日志文件
@@ -81,6 +72,22 @@ module.exports = {
             const { chineseName, englishName } = await getProjectNames(targetDir, program);
 
             await replaceFileContent(path.join(sourceDir, 'README.md'), ['# NodeJS 后端模板', `# ${chineseName}`]);
+            await modifyPackageJson(path.join(sourceDir, 'package.json'), {
+                name: englishName,
+            });
+        },
+    },
+    'nextjs': {
+        description: '服务端渲染，需要SEO的项目使用，基于nextjs、Antd、sqlite3',
+        git: 'https://gitee.com/zkboys/nextjs-template.git',
+        async beforeCopy(sourceDir, targetDir, program) {
+            await removeDirOrFiles(sourceDir, [
+                '.next',    // 构建文件
+            ]);
+
+            const { chineseName, englishName } = await getProjectNames(targetDir, program);
+
+            await replaceFileContent(path.join(sourceDir, 'README.md'), ['# nextjs 模版', `# ${chineseName}`]);
             await modifyPackageJson(path.join(sourceDir, 'package.json'), {
                 name: englishName,
             });

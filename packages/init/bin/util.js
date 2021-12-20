@@ -2,7 +2,6 @@ const path = require('path');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const chalk = require('chalk');
-const clone = require('git-clone');
 const fs = require('fs-extra');
 const spawn = require('cross-spawn');
 
@@ -29,6 +28,14 @@ async function run(TEMPLATES, program) {
         spinner.start(chalk.yellow(`cloning ${templateKey} ...\n`));
         await downloadTemplate(templateKey, gitUrl, sourceDir);
         spinner.succeed(chalk.green(`${templateKey} clone success! 👏👏👏`));
+
+        // 删除所有模版公共文件
+        await removeDirOrFiles(sourceDir, [
+            '.idea',        // webstorm 配置文件
+            '.vscode',      // vscode 配置文件
+            '.git',         // git配置文件
+            'node_modules', // 依赖文件
+        ]);
 
         // 处理模版
         if (beforeCopy) await beforeCopy(sourceDir, targetDir, program);
@@ -218,16 +225,18 @@ async function spawnPromise(command, args, options) {
 
 /**
  * 从本机复制，节省模版下载时间
- * @param template
+ * @param gitUrl
  * @param tempDir
  * @returns {Promise<boolean>}
  */
-async function downloadFromLocal(template, tempDir) {
+async function downloadFromLocal(gitUrl, tempDir) {
     // 判断是否是我本机，不是不从本机复制
     const cwd = process.cwd();
     if (!cwd.startsWith('/Users/wangshubin')) return false;
 
-    const templateLocalPath = `/Users/wangshubin/workspace/suixingpay/${template}`;
+    const name = gitUrl.split('/').pop().replace('.git', '');
+
+    const templateLocalPath = `/Users/wangshubin/workspace/suixingpay/${name}`;
 
     // 模版不存在，不复制
     const exists = await fs.exists(templateLocalPath);
@@ -241,6 +250,8 @@ async function downloadFromLocal(template, tempDir) {
         // 忽略node_modules
         filter: (src) => !src.startsWith(path.join(templateLocalPath, 'node_modules')),
     });
+
+    console.log('本机复制！');
 
     return true;
 }
@@ -257,15 +268,10 @@ async function downloadTemplate(template, gitUrl, tempDir) {
     await fs.remove(tempDir);
 
     // 本机复制
-    const isLocal = await downloadFromLocal(template, tempDir);
+    const isLocal = await downloadFromLocal(gitUrl, tempDir);
     if (isLocal) return;
-    await new Promise((resolve, reject) => {
-        clone(gitUrl, tempDir, err => {
-            if (err) return reject(err);
 
-            return resolve();
-        });
-    });
+    await spawnPromise('git', ['clone', gitUrl, tempDir]);
 }
 
 /**
