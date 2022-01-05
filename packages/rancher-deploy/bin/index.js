@@ -3,17 +3,33 @@ const fs = require('fs');
 const path = require('path');
 const __cwd = process.cwd();
 
+// 从package.json中读取项目名称
 const appName = require(path.join(__cwd, 'package.json')).name;
-const execSync = require('child_process').execSync; // 同步子进程
+// 子进程，同步方式
+const execSync = require('child_process').execSync;
 
+// jenkins路径，带用户名密码
 const JENKINS_BASE_URL = process.env.JENKINS_BASE_URL || 'http://wang_sb:wang2018@172.16.175.93:8080/jenkins';
+// jenkins任务名
 const JENKINS_JOB_NAME = process.env.JENKINS_JOB_NAME || appName;
-const GIT_URL = process.env.GIT_URL || getGitUrl(); // 'https://gitee.com/sxfad/react-admin.git';
-const GIT_BRANCH = process.env.GIT_BRANCH || getGitBranch(); // 'master';
+// git仓库地址，默认本地项目地址
+const GIT_URL = process.env.GIT_URL || getGitUrl();
+// git分支，默认本地项目分支
+const GIT_BRANCH = process.env.GIT_BRANCH || getCurrentGitBranch();
+// rancher 命名空间
 const RANCHER_NAME_SPACE = process.env.RANCHER_NAME_SPACE || 'front-center';
+// 前端目录文件夹，默认.git所在目录
 const FRONT_FOLDER = process.env.FRONT_FOLDER || getFrontFolder();
-const BUILD_PATH = process.env.BUILD_PATH || 'build';
+// 构建命令
 const BUILD_COMMAND = process.env.BUILD_COMMAND || 'build';
+// 构建生成文件路径
+const BUILD_PATH = process.env.BUILD_PATH || 'build';
+// 是否安装依赖，有些项目不需要安装依赖，直接复制到docker中，在docker镜像中安装依赖。
+const INSTALL = process.env.INSTALL !== 'false';
+// 是否构建
+const BUILD = process.env.BUILD !== 'false';
+// 是否使用yarn，否则使用npm
+const USE_YARN = fs.existsSync(path.join(__cwd, 'yarn.lock'));
 
 const jenkins = require('jenkins')({
     baseUrl: JENKINS_BASE_URL,
@@ -93,9 +109,7 @@ function showLog(jobName, buildNumber) {
 
 // 获取配置xml
 // async function getConfig(jobName) {
-//     const res = await jenkins.job.config(jobName);
-//
-//     return res;
+//     return await jenkins.job.config(jobName);
 // }
 
 /**
@@ -115,22 +129,30 @@ function getConfigXml(options = {}) {
 
     if (!gitUrl) throw Error('git 地址不能为空！');
 
-    const xmlTemplate = fs.readFileSync(path.join(__dirname, 'job.xml'), 'UTF-8');
+    // 读取jenkins配置模版
+    const xmlTemplate = fs.readFileSync(path.join(__dirname, 'job.xml'), 'UTF-8') || '';
+
+    // 不安装依赖
+    if (!INSTALL) xmlTemplate.replace('yarn install', '');
+    // 不构建
+    if (!BUILD) xmlTemplate.replace('yarn build', '');
 
     return xmlTemplate
         // 替换git仓库地址
         .replace('<url>https://gitee.com/sxfad/react-admin.git</url>', `<url>${gitUrl}</url>`)
         // 替换分支
         .replace('<name>*/master</name>', `<name>*/${branch}</name>`)
-        // 替换构建命令
-        .replace('yarn build', `yarn ${buildCommand}`)
-        // 替换前端构建目录
-        .replace('rm -rf deploy/rancher/build', `rm -rf deploy/rancher/${buildPath}`)
-        .replace('cp -r build/ deploy/rancher/build', `cp -r ${buildPath}/ deploy/rancher/${buildPath}`)
-        // 替换rancher命名空间
-        .replace('/NAMESPACE_NAME/front-center', `/NAMESPACE_NAME/${nameSpace}`)
         // 替换前端目录
-        .replace('cd .', `cd ${fontFolder}`);
+        .replace('cd .', `cd ${fontFolder}`)
+        // 替换安装命令
+        .replace('yarn install', USE_YARN ? 'yarn install' : 'npm i ')
+        // 替换构建命令
+        .replace('yarn build', `${USE_YARN ? 'yarn' : 'npm run'} ${buildCommand}`)
+        // 替换前端构建目录，将构建生成的目录复制到rancher目录中，提升docker构建速度
+        .replace('rm -rf deploy/rancher/build', `rm -rf deploy/rancher/${buildPath}`)
+        .replace('rsync -rv --exclude=deploy build/ deploy/rancher/build', `rsync -rv --exclude=deploy ${buildPath}/ deploy/rancher/${buildPath}`)
+        // 替换rancher命名空间
+        .replace('/NAMESPACE_NAME/front-center', `/NAMESPACE_NAME/${nameSpace}`);
 }
 
 /**
@@ -206,6 +228,10 @@ function getFrontFolder() {
     }
 }
 
-function getGitBranch() {
+/**
+ * 获取git当前分支
+ * @return {string} 当前git分支
+ */
+function getCurrentGitBranch() {
     return execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 }
