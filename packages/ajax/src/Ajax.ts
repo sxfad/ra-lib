@@ -26,6 +26,10 @@ export interface methodOptions extends AxiosRequestConfig {
     fileName?: string;
     // 下载之钱回调函数，返回false 不执行下载
     beforeDownload?: (res: AxiosResponse) => boolean;
+    // error以弹框形式提示
+    errorModal?: any,
+    // success 以弹框形式提示
+    successModal?: any,
 }
 
 // onSuccess 函数参数
