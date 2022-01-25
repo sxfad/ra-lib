@@ -17,6 +17,35 @@ const MAIN_APP_KEY = `${PACKAGE_NAME}_main_app`;
 const userId = window.sessionStorage.getItem(LOGIN_USER_ID_STORAGE_KEY);
 const STORAGE_PREFIX = `${PACKAGE_NAME}_${userId || ''}_`;
 
+
+export interface loginUser {
+    // 用户id
+    id: string | number;
+    // 用户名
+    name: string;
+    // 用户头像
+    avatar?: string;
+    // 用户token
+    token?: string;
+    // 用户权限
+    permissions?: string[];
+
+    // 其他字段
+    [key: string]: any;
+}
+
+export interface menu {
+    id: string | number;
+    parentId?: string | number;
+    title?: string;
+    path?: string;
+    order?: number;
+    type?: number;
+
+    // 其他字段
+    [key: string]: any;
+}
+
 /**
  * 前端存储对象 storage.local storage.session storage.global
  * storage.local.setItem(key, value) storage.local.getItem(key, value)
@@ -60,7 +89,7 @@ function useCreateStorageHook(storageInstance, key, defaultValue) {
  * 存储token到sessionStorage及loginUser中
  * @param token
  */
-export function setToken(token) {
+export function setToken(token): void {
     window.sessionStorage.setItem(LOGIN_USER_TOKEN_STORAGE_KEY, token);
 }
 
@@ -68,7 +97,7 @@ export function setToken(token) {
  * 获取token
  * token来源: queryString > sessionStorage > loginUser
  */
-export function getToken() {
+export function getToken(): string {
     const query: any = queryParse();
     if (query?.token) setToken(query.token);
     return query?.token
@@ -79,7 +108,7 @@ export function getToken() {
  * 设置当前用户信息
  * @param loginUser 当前登录用户信息
  */
-export function setLoginUser(loginUser: any = {}) {
+export function setLoginUser(loginUser: any = {}): void {
     if (!loginUser) return;
     // 必须字段
     [
@@ -110,7 +139,7 @@ export function setLoginUser(loginUser: any = {}) {
  * 获取当前用户信息
  * @returns {any}
  */
-export function getLoginUser() {
+export function getLoginUser(): loginUser {
     const loginUser = window.sessionStorage.getItem(LOGIN_USER_STORAGE_KEY);
 
     return loginUser ? JSON.parse(loginUser) : undefined;
@@ -120,7 +149,7 @@ export function getLoginUser() {
  * 判断是否有权限
  * @param code
  */
-export function hasPermission(code) {
+export function hasPermission(code): boolean {
     if (typeof code === 'boolean') return code;
 
     if (!code) return true;
@@ -133,7 +162,7 @@ export function hasPermission(code) {
  * 判断用户是否登录 前端简单通过登录用户或token是否存在来判断
  * @returns {boolean}
  */
-export function isLogin() {
+export function isLogin(): boolean {
     // 前端判断是否登录，基于不同项目，可能需要调整
     return !!(
         getLoginUser()
@@ -147,7 +176,7 @@ export function isLogin() {
  * @param path
  * @returns {string|*|boolean}
  */
-export function isLoginPage(path = window.location.pathname) {
+export function isLoginPage(path = window.location.pathname): boolean {
     return path && path.endsWith('/login') || window.location.href.includes('/#/login');
 }
 
@@ -213,7 +242,7 @@ export function getContainerId(name) {
  * @param pathname
  * @returns {*}
  */
-export function isActiveApp(app, pathname = window.location.pathname) {
+export function isActiveApp(app, pathname = window.location.pathname): boolean {
     return pathname.startsWith(`/${app.name}`);
 }
 
@@ -221,7 +250,7 @@ export function isActiveApp(app, pathname = window.location.pathname) {
  * 获取模块名
  * @param filePath
  */
-export function getModelName(filePath) {
+export function getModelName(filePath): string {
     // models/page.js 情况
     let name = filePath.replace('./', '').replace('.js', '');
 
@@ -246,7 +275,7 @@ export function getModelName(filePath) {
  * @param menus
  * @returns {*}
  */
-export function formatMenus(menus) {
+export function formatMenus(menus): menu[] {
     // 检测是否有重复id
     const someId = checkSameField(menus, 'id');
     if (someId) throw Error(`菜单中有重复id 「 ${someId} 」`);
@@ -260,7 +289,7 @@ export function formatMenus(menus) {
  * @param menus
  * @param basePath
  */
-function loopMenus(menus, basePath = '') {
+function loopMenus(menus, basePath = ''): menu[] {
     menus.forEach(item => {
         let { path, target, children } = item;
 
