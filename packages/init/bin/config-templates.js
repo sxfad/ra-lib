@@ -57,7 +57,7 @@ module.exports = {
 
             // 替换文件内容
             await replaceFileContent(
-                path.join(sourceDir, 'src', 'config', 'index.js'),
+                path.join(sourceDir, 'src', 'config', 'index.ts'),
                 [`'APP_NAME', 'React Admin'`, `'APP_NAME', '${chineseName}'`],
             );
 
