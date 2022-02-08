@@ -5,24 +5,24 @@ import classNames from 'classnames';
 import ComponentContext from '../component-context';
 import './style.less';
 
+export interface OperatorItem {
+    label?: ReactNode,
+    icon?: string,
+    visible?: boolean,
+    disabled?: boolean,
+    color?: string,
+    loading?: boolean,
+    isMore?: boolean,
+    onClick?: () => void,
+    confirm?: PopconfirmProps,
+    statusSwitch?: Record<string, unknown>,
+
+    [key: string]: any,
+}
 
 export interface OperatorProps {
     // 操作项
-    items: [
-        {
-            label?: ReactNode,
-            icon?: string,
-            visible?: boolean,
-            disabled?: boolean,
-            color?: string,
-            loading?: boolean,
-            isMore?: boolean,
-
-            onClick?: () => void,
-            confirm?: PopconfirmProps,
-            statusSwitch?: Record<string, unknown>,
-        }
-    ],
+    items: OperatorItem[] | any,
     // 更多标签文案
     moreText?: ReactNode,
     // 更多标签宽度

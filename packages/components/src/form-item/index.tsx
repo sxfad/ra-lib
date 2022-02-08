@@ -85,6 +85,8 @@ export interface ItemProps extends FormItemProps {
     checkedChildren?: ReactNode,
     unCheckedChildren?: ReactNode,
 
+    // input
+    prefix?: any,
 
     // 允许任意属性 会导致 IDE 提示失效
     // declare const FormItem: React.ForwardRefExoticComponent<Pick<ItemProps, string | number> & React.RefAttributes<any>>;
@@ -194,7 +196,7 @@ const FormItem = forwardRef<any, ItemProps>((props, ref) => {
             wrapperCol={wrapperCol}
             fieldKey={fieldKey}
         >
-            {children || <Element {...elementProps} forwardRef={ref}/>}
+            {children || <Element {...elementProps} forwardRef={ref} />}
         </Item>
     );
 });

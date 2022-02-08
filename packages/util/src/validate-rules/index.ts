@@ -1,4 +1,5 @@
 import * as regexps from './regexp';
+import { Rule } from 'rc-field-form/lib/interface';
 
 /**
  * 获取字符串字节长度，中文占两个字节
@@ -59,21 +60,21 @@ function stringFormat(value, ...args) {
 }
 
 
-export function ip(message = '请输入正确的IP地址！') {
+export function ip(message = '请输入正确的IP地址！'): Rule {
     return {
         pattern: regexps.ip,
         message,
     };
 }
 
-export function port(message = '请输入正确的端口号！') {
+export function port(message = '请输入正确的端口号！'): Rule {
     return {
         pattern: regexps.port,
         message,
     };
 }
 
-export function noSpace(message = '不能含有空格！') {
+export function noSpace(message = '不能含有空格！'): Rule {
     return {
         validator: (rule, value) => {
             if (/\s/g.test(value)) return Promise.reject(message);
@@ -82,70 +83,70 @@ export function noSpace(message = '不能含有空格！') {
     };
 }
 
-export function mobile(message = '请输入正确的手机号！') { // 手机号
+export function mobile(message = '请输入正确的手机号！'): Rule { // 手机号
     return {
         pattern: regexps.mobile,
         message,
     };
 }
 
-export function landline(message = '请输入正确的座机号！') { // 座机
+export function landline(message = '请输入正确的座机号！'): Rule { // 座机
     return {
         pattern: regexps.landLine,
         message,
     };
 }
 
-export function qq(message = '请输入正确的qq号！') { // qq号
+export function qq(message = '请输入正确的qq号！'): Rule { // qq号
     return {
         pattern: regexps.qq,
         message,
     };
 }
 
-export function cardNumber(message = '请输入正确的身份证号！') { // 身份证号十五位十八位最后X的校验
+export function cardNumber(message = '请输入正确的身份证号！'): Rule { // 身份证号十五位十八位最后X的校验
     return {
         pattern: regexps.cardNumber,
         message,
     };
 }
 
-export function email(message = '请输入正确的邮箱！') {
+export function email(message = '请输入正确的邮箱！'): Rule {
     return {
         type: 'email',
         message,
     };
 }
 
-export function number(message = '请输入数字.') { // 纯数字，不包括 + -
+export function number(message = '请输入数字.'): Rule { // 纯数字，不包括 + -
     return {
         pattern: regexps.number,
         message,
     };
 }
 
-export function integer(message = '请输入整数！') { // 整数
+export function integer(message = '请输入整数！'): Rule { // 整数
     return {
         pattern: regexps.integer,
         message,
     };
 }
 
-export function positiveInteger(message = '请输入正整数！') { // 正整数 = 不按包含0
+export function positiveInteger(message = '请输入正整数！'): Rule { // 正整数 = 不按包含0
     return {
         pattern: regexps.positiveInteger,
         message,
     };
 }
 
-export function numberWithTwoDecimal(message = '请输入数字，保存两位小数.') {
+export function numberWithTwoDecimal(message = '请输入数字，保存两位小数.'): Rule {
     return {
         pattern: regexps.numberWithTwoDecimal,
         message,
     };
 }
 
-export function numberRange(min, max, message = '请输入{min}到{max}之间的值.') {
+export function numberRange(min, max, message = '请输入{min}到{max}之间的值.'): Rule {
     return {
         validator(rule, value) {
             if (!value) return Promise.resolve();
@@ -164,7 +165,7 @@ export function numberRange(min, max, message = '请输入{min}到{max}之间的
     };
 }
 
-export function numberMaxRange(max, message = '不能大于{max}') {
+export function numberMaxRange(max, message = '不能大于{max}'): Rule {
     return {
         validator(rule, value) {
             if (!value) return Promise.resolve();
@@ -183,7 +184,7 @@ export function numberMaxRange(max, message = '不能大于{max}') {
     };
 }
 
-export function numberMinRange(min, message = '不能小于{min}') {
+export function numberMinRange(min, message = '不能小于{min}'): Rule {
     return {
         validator(rule, value) {
             if (!value) return Promise.resolve();
@@ -202,7 +203,7 @@ export function numberMinRange(min, message = '不能小于{min}') {
     };
 }
 
-export function stringByteRangeLength(min, max, message = '请输入 {min}-{max} 个字符(汉字算2个字符).') {
+export function stringByteRangeLength(min, max, message = '请输入 {min}-{max} 个字符(汉字算2个字符).'): Rule {
     return {
         validator(rule, value) {
             if (!value) return Promise.resolve();
@@ -214,7 +215,7 @@ export function stringByteRangeLength(min, max, message = '请输入 {min}-{max}
     };
 }
 
-export function stringByteMinLength(min, message = '最少输入{min}个字符(汉字算2个字符).') {
+export function stringByteMinLength(min, message = '最少输入{min}个字符(汉字算2个字符).'): Rule {
     return {
         validator(rule, value) {
             if (!value) return Promise.resolve();
@@ -225,7 +226,7 @@ export function stringByteMinLength(min, message = '最少输入{min}个字符(�
     };
 }
 
-export function stringByteMaxLength(max, message = '最多输入{max}个字符(汉字算2个字符).') {
+export function stringByteMaxLength(max, message = '最多输入{max}个字符(汉字算2个字符).'): Rule {
     return {
         validator(rule, value) {
             if (!value) return Promise.resolve();
@@ -236,7 +237,7 @@ export function stringByteMaxLength(max, message = '最多输入{max}个字符(�
     };
 }
 
-export function arrayMaxLength(max, message = '最多{max}个值') {
+export function arrayMaxLength(max, message = '最多{max}个值'): Rule {
     return {
         validator(rule, value) {
             if (!value || !Array.isArray(value)) return Promise.resolve();

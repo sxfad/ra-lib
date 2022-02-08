@@ -15,9 +15,9 @@ export interface methodOptions extends AxiosRequestConfig {
     // 返回完整响应对象，否则返回response.data
     originResponse?: boolean;
     // 默认false，不展示
-    successTip?: boolean;
+    successTip?: boolean | string;
     //  = method === 'get' ? '获取数据失败！' : '操作失败！', // 默认失败提示
-    errorTip?: boolean;
+    errorTip?:  boolean | string;
     // 获取cancel方法
     cancelRef?: (c: any) => any;
     // 设置loading函数
@@ -220,7 +220,7 @@ export default class Ajax {
      * @param {object} [options] axios 配置参数
      * @returns {Promise}
      */
-    get(url, params, options: methodOptions = {}) {
+    get(url: string, params?: any, options: methodOptions = {}) {
         return this.ajax({ url, params, method: 'get', ...options });
     }
 
@@ -231,7 +231,7 @@ export default class Ajax {
      * @param {object} [options] axios 配置参数
      * @returns {Promise}
      */
-    post(url, data, options: methodOptions = {}) {
+    post(url: string, data?: any, options: methodOptions = {}) {
         return this.ajax({ url, data, method: 'post', ...options });
     }
 
@@ -242,7 +242,7 @@ export default class Ajax {
      * @param {object} [options] axios 配置参数
      * @returns {Promise}
      */
-    put(url, data, options: methodOptions = {}) {
+    put(url: string, data?: any, options: methodOptions = {}) {
         return this.ajax({ url, data, method: 'put', ...options });
     }
 
@@ -253,7 +253,7 @@ export default class Ajax {
      * @param {object} [options] axios 配置参数
      * @returns {Promise}
      */
-    patch(url, data, options: methodOptions = {}) {
+    patch(url: string, data?: any, options: methodOptions = {}) {
         return this.ajax({ url, data, method: 'patch', ...options });
     }
 
@@ -264,7 +264,7 @@ export default class Ajax {
      * @param {object} [options] axios 配置参数
      * @returns {Promise}
      */
-    del(url, params, options: methodOptions = {}) {
+    del(url: string, params?: any, options: methodOptions = {}) {
         return this.ajax({ url, params, method: 'delete', ...options });
     }
 
@@ -278,7 +278,7 @@ export default class Ajax {
      * @param options
      * @returns {Promise}
      */
-    download(url, params, options: methodOptions = {}) {
+    download(url: string, params?: any, options: methodOptions = {}) {
         let {
             fileName,
             method = 'get',
