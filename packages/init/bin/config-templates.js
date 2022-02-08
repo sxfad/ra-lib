@@ -42,6 +42,32 @@ module.exports = {
         },
     },
 
+    'react-admin-ts': {
+        description: '中后台管理框架，基于React + Antd + TypeScript',
+        git: 'https://github.com/zkboys/react-admin-ts.git',
+        async beforeCopy(sourceDir, targetDir, program) {
+            // 删除目录或文件
+            await removeDirOrFiles(sourceDir, [
+                'docs',     // 文档目录
+                'build',    // 构建文件
+            ]);
+
+            // 获取用户输入的中文名和英文名
+            const { chineseName, englishName } = await getProjectNames(targetDir, program);
+
+            // 替换文件内容
+            await replaceFileContent(
+                path.join(sourceDir, 'src', 'config', 'index.js'),
+                [`'APP_NAME', 'React Admin'`, `'APP_NAME', '${chineseName}'`],
+            );
+
+            // 修改package.json 文件
+            await modifyPackageJson(path.join(sourceDir, 'package.json'), {
+                name: englishName,
+            });
+        },
+    },
+
     'docsify': {
         description: '文档编写模版，基于Docsify',
         git: 'https://gitee.com/sxfad/docsify-template.git',
