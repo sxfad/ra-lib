@@ -59,7 +59,10 @@ async function getTargetDir(program) {
             return targetDir;
         }
         // 用户不覆盖，直接结束
-        if (!replace) throw Error('no target dir');
+        if (!replace) {
+            console.log('用户取消！');
+            return '';
+        }
     }
 
     return targetDir;

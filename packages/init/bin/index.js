@@ -23,6 +23,8 @@ program
     // 获取目标目录
     const targetDir = await getTargetDir(program);
 
+    if (!targetDir) return;
+
     // 获取模版
     const temps = templates.map(Item => {
         const sourceDir = path.join(__dirname, 'temp');
