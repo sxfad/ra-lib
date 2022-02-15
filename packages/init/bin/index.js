@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const program = require('commander');
-const { run } = require('./util');
-const TEMPLATES = require('./config-templates');
+const templates = require('./templates');
+const path = require('path');
+const { getTargetDir, getTemplate } = require('./utils');
 
 // 命令配置
 program
@@ -19,5 +20,17 @@ program
     .parse(process.argv);
 
 (async () => {
-    await run(TEMPLATES, program);
+    // 获取目标目录
+    const targetDir = await getTargetDir(program);
+
+    // 获取模版
+    const temps = templates.map(Item => {
+        const sourceDir = path.join(__dirname, 'temp');
+        return new Item(sourceDir, targetDir, program);
+    });
+    const temp = await getTemplate(temps, program);
+
+    // 执行模版方法
+    temp.run();
 })();
+
