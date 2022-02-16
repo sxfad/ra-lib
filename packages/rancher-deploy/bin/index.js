@@ -133,14 +133,14 @@ function getConfigXml(options = {}) {
     if (!gitUrl) throw Error('git 地址不能为空！');
 
     // 读取jenkins配置模版
-    const xmlTemplate = fs.readFileSync(path.join(__dirname, 'job.xml'), 'UTF-8') || '';
+    let xmlTemplate = fs.readFileSync(path.join(__dirname, 'job.xml'), 'UTF-8') || '';
 
     // 不安装依赖
-    if (!INSTALL) xmlTemplate.replace('yarn install', '');
+    if (!INSTALL) xmlTemplate = xmlTemplate.replace('yarn install', '');
     // 不构建
-    if (!BUILD) xmlTemplate.replace('yarn build', '');
+    if (!BUILD) xmlTemplate = xmlTemplate.replace('yarn build', '');
     // 不复制文件
-    if (!COPY_TO_RANCHER) xmlTemplate.replace('rm -rf deploy/rancher/build', '# rm -rf deploy/rancher/build');
+    if (!COPY_TO_RANCHER) xmlTemplate = xmlTemplate.replace('rm -rf deploy/rancher/build', '# rm -rf deploy/rancher/build');
 
     return xmlTemplate
         // 替换git仓库地址
