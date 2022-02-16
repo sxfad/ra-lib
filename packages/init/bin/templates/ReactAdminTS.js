@@ -15,7 +15,7 @@ module.exports = class ReactAdminTS extends Base {
 
         return [
             {
-                filePath: path.join(this.sourceDir, 'src', 'config', 'index.js'),
+                filePath: path.join(this.sourceDir, 'src', 'config', 'index.ts'),
                 replaces: [`'APP_NAME', 'React Admin'`, `'APP_NAME', '${chineseName}'`],
             },
         ];
