@@ -37,6 +37,7 @@ const jenkins = require('jenkins')({
     promisify: true,
 });
 
+
 (async () => {
     // 不存在，创建任务
     const exist = await jenkins.job.exists(JENKINS_JOB_NAME);
