@@ -30,6 +30,8 @@ const INSTALL = process.env.INSTALL !== 'false';
 const BUILD = process.env.BUILD !== 'false';
 // 是否使用yarn，否则使用npm
 const USE_YARN = fs.existsSync(path.join(__cwd, 'yarn.lock'));
+// 是否复制文件到RANCHER目录
+const COPY_TO_RANCHER = process.env.BUILD !== 'false';
 
 const jenkins = require('jenkins')({
     baseUrl: JENKINS_BASE_URL,
@@ -137,6 +139,8 @@ function getConfigXml(options = {}) {
     if (!INSTALL) xmlTemplate.replace('yarn install', '');
     // 不构建
     if (!BUILD) xmlTemplate.replace('yarn build', '');
+    // 不复制文件
+    if (!COPY_TO_RANCHER) xmlTemplate.replace('rm -rf deploy/rancher/build', '# rm -rf deploy/rancher/build');
 
     return xmlTemplate
         // 替换git仓库地址
