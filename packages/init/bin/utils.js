@@ -230,7 +230,10 @@ async function downloadFromLocal(gitUrl, tempDir) {
     // 开始复制文件
     await fs.copy(templateLocalPath, tempDir, {
         // 忽略node_modules
-        filter: (src) => !src.startsWith(path.join(templateLocalPath, 'node_modules')),
+        filter: (src) => {
+            return !src.startsWith(path.join(templateLocalPath, 'node_modules'))
+                && !src.startsWith(path.join(templateLocalPath, 'front', 'node_modules'));
+        },
     });
 
     console.log('本机复制！');

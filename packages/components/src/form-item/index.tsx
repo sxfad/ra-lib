@@ -69,7 +69,7 @@ export interface ItemProps extends FormItemProps {
     placeholder?: any,
     options?: any,
     treeData?: [],
-    onChange?: () => void,
+    onChange?: any,
     onSelect?: () => void,
     onCheck?: () => void,
     onClick?: () => void,
