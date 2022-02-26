@@ -24,7 +24,7 @@ let BodyContainer = SortableContainer(props => {
 
             return (
                 <RowElement
-                    key={key}
+                    key={key || index}
                     index={index}
                 >
                     {item}
