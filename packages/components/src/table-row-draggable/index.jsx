@@ -1,15 +1,12 @@
-import React, { Component } from 'react';
-import { ConfigProvider } from 'antd';
-import PropTypes from 'prop-types';
+import React, { useContext, useCallback, useRef } from 'react';
 import classnames from 'classnames';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import './index.less';
-
+import ComponentContext from '../component-context';
 
 let RowElement = SortableElement((props) => {
     return props.children;
 });
-
 
 let BodyContainer = SortableContainer(props => {
     const {
@@ -41,85 +38,81 @@ function getCss(element, attr) {
 
 export default function DragRow(OriTable) {
 
-    class DragRowTable extends Component {
-        static contextType = ConfigProvider.ConfigContext;
+    function DragRowTable(props) {
+        const context = useContext(ComponentContext);
 
-        constructor(props) {
-            super(props);
+        const {
+            prefixCls = context.prefixCls,
+            helperClass,
+            onSortStart,
+            onSortEnd,
+            components,
+            className,
+            ...others
+        } = props;
 
-            const { helperClass, onSortStart, onSortEnd, components } = this.props;
+        const bodyRef = useRef(null);
 
-            const handleSortStart = (...args) => {
-                if (onSortStart) onSortStart(...args);
+        const handleSortStart = useCallback((...args) => {
+            if (onSortStart) onSortStart(...args);
 
-                // 保持tr样式
-                const helperTds = document.querySelectorAll('.helper-element > td');
-                const tr = this.body.container.querySelector('tr');
-                const tds = tr.querySelectorAll('td');
+            // 保持tr样式
+            const helperTds = document.querySelectorAll('.helper-element > td');
+            const tr = bodyRef.current.container.querySelector('tr');
+            const tds = tr.querySelectorAll('td');
 
-                tds.forEach((item, index) => {
-                    if (!helperTds[index]) return;
+            tds.forEach((item, index) => {
+                if (!helperTds[index]) return;
 
-                    helperTds[index].style.width = getCss(item, 'width');
-                    helperTds[index].style.height = getCss(item, 'height');
-                });
+                helperTds[index].style.width = getCss(item, 'width');
+                helperTds[index].style.height = getCss(item, 'height');
+            });
+        }, [onSortStart]);
+
+        const handleSortEnd = useCallback((sortProps) => {
+            let { oldIndex, newIndex } = sortProps;
+            if (oldIndex === newIndex) return;
+            if (bodyRef.current.container.querySelector(`.${prefixCls}-table-measure-row`)) {
+                newIndex = (newIndex - 1) < 0 ? 0 : newIndex - 1;
+                oldIndex -= 1;
+            }
+
+            onSortEnd({ ...sortProps, oldIndex, newIndex });
+        }, [onSortEnd, prefixCls]);
+
+        let BodyWrapper = useCallback((bodyProps) => {
+            const injectProps = {
+                onSortEnd: handleSortEnd,
+                onSortStart: handleSortStart,
+                helperClass: classnames(helperClass, 'helper-element'),
             };
+            return <BodyContainer ref={bodyRef} {...injectProps} {...bodyProps} />;
+        }, [handleSortEnd, handleSortStart, helperClass]);
 
-            const handleSortEnd = (sortProps) => {
-                let { oldIndex, newIndex } = sortProps;
-                const prefixCls = this.context.getPrefixCls();
-                if (this.body.container.querySelector(`.${prefixCls}-table-measure-row`)) {
-                    newIndex = (newIndex - 1) < 0 ? 0 : newIndex - 1;
-                    oldIndex -= 1;
-                }
+        const body = components?.body || {};
 
-                onSortEnd({ ...sortProps, oldIndex, newIndex });
-            };
-
-            let BodyWrapper = (bodyProps) => {
-                const injectProps = {
-                    onSortEnd: handleSortEnd,
-                    onSortStart: handleSortStart,
-                    helperClass: classnames(helperClass, 'helper-element'),
-                };
-                return <BodyContainer ref={node => this.body = node} {...injectProps} {...bodyProps} />;
-            };
-
-            const body = components?.body || {};
-
-            this.components = {
-                body: {
-                    ...body,
-                    wrapper: BodyWrapper,
-                },
-            };
-        }
-
-        static propTypes = {
-            onSortEnd: PropTypes.func.isRequired,
-            helperClass: PropTypes.string,
+        const tableComponents = {
+            body: {
+                ...body,
+                wrapper: BodyWrapper,
+            },
         };
 
-        render() {
-            const {
-                className,
-                onSortStart,
-                onSortEnd,
-                helperClass,
-                ...others
-            } = this.props;
-            const classNames = classnames(className, 'sxTableRowDraggable');
+        const classNames = classnames(className, 'sxTableRowDraggable');
 
-            return (
-                <OriTable
-                    {...others}
-                    className={classNames}
-                    components={this.components}
-                />
-            );
-        }
+        return (
+            <OriTable
+                {...others}
+                className={classNames}
+                components={tableComponents}
+            />
+        );
     }
 
-    return DragRowTable;
+    return (props) => {
+        if (!props.dataSource?.length) return <OriTable {...props} />;
+
+        return <DragRowTable {...props} />;
+    };
 }
 
