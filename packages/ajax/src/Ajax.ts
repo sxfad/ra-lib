@@ -17,7 +17,7 @@ export interface methodOptions extends AxiosRequestConfig {
     // 默认false，不展示
     successTip?: boolean | string;
     //  = method === 'get' ? '获取数据失败！' : '操作失败！', // 默认失败提示
-    errorTip?:  boolean | string;
+    errorTip?: boolean | string;
     // 获取cancel方法
     cancelRef?: (c: any) => any;
     // 设置loading函数
@@ -389,15 +389,15 @@ function getFileName(headers) {
     if (headers.fileName) return headers.fileName;
     if (headers['file-name']) return headers['file-name'];
 
-    let fileName = headers['content-disposition'].split(';')[1].split('filename=')[1];
-    const fileNameUnicode = headers['content-disposition'].split('filename*=')[1];
+    let fileName = headers['content-disposition']?.split(';')?.[1]?.split('filename=')?.[1];
+    const fileNameUnicode = headers['content-disposition']?.split('filename*=')?.[1];
 
     // 当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
-    if (fileNameUnicode) {
-        fileName = decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
+    if (fileName && fileNameUnicode) {
+        return decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
     }
 
-    return fileName;
+    return null;
 }
 
 /**

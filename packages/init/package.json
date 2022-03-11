@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "bin": {
-        "ra-init": "bin/index.js"
+        "ra-init": "bin/index.js",
+        "init": "bin/index.js"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
