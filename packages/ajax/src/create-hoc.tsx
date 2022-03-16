@@ -29,16 +29,20 @@ const createAjaxHoc = ajax => ({ propName = 'ajax' } = {}) => WrappedComponent =
             const methods = [ 'get', 'post', 'put', 'patch', 'del', 'download' ];
 
             methods.forEach(method => {
-                this._$ajax[method] = (...args) => {
-                    const ajaxToken = ajax[method](...args);
-                    this._$ajaxTokens.push(ajaxToken);
-                    return ajaxToken;
+                this._$ajax[method] = (url, data, options) => {
+                    let _options = options || {};
+
+                    _options.cancelRef = c => {
+                        this._$ajaxTokens.push(c);
+                    };
+
+                    return ajax[method](url, data, _options);
                 };
             });
         }
 
         componentWillUnmount() {
-            this._$ajaxTokens.forEach(item => item.cancel());
+            this._$ajaxTokens.forEach(cancel => cancel && cancel());
         }
 
         render() {

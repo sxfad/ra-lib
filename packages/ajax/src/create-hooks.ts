@@ -103,11 +103,7 @@ export default function createHooks(ajax) {
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 setResult(result => ({ ...result, loading: true, error: null }));
 
-                // 此处真正发起的ajax请求，ajaxToken 是一个promise
-                ajaxHandler.current = ajax[method](_url, myParams, { reject: true, ...mergedOptions });
-                const ajaxToken = ajaxHandler.current;
-
-                ajaxToken
+                return ajax[method](_url, myParams, { reject: true, cancelRef: c => ajaxHandler.current = c, ...mergedOptions })
                     .then((res) => {
                         const data = formatResult(res);
 
@@ -126,7 +122,6 @@ export default function createHooks(ajax) {
                         // 结束时清除token
                         ajaxHandler.current = null;
                     });
-                return ajaxToken;
             },
             // eslint-disable-next-line react-hooks/exhaustive-deps
             [
@@ -141,7 +136,7 @@ export default function createHooks(ajax) {
         // 组件被卸载，清除未完成的ajax请求 对于hooks 不清除好像也不会报警告
         useEffect(() => () => {
             if (ajaxHandler.current) {
-                ajaxHandler.current.cancel();
+                ajaxHandler.current();
                 ajaxHandler.current = null;
             }
         }, []);
