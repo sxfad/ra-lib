@@ -86,7 +86,18 @@ export default function DragRow(OriTable) {
                 onSortStart: handleSortStart,
                 helperClass: classnames(helperClass, 'helper-element'),
             };
-            return <BodyContainer ref={bodyRef} {...injectProps} {...bodyProps} />;
+            return (
+                <BodyContainer
+                    ref={bodyRef}
+                    shouldCancelStart={(e) => {
+                        const { tagName, classList } = e.target;
+                        if (['A', 'INPUT', 'SELECT', 'BUTTON', 'TEXTAREA', 'OPTION'].includes(tagName)) return true;
+                        return String(classList).includes('select-selection');
+                    }}
+                    {...injectProps}
+                    {...bodyProps}
+                />
+            );
         }, [handleSortEnd, handleSortStart, helperClass]);
 
         const body = components?.body || {};
