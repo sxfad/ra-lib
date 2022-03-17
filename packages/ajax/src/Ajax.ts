@@ -166,8 +166,12 @@ export default class Ajax {
         const ajaxPromise = new Promise((resolve, reject) => {
             setPublicLoading(setLoading, true);
 
+            let isCanceled = false;
             const cancelToken = new axios.CancelToken(c => {
-                cancel = () => c('canceled');
+                cancel = () => {
+                    c('canceled');
+                    isCanceled = true;
+                };
                 cancelRef(cancel);
             });
 
@@ -186,7 +190,7 @@ export default class Ajax {
                 })
                 .catch((err: any) => {
                     // 如果是用户主动cancel，不做任何处理，不会触发任何函数
-                    if (err?.message === 'canceled') return;
+                    if (isCanceled) return;
 
                     // errorTip不等于false，进行提示
                     if (errorTip !== false) {
@@ -204,6 +208,8 @@ export default class Ajax {
                     resolve({ $type: 'unRejectError', $error: err });
                 })
                 .finally(() => {
+                    // cancel之后，不要进行setLoading，否则会报提醒
+                    if (isCanceled) return;
                     setPublicLoading(setLoading, false);
                 });
         });
