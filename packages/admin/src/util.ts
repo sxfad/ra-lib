@@ -155,7 +155,14 @@ export function hasPermission(code): boolean {
     if (!code) return true;
 
     const loginUser = getLoginUser();
-    return loginUser?.permissions?.includes(code);
+
+    if (typeof code === 'string') {
+        return loginUser?.permissions?.includes(code);
+    }
+
+    if (Array.isArray(code)) {
+        return code.some(c => loginUser?.permissions?.includes(c));
+    }
 }
 
 /**
