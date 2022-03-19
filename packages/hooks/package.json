@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/hooks",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "description": "通用hooks",
     "main": "lib/index.js",
     "module": "es/index.js",
