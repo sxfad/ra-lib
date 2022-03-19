@@ -10,9 +10,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "peerDependencies": {
-        "query-string": "^7.0.1",
-        "react": "^17.0.2",
-        "react-router-dom": "^5.2.0"
+        "react": "^17.0.2"
     },
     "author": "zkboys",
     "license": "ISC",

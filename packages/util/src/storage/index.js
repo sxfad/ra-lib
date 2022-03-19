@@ -14,11 +14,11 @@ const globalStorage = {
     getItem: key => globalData[key],
     removeItem: key => Reflect.deleteProperty(globalData, key),
 };
-const {localStorage} = window;
-const {sessionStorage} = window;
+const { localStorage } = window;
+const { sessionStorage } = window;
 
 export default class Storage {
-    constructor({prefix = ''} = {}) {
+    constructor({ prefix = '' } = {}) {
         this.session = getStorage(prefix, sessionStorage, JSON.parse, JSON.stringify);
         this.local = getStorage(prefix, localStorage, JSON.parse, JSON.stringify);
         this.global = getStorage(prefix, globalStorage, value => value, value => value);
