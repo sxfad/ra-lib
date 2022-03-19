@@ -10,9 +10,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "peerDependencies": {
-        "axios": "^0.21.1",
-        "qs": "^6.10.1",
-        "react": "^17.0.2"
+        "qs": "^6.10.1"
     },
     "author": "zkboys",
     "license": "ISC",

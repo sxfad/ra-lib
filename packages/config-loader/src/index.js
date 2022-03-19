@@ -1,6 +1,6 @@
 import fs from 'fs';
 import loaderUtils from 'loader-utils';
-import {getConfig, getFiles} from './util';
+import { getConfig, getFiles, getConventionalRoutes } from './util';
 
 export default function routerLoader() {
     const options = loaderUtils.getOptions(this) || {};
@@ -9,6 +9,7 @@ export default function routerLoader() {
         configName = 'config',
         pagesPath,
         extensions = ['.js', '.jsx', '.ts', '.tsx'],
+        conventionalRoutes = false,
     } = options;
 
     // 将路由页面所在目录添加到依赖当中，当有文件变化，会触发这个loader
@@ -37,7 +38,12 @@ export default function routerLoader() {
         result.push(config);
     });
 
-    return `
+    let conventionalRoutesContent = '';
+    if (conventionalRoutes) {
+        conventionalRoutesContent = getConventionalRoutes(pagesPath);
+    }
+
+    return `${conventionalRoutesContent}
         export default [${result.join(',')}]
     `;
 };

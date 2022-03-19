@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { getRoutes } = require('./conventional-routes');
 
 /**
  * 删除注释
@@ -7,7 +8,7 @@ const path = require('path');
  * @returns {*|string}
  */
 function removeComments(codes) {
-    let {replacedCodes, matchedObj} = replaceQuotationMarksWithForwardSlash(codes);
+    let { replacedCodes, matchedObj } = replaceQuotationMarksWithForwardSlash(codes);
 
     replacedCodes = replacedCodes.replace(/(\s*(?<!\\)\/\/.*$)|(\s*(?<!\\)\/\*[\s\S]*?(?<!\\)\*\/)/mg, '');
     Object.keys(matchedObj).forEach(k => {
@@ -30,7 +31,7 @@ function removeComments(codes) {
             return s;
         });
 
-        return {replacedCodes, matchedObj};
+        return { replacedCodes, matchedObj };
     }
 }
 
@@ -123,7 +124,44 @@ function getFiles(rootPath, extensions = ['.js', '.jsx', '.ts', '.tsx']) {
     return result;
 }
 
+function getConventionalRoutes(root) {
+    const options = {
+        componentPrefix: 'src/',
+        root,
+        config: {
+            singular: true,
+        },
+    };
+
+    const routes = getRoutes(options);
+    let routesStr = JSON.stringify(routes, null, 4);
+    const comList = [];
+    let index = 0;
+    routesStr = routesStr.replace(/"component": "(.*)"/g, (str, $1) => {
+        const Component = 'C' + index;
+        index++;
+        const componentPath = str.replace(`"component": `, '').replace(/"/g, '');
+        comList.push({
+            componentPath,
+            Component,
+        });
+        return `"element": <${Component}/>`;
+    });
+    routesStr = routesStr.replace(/"routes":/g, 'children:');
+
+    return `import React from 'react';
+
+${comList.map(item => {
+        const { componentPath, Component } = item;
+        return `const ${Component} = React.lazy(() => import('${componentPath}'));`;
+    }).join('\n')}
+
+export const conventionalRoutes =  ${routesStr}
+`;
+}
+
 module.exports = {
     getConfig,
     getFiles,
+    getConventionalRoutes,
 };
