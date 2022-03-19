@@ -17,7 +17,7 @@ export interface methodOptions extends AxiosRequestConfig {
     // 默认false，不展示
     successTip?: boolean | string;
     //  = method === 'get' ? '获取数据失败！' : '操作失败！', // 默认失败提示
-    errorTip?:  boolean | string;
+    errorTip?: boolean | string;
     // 获取cancel方法
     cancelRef?: (c: any) => any;
     // 设置loading函数
@@ -166,8 +166,12 @@ export default class Ajax {
         const ajaxPromise = new Promise((resolve, reject) => {
             setPublicLoading(setLoading, true);
 
+            let isCanceled = false;
             const cancelToken = new axios.CancelToken(c => {
-                cancel = () => c('canceled');
+                cancel = () => {
+                    c('canceled');
+                    isCanceled = true;
+                };
                 cancelRef(cancel);
             });
 
@@ -186,7 +190,7 @@ export default class Ajax {
                 })
                 .catch((err: any) => {
                     // 如果是用户主动cancel，不做任何处理，不会触发任何函数
-                    if (err?.message === 'canceled') return;
+                    if (isCanceled) return;
 
                     // errorTip不等于false，进行提示
                     if (errorTip !== false) {
@@ -204,6 +208,8 @@ export default class Ajax {
                     resolve({ $type: 'unRejectError', $error: err });
                 })
                 .finally(() => {
+                    // cancel之后，不要进行setLoading，否则会报提醒
+                    if (isCanceled) return;
                     setPublicLoading(setLoading, false);
                 });
         });
@@ -389,15 +395,15 @@ function getFileName(headers) {
     if (headers.fileName) return headers.fileName;
     if (headers['file-name']) return headers['file-name'];
 
-    let fileName = headers['content-disposition'].split(';')[1].split('filename=')[1];
-    const fileNameUnicode = headers['content-disposition'].split('filename*=')[1];
+    let fileName = headers['content-disposition']?.split(';')?.[1]?.split('filename=')?.[1];
+    const fileNameUnicode = headers['content-disposition']?.split('filename*=')?.[1];
 
     // 当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
-    if (fileNameUnicode) {
-        fileName = decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
+    if (fileName && fileNameUnicode) {
+        return decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
     }
 
-    return fileName;
+    return null;
 }
 
 /**

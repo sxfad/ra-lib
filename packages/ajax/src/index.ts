@@ -7,3 +7,4 @@ export { default as createHooks } from './create-hooks';
 export * from './Ajax';
 
 export default Ajax;
+
