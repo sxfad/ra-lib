@@ -272,7 +272,6 @@ export function stringToRGB(str, defaultRGB = 'rgb(255, 0, 0)') {
     return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
-
 /**
  * 获取约定菜单
  * @param pageConfig 页面配置 config高级组件参数
