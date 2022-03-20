@@ -33,5 +33,8 @@
         "url": ""
     },
     "homepage": "",
-    "gitHead": "b1d6a9caa157ac0c65a6e6ef4de3b8395522c4af"
+    "gitHead": "b1d6a9caa157ac0c65a6e6ef4de3b8395522c4af",
+    "dependencies": {
+        "@ra-lib/component": "^0.0.3"
+    }
 }

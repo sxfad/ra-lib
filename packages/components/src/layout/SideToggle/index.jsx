@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import {MenuUnfoldOutlined, MenuFoldOutlined} from '@ant-design/icons';
 import classNames from 'classnames';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import './style.less';
 
 export default function SideToggle(props) {

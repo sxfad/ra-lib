@@ -4,7 +4,7 @@ import {match} from 'path-to-regexp';
 import classNames from 'classnames';
 import {SyncOutlined, VerticalRightOutlined, VerticalLeftOutlined} from '@ant-design/icons';
 import {Tabs, Dropdown, Menu} from 'antd';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import SideToggle from '../SideToggle';
 import Logo from '../Logo';
 import './style.less';

@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import classNames from 'classnames';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import Breadcrumb from '../Breadcrumb';
 import './style.less';
 

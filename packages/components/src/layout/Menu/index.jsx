@@ -5,7 +5,7 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import classNames from 'classnames';
 // @ts-ignore
 import { filterTree, scrollElement } from '@ra-lib/util';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import './style.less';
 
 export default withRouter(function MenuComponent(props) {

@@ -9,7 +9,7 @@ import React, {
 import classNames from 'classnames';
 // @ts-ignore
 import { getTreeData, findNode, findParentNodes } from '@ra-lib/util';
-import ComponentContext from '../component-context';
+import {ComponentContext} from '../component-context';
 import Header from './Header';
 import MobileHeader from './MobileHeader';
 import Tab from './Tab';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Result, Button, Space } from 'antd';
 import { withRouter } from 'react-router-dom';
-import PageContent from '../page-content';
+import { PageContent } from '@ra-lib/component';
 import { History } from 'history';
 
 export interface Error404Props {

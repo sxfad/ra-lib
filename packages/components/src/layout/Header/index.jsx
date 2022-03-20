@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 // @ts-ignore
 import { getFirstNode, findParentNodes } from '@ra-lib/util';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import LAYOUT_TYPE from '../layout-type';
 import Menu from '../Menu';
 import SideToggle from '../SideToggle';

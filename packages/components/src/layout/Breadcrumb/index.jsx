@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import {Breadcrumb} from 'antd';
 import {Link} from 'react-router-dom';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import classNames from 'classnames';
 import './style.less';
 

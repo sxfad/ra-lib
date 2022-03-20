@@ -1,7 +1,7 @@
 import React, { useEffect, useState, forwardRef, useContext, ReactNode, CSSProperties } from 'react';
 import { Button, Spin, ConfigProvider } from 'antd';
 import { ButtonHTMLType } from 'antd/es/button/button';
-import ComponentContext from '../component-context';
+import {ComponentContext} from '../component-context';
 
 export interface DrawerContentProps {
     prefixCls?: string,

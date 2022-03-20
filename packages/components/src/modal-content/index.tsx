@@ -1,6 +1,6 @@
 import React, { forwardRef, useRef, useState, useContext, ReactNode, CSSProperties, useEffect } from 'react';
 import { Button, Spin, ConfigProvider } from 'antd';
-import ComponentContext from '../component-context';
+import {ComponentContext} from '../component-context';
 // @ts-ignore
 import { useHeight } from '@ra-lib/hooks';
 

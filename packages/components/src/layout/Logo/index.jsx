@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import ComponentContext from '../../component-context';
+import {ComponentContext} from '../../component-context';
 import './style.less';
 
 function Header(props) {
