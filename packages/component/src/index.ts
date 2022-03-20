@@ -1,8 +1,8 @@
 export { ComponentContext, ComponentProvider, ComponentConsumer } from './component-context';
 export { default as PageContent } from './page-content';
 export { default as Content } from './content';
-// export { default as ModalContent } from './modal-content';
-// export { default as DrawerContent } from './drawer-content';
+export { default as ModalContent } from './modal-content';
+export { default as DrawerContent } from './drawer-content';
 // export { default as Layout } from './layout';
 // export { default as KeepPageAlive } from './layout/KeepPageAlive';
 // export { default as LAYOUT_TYPE } from './layout/layout-type';
