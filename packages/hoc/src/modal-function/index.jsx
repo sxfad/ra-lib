@@ -2,6 +2,7 @@ import { ConfigProvider } from 'antd';
 import { ComponentProvider } from '@ra-lib/component';
 import ReactDOM from 'react-dom';
 import destroyFns from 'antd/lib/modal/destroyFns';
+import _destroyFns from 'antd/es/modal/destroyFns';
 
 export default (options = {}) => WrappedComponent => {
     const {
@@ -68,6 +69,14 @@ export default (options = {}) => WrappedComponent => {
                     break;
                 }
             }
+            for (let i = 0; i < _destroyFns.length; i++) {
+                const fn = _destroyFns[i];
+
+                if (fn === close) {
+                    _destroyFns.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         /**
@@ -127,6 +136,7 @@ export default (options = {}) => WrappedComponent => {
         render(currentConfig);
 
         destroyFns.push(close);
+        _destroyFns.push(close);
 
         // webpack热更新之后，销毁当前弹框
         if (process.env.NODE_ENV === 'development') {
