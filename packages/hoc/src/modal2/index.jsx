@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
-export default (WrappedComponent) => {
+export default ({ commonProps: _commonProps = {} }) => (WrappedComponent) => {
     return props => {
         const { visible, onCancel } = props;
         const [destroyed, setDestroyed] = useState(true);
@@ -22,10 +22,11 @@ export default (WrappedComponent) => {
             // bodyStyle: { padding: 0 },
             // style: { top: 50 },
             maskClosable: false,
+            ..._commonProps,
             visible,
             onCancel,
         };
 
-        return <WrappedComponent {...props} commonProps={commonProps}/>;
+        return <WrappedComponent {...props} commonProps={commonProps} />;
     };
 }

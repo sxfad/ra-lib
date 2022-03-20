@@ -3,7 +3,7 @@ import { ComponentProvider } from '@ra-lib/component';
 import ReactDOM from 'react-dom';
 import destroyFns from 'antd/lib/modal/destroyFns';
 
-export default ({ antPrefix = 'ant', raLibPrefix = 'ra-lib' }) => WrappedComponent => {
+export default ({ antPrefix = 'ant', raLibPrefix = 'ra-lib', commonProps: _commonProps ={} }) => WrappedComponent => {
     /**
      * config 为用户调用弹框函数时，传递的参数
      */
@@ -28,6 +28,7 @@ export default ({ antPrefix = 'ant', raLibPrefix = 'ra-lib' }) => WrappedCompone
                     // bodyStyle: { padding: 0 },
                     // style: { top: 50 },
                     maskClosable: false,
+                    ..._commonProps,
                     onCancel: props.onCancel,
                     visible: props.visible,
                 };
