@@ -1,7 +1,9 @@
+import { ConfigProvider } from 'antd';
+import { ComponentProvider } from '@ra-lib/component';
 import ReactDOM from 'react-dom';
 import destroyFns from 'antd/lib/modal/destroyFns';
 
-export default WrappedComponent => {
+export default ({ antPrefix = 'ant', raLibPrefix = 'ra-lib' }) => WrappedComponent => {
     /**
      * config 为用户调用弹框函数时，传递的参数
      */
@@ -29,9 +31,14 @@ export default WrappedComponent => {
                     onCancel: props.onCancel,
                     visible: props.visible,
                 };
+                console.log(123);
 
                 ReactDOM.render(
-                    <WrappedComponent {...props} commonProps={commonProps} />,
+                    <ConfigProvider prefixCls={antPrefix}>
+                        <ComponentProvider prefixCls={raLibPrefix}>
+                            <WrappedComponent {...props} commonProps={commonProps} />
+                        </ComponentProvider>
+                    </ConfigProvider>,
                     container,
                 );
             });
