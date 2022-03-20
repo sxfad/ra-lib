@@ -31,7 +31,6 @@ export default ({ antPrefix = 'ant', raLibPrefix = 'ra-lib' }) => WrappedCompone
                     onCancel: props.onCancel,
                     visible: props.visible,
                 };
-                console.log(123);
 
                 ReactDOM.render(
                     <ConfigProvider prefixCls={antPrefix}>
