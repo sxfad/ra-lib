@@ -340,7 +340,7 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
 
             // 当前菜单作为子菜单
             __menus.push({
-                id: `${id}_index`,
+                id: `${id}/index`,
                 parentId: id,
                 title,
                 path,
