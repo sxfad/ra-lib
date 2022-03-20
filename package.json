@@ -14,6 +14,7 @@
         "build:babel-plugin-attribute-wrapper": "PACKAGE=babel-plugin-attribute-wrapper father-build",
         "build:util": "PACKAGE=util father-build",
         "build:components": "PACKAGE=components father-build",
+        "build:component": "PACKAGE=component father-build",
         "publish": "lerna publish",
         "publish:yes": "lerna publish --yes",
         "publish:all": "sh scripts/publish.sh",
