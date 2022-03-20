@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/admin",
-    "version": "0.1.46",
+    "version": "0.1.47",
     "description": "管理系统整合库",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -29,7 +29,7 @@
         "@ra-lib/babel-plugin-attribute-wrapper": "^0.0.20",
         "@ra-lib/components": "0.1.101",
         "@ra-lib/config-loader": "0.1.9",
-        "@ra-lib/hoc": "0.1.11",
+        "@ra-lib/hoc": "0.1.12",
         "@ra-lib/hooks": "0.1.11",
         "@ra-lib/model": "^0.1.11",
         "@ra-lib/util": "^0.1.27"
