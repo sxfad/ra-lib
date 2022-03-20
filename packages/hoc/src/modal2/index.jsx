@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export default ({ commonProps: _commonProps = {} }) => (WrappedComponent) => {
+export default (options = {}) => (WrappedComponent) => {
+    const { commonProps: _commonProps = {} } = options;
     return props => {
         const { visible, onCancel } = props;
         const [destroyed, setDestroyed] = useState(true);

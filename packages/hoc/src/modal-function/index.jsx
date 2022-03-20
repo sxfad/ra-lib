@@ -3,7 +3,12 @@ import { ComponentProvider } from '@ra-lib/component';
 import ReactDOM from 'react-dom';
 import destroyFns from 'antd/lib/modal/destroyFns';
 
-export default ({ antPrefix = 'ant', raLibPrefix = 'ra-lib', commonProps: _commonProps ={} }) => WrappedComponent => {
+export default (options = {}) => WrappedComponent => {
+    const {
+        antPrefix = 'ant',
+        raLibPrefix = 'ra-lib',
+        commonProps: _commonProps = {},
+    } = options;
     /**
      * config 为用户调用弹框函数时，传递的参数
      */
