@@ -47,6 +47,8 @@ const jenkins = require('jenkins')({
 });
 
 (async () => {
+    const url = new URL(JENKINS_BASE_URL);
+    console.log(`jenkins job: ${url.origin}${url.pathname}/job/${JENKINS_JOB_NAME}`);
     // 不存在，创建任务
     const exist = await jenkins.job.exists(JENKINS_JOB_NAME);
     const options = {
@@ -132,7 +134,7 @@ function showLog(jobName, buildNumber) {
 
     log.on('end', async function() {
         const address = await getWebAddress();
-        console.log(address);
+        console.log(`web address: ${address}`);
     });
 }
 
