@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 export default (options = {}) => (WrappedComponent) => {
     const { commonProps: _commonProps = {} } = options;
     return props => {
-        const { visible, onCancel } = props;
+        const { visible, onCancel, onClose } = props;
         const [destroyed, setDestroyed] = useState(true);
 
         useEffect(() => {
@@ -26,6 +26,7 @@ export default (options = {}) => (WrappedComponent) => {
             ..._commonProps,
             visible,
             onCancel,
+            onClose,
         };
 
         return <WrappedComponent {...props} commonProps={commonProps} />;

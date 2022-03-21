@@ -17,6 +17,7 @@ export default (options = {}) => WrappedComponent => {
         let currentConfig = {
             ...config,
             onCancel,
+            onClose,
             close,
             visible: true,
         };
@@ -35,6 +36,7 @@ export default (options = {}) => WrappedComponent => {
                     maskClosable: false,
                     ..._commonProps,
                     onCancel: props.onCancel,
+                    onClose: props.onClose,
                     visible: props.visible,
                 };
 
@@ -56,8 +58,12 @@ export default (options = {}) => WrappedComponent => {
         function destroy(...args) {
             ReactDOM.unmountComponentAtNode(container);
             const triggerCancel = args.some(param => param && param.triggerCancel);
+            const triggerClose = args.some(param => param && param.triggerClose);
             if (config.onCancel && triggerCancel) {
                 config.onCancel(...args);
+            }
+            if (config.onClose && triggerClose) {
+                config.onClose(...args);
             }
 
             for (let i = 0; i < destroyFns.length; i++) {
@@ -80,6 +86,27 @@ export default (options = {}) => WrappedComponent => {
 
             // 调用用户传递的onCancel函数
             const res = config.onCancel(...args);
+
+            // 如果是promise，成功之后才关闭，失败不关闭
+            if (res?.then) {
+                res.then(() => close(...args));
+            } else {
+                // 不是promise，直接关闭
+                close(...args);
+            }
+        }
+
+
+        /**
+         * 触发用户传递的onCancel -> close -> destroy
+         * @param args
+         */
+        function onClose(...args) {
+            // 用户没有传递onCancel函数，直接关闭
+            if (!config.onClose) return close(...args);
+
+            // 调用用户传递的onCancel函数
+            const res = config.onClose(...args);
 
             // 如果是promise，成功之后才关闭，失败不关闭
             if (res?.then) {
