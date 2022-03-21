@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 const __cwd = process.cwd();
 
 // 从package.json中读取项目名称
@@ -33,6 +34,8 @@ const USE_YARN = fs.existsSync(path.join(__cwd, 'yarn.lock'));
 // 是否复制文件到RANCHER目录
 const COPY_TO_RANCHER = process.env.COPY_TO_RANCHER !== 'false';
 
+const RANCHER_BEARER_TOKEN = process.env.RANCHER_BEARER_TOKEN;
+const RANCHER_URL = process.env.RANCHER_URL;
 const jenkins = require('jenkins')({
     baseUrl: JENKINS_BASE_URL,
     crumbIssuer: true,
@@ -89,6 +92,25 @@ async function getBuildNumber(queueNumber) {
     });
 }
 
+async function getWebAddress() {
+    if (!RANCHER_URL || !RANCHER_BEARER_TOKEN) return;
+    const url = `${RANCHER_URL}/project/c-bv4qc:p-sbjrp/workloads/deployment:${RANCHER_NAME_SPACE}:${JENKINS_JOB_NAME}`;
+    const res = await axios.get(url, {
+        headers: {
+            Authorization: `Bearer ${RANCHER_BEARER_TOKEN}`,
+        },
+    });
+
+    if (res.data && res.data.publicEndpoints && res.data.publicEndpoints.length) {
+        const info = res.data.publicEndpoints[0];
+        const { addresses = [], port } = info;
+        if (addresses.length && port) {
+            const ip = addresses[0];
+            return `http://${ip}:${port}`;
+        }
+    }
+}
+
 /**
  * 显示日志
  * @param jobName
@@ -105,8 +127,9 @@ function showLog(jobName, buildNumber) {
         console.log('error', err);
     });
 
-    log.on('end', function() {
-        console.log('end');
+    log.on('end', async function() {
+        const address = await getWebAddress();
+        console.log(address);
     });
 }
 
