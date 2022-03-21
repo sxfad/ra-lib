@@ -8,8 +8,11 @@ const ignorePackages = [
     'util',
     'hooks',
     'admin',
-    'init',
-    'rancher-deploy',
+    'adm',
+    'init', // 不需要构建
+    'rancher-deploy', // 不需要构建
+    'options',
+    'admin-util',
 ];
 packageNames = packageNames.filter(name => !ignorePackages.includes(name));
 
@@ -19,10 +22,14 @@ export default {
         type: 'babel',
         importLibToEs: true,
     },
+    // 由于包之间有依赖关系，需要指定包构建顺序
     pkgs: [
         'util',
         'hooks',
+        'options',
+        'admin-util',
         ...packageNames,
         'admin',
+        'adm',
     ],
 };

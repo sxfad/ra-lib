@@ -17,7 +17,6 @@ const MAIN_APP_KEY = `${PACKAGE_NAME}_main_app`;
 const userId = window.sessionStorage.getItem(LOGIN_USER_ID_STORAGE_KEY);
 const STORAGE_PREFIX = `${PACKAGE_NAME}_${userId || ''}_`;
 
-
 export interface loginUser {
     // 用户id
     id: string | number;
@@ -203,7 +202,6 @@ export function setMainApp(mainApp) {
 export function getMainApp() {
     return storage.global.getItem(MAIN_APP_KEY);
 }
-
 
 /**
  * 获取配置

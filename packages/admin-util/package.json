@@ -1,0 +1,26 @@
+{
+    "name": "@ra-lib/admin-util",
+    "version": "0.0.1",
+    "description": "管理系统整合库",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "typings": "lib/index.d.ts",
+    "scripts": {
+        "build": "father-build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "zkboys",
+    "license": "ISC",
+    "publishConfig": {
+        "registry": ""
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "homepage": "",
+    "gitHead": "512f2b222bc7b76ea65a16b1e430b0b49dd78049",
+    "dependencies": {
+        "@ra-lib/util": "0.1.28"
+    }
+}

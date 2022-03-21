@@ -15,6 +15,8 @@
         "build:util": "PACKAGE=util father-build",
         "build:components": "PACKAGE=components father-build",
         "build:component": "PACKAGE=component father-build",
+        "build:admin-util": "PACKAGE=admin-util father-build",
+        "build:options": "PACKAGE=options father-build",
         "publish": "lerna publish",
         "publish:yes": "lerna publish --yes",
         "publish:all": "sh scripts/publish.sh",
