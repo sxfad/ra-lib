@@ -403,7 +403,7 @@ function getFileName(headers) {
         return decodeURIComponent(fileNameUnicode.split('\'\'')[1]);
     }
 
-    return null;
+    return fileName;
 }
 
 /**
