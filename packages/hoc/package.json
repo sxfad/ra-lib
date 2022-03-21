@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/hoc",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "react 高阶组件",
     "main": "lib/index.js",
     "module": "es/index.js",
