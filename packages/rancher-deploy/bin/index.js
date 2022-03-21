@@ -4,27 +4,31 @@ const path = require('path');
 const axios = require('axios');
 const __cwd = process.cwd();
 
+// 读取配置
+const configPath = path.join(__cwd, 'deploy', 'rancher', 'config.json');
+const config = fs.existsSync(configPath) ? require(configPath) : {};
+
 // 从package.json中读取项目名称
 const appName = require(path.join(__cwd, 'package.json')).name;
 // 子进程，同步方式
 const execSync = require('child_process').execSync;
 
 // jenkins路径，带用户名密码
-const JENKINS_BASE_URL = process.env.JENKINS_BASE_URL || 'http://wang_sb:wang2018@172.16.175.93:8080/jenkins';
+const JENKINS_BASE_URL = process.env.JENKINS_BASE_URL || config.JENKINS_BASE_URL || 'http://wang_sb:wang2018@172.16.175.93:8080/jenkins';
 // jenkins任务名
-const JENKINS_JOB_NAME = process.env.JENKINS_JOB_NAME || appName;
+const JENKINS_JOB_NAME = process.env.JENKINS_JOB_NAME || config.JENKINS_JOB_NAME || appName;
 // git仓库地址，默认本地项目地址
-const GIT_URL = process.env.GIT_URL || getGitUrl();
+const GIT_URL = process.env.GIT_URL || config.GIT_URL || getGitUrl();
 // git分支，默认本地项目分支
-const GIT_BRANCH = process.env.GIT_BRANCH || getCurrentGitBranch();
+const GIT_BRANCH = process.env.GIT_BRANCH || config.GIT_BRANCH || getCurrentGitBranch();
 // rancher 命名空间
-const RANCHER_NAME_SPACE = process.env.RANCHER_NAME_SPACE || 'front-center';
+const RANCHER_NAME_SPACE = process.env.RANCHER_NAME_SPACE || config.RANCHER_NAME_SPACE || 'front-center';
 // 前端目录文件夹，默认.git所在目录
-const FRONT_FOLDER = process.env.FRONT_FOLDER || getFrontFolder();
+const FRONT_FOLDER = process.env.FRONT_FOLDER || config.FRONT_FOLDER || getFrontFolder();
 // 构建命令
-const BUILD_COMMAND = process.env.BUILD_COMMAND || 'build';
+const BUILD_COMMAND = process.env.BUILD_COMMAND || config.BUILD_COMMAND || 'build';
 // 构建生成文件路径
-const BUILD_PATH = process.env.BUILD_PATH || 'build';
+const BUILD_PATH = process.env.BUILD_PATH || config.BUILD_PATH || 'build';
 // 是否安装依赖，有些项目不需要安装依赖，直接复制到docker中，在docker镜像中安装依赖。
 const INSTALL = process.env.INSTALL !== 'false';
 // 是否构建
@@ -33,15 +37,14 @@ const BUILD = process.env.BUILD !== 'false';
 const USE_YARN = fs.existsSync(path.join(__cwd, 'yarn.lock'));
 // 是否复制文件到RANCHER目录
 const COPY_TO_RANCHER = process.env.COPY_TO_RANCHER !== 'false';
+const RANCHER_BEARER_TOKEN = process.env.RANCHER_BEARER_TOKEN || config.RANCHER_BEARER_TOKEN;
+const RANCHER_URL = process.env.RANCHER_URL || config.RANCHER_URL;
 
-const RANCHER_BEARER_TOKEN = process.env.RANCHER_BEARER_TOKEN;
-const RANCHER_URL = process.env.RANCHER_URL;
 const jenkins = require('jenkins')({
     baseUrl: JENKINS_BASE_URL,
     crumbIssuer: true,
     promisify: true,
 });
-
 
 (async () => {
     // 不存在，创建任务
