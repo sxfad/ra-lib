@@ -7,3 +7,5 @@ export { default as Ajax, createHooks as createAjaxHooks, createHoc as createAja
 
 export * from './options';
 export * from './util';
+
+export { default as useQueryState } from './useQueryState';
