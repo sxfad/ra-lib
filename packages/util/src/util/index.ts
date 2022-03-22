@@ -280,13 +280,13 @@ export function stringToRGB(str, defaultRGB = 'rgb(255, 0, 0)') {
  * @returns {*[]|*}
  */
 export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) {
-    const hasTitle = pageConfig.filter(item => item.title);
+    const hasTitleConfig = pageConfig.filter(item => item.title);
 
     const _menus = [];
     const __menus = [];
-    if (hasTitle?.length) {
+    if (hasTitleConfig?.length) {
         const loop = nodes => nodes.forEach(node => {
-            const menu = hasTitle.find(item => item.filePath === node.absComponent);
+            const menu = hasTitleConfig.find(item => item.filePath === node.absComponent);
             if (menu) {
                 const paths = node.path.split('/').filter(Boolean);
                 const id = paths.join('/');
@@ -297,7 +297,9 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
                     id,
                     parentId,
                     title: menu.title,
+                    order: menu.order || 0,
                     parentTitle: menu.parentTitle,
+                    parentOrder: menu.parentOrder || 0,
                     path: node.path,
                     filePath: menu.filePath,
                 });
@@ -310,7 +312,7 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
         loop(conventionalRoutes);
 
         _menus.forEach(item => {
-            const { id, parentId, title, path, parentTitle, filePath } = item;
+            const { id, parentId, title, order, path, parentTitle, parentOrder, filePath } = item;
 
             // 添加缺少的父级菜单
             if (
@@ -321,6 +323,7 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
                 __menus.push({
                     id: parentId,
                     title: TITLE_MAP[parentId] || parentId,
+                    order,
                 });
             }
 
@@ -336,6 +339,7 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
                 id,
                 parentId,
                 title: parentTitle || TITLE_MAP[id] || id,
+                order: parentOrder,
             });
 
             // 当前菜单作为子菜单
@@ -343,11 +347,19 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
                 id: `${id}/index`,
                 parentId: id,
                 title,
+                order,
                 path,
                 filePath,
             });
         });
     }
+    __menus.sort((a, b) => {
+        const aOrder = a.order || 0;
+        const bOrder = b.order || 0;
+        if (aOrder === bOrder) return 0;
+        if (aOrder > bOrder) return 1;
+        return -1;
+    });
     return convertToTree(__menus);
 }
 
