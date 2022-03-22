@@ -357,7 +357,7 @@ export function getConventionalMenus(pageConfig, conventionalRoutes, TITLE_MAP) 
         const aOrder = a.order || 0;
         const bOrder = b.order || 0;
         if (aOrder === bOrder) return 0;
-        if (aOrder > bOrder) return 1;
+        if (aOrder < bOrder) return 1;
         return -1;
     });
     return convertToTree(__menus);
