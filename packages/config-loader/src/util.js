@@ -145,7 +145,7 @@ function getConventionalRoutes(root) {
             componentPath,
             Component,
         });
-        return `"element": <${Component}/>`;
+        return `"Component": ${Component}`;
     });
     routesStr = routesStr.replace(/"routes":/g, 'children:');
 
