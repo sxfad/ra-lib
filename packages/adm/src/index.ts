@@ -5,4 +5,4 @@ export * from '@ra-lib/hooks';
 export { default as Ajax, createHooks as createAjaxHooks, createHoc as createAjaxHoc } from '@ra-lib/ajax';
 export * from '@ra-lib/admin-util';
 export * from '@ra-lib/options';
-export { default as KeePageAlive } from './keep-page-alive';
+export { default as KeepPageAlive } from './keep-page-alive';
