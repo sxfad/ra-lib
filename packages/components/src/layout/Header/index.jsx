@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 // @ts-ignore
 import { getFirstNode, findParentNodes } from '@ra-lib/util';
-import {ComponentContext} from '../../component-context';
+import { ComponentContext } from '../../component-context';
 import LAYOUT_TYPE from '../layout-type';
 import Menu from '../Menu';
 import SideToggle from '../SideToggle';
@@ -39,9 +39,10 @@ function Header(props) {
     const [selectedPath, setSelectedPath] = useState(null);
 
     useEffect(() => {
+        setSelectedPath(selectedMenuPath);
+
         if (layoutType === LAYOUT_TYPE.TOP_MENU) {
             setTopMenus(menuTreeData);
-            setSelectedPath(selectedMenuPath);
         }
 
         if (layoutType === LAYOUT_TYPE.TOP_SIDE_MENU) {
