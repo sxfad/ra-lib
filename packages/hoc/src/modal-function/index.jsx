@@ -1,4 +1,5 @@
 import { ConfigProvider } from 'antd';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 import { ComponentProvider } from '@ra-lib/component';
 import ReactDOM from 'react-dom';
 
@@ -6,6 +7,7 @@ export default (options = {}) => WrappedComponent => {
     const {
         antPrefix = 'ant',
         raLibPrefix = 'ra-lib',
+        locale = zhCN,
         commonProps: _commonProps = {},
         destroyFns = [],
     } = options;
@@ -41,7 +43,7 @@ export default (options = {}) => WrappedComponent => {
                 };
 
                 ReactDOM.render(
-                    <ConfigProvider prefixCls={antPrefix}>
+                    <ConfigProvider locale={locale} prefixCls={antPrefix}>
                         <ComponentProvider prefixCls={raLibPrefix}>
                             <WrappedComponent {...props} commonProps={commonProps} />
                         </ComponentProvider>
