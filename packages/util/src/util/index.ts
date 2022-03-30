@@ -428,3 +428,19 @@ export function formatDateTime(date, time) {
 
     return `${dateStr} ${timeStr}`;
 }
+
+
+/**
+ * 加载js文件
+ * @param url
+ * @returns {Promise<unknown>}
+ */
+export function loadScript(url) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.onload = resolve;
+        script.src = url;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
