@@ -1,5 +1,6 @@
 import qs from 'qs';
 import { convertToTree } from '../tree';
+import moment from 'moment';
 
 /**
  * 遍历对象
@@ -374,4 +375,56 @@ export function compose(functions) {
     }
 
     return functions.reduce((a, b) => (...args) => a(b(...args)));
+}
+
+/**
+ * 渲染日期+时间
+ * @param format
+ */
+export function renderDateTime(format = 'YYYY-MM-DD HH:mm:ss') {
+    return (value) => {
+        if (!value) return '-';
+
+        return moment(value).format(format);
+    };
+}
+
+/**
+ * 渲染日期
+ * @param format
+ */
+export function renderDate(format = 'YYYY-MM-DD') {
+    return (value) => {
+        if (!value) return '-';
+
+        return moment(value).format(format);
+    };
+}
+
+/**
+ * 渲染时间
+ * @param format
+ */
+export function renderTime(format = 'HH:mm:ss') {
+    return (value) => {
+        if (!value) return '-';
+
+        return moment(value).format(format);
+    };
+}
+
+/**
+ * 格式化日期 20220303  153023
+ * @param date
+ * @param time
+ */
+export function formatDateTime(date, time) {
+    let dateStr = date ? `${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6)}` : '';
+    let timeStr = time ? `${time.substring(0, 2)}:${time.substring(2, 4)}:${time.substring(4)}` : '';
+
+    if (!dateStr || !timeStr) return '-';
+
+    if (!timeStr) return dateStr;
+
+    return `${dateStr} ${timeStr}`;
 }
