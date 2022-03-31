@@ -133,8 +133,9 @@ function showLog(jobName, buildNumber) {
     });
 
     log.on('end', async function() {
-        const address = await getWebAddress();
-        console.log(`web address: ${address}`);
+        console.log('end');
+        // const address = await getWebAddress();
+        // console.log(`web address: ${address}`);
     });
 }
 
