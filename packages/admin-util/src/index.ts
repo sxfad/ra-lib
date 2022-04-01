@@ -498,6 +498,6 @@ export function getConfig() {
         isIframe,
         isMicro,
         publicPath,
-        baseName,
+        baseName: isIframe ? '' : baseName,
     };
 }
