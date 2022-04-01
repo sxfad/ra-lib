@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { match } from 'path-to-regexp';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -39,15 +39,25 @@ function KeepPageAlive(props, ref) {
     let routePath = hashRouter ? hash.replace('#', '').split('?')[0] : pathname;
     if (baseName) routePath = routePath.replace(baseName, '');
 
+    // 获取当前浏览器url地址对应的路由
+    const getRoute = useCallback((_routes) => {
+        return _routes.find(({ path }) => {
+            // 通配符路由，不能通过match匹配，会报错
+            if (path.endsWith('/*')) return routePath.startsWith(path.replace('/*', ''));
+
+            return match(path, { decode: decodeURIComponent })(routePath);
+        });
+    }, [routePath]);
+
 
     useEffect(() => {
         if (!keepRoutes.length) return;
         const key = hashRouter ? hash.replace('#', '') : `${pathname}${search}${hash}`;
 
         // 保持页面的路由
-        let keepRoute = keepRoutes.find(({ path }) => match(path, { decode: decodeURIComponent })(routePath));
+        let keepRoute = getRoute(keepRoutes);
         // 非保持页面路由
-        const unKeepRoute = unKeepRoutes.find(({ path }) => match(path, { decode: decodeURIComponent })(routePath));
+        const unKeepRoute = getRoute(unKeepRoutes);
 
         // 所有先标记为非激活
         keepPagesRef.current.forEach(item => {
@@ -81,18 +91,7 @@ function KeepPageAlive(props, ref) {
 
         // 触发当前组件更新
         setRefresh({});
-    }, [
-        reload,
-        keepRoutes,
-        unKeepRoutes,
-        pathname,
-        search,
-        hash,
-        hashRouter,
-        routePath,
-        error404,
-        ejectProps,
-    ]);
+    }, [reload, keepRoutes, unKeepRoutes, pathname, search, hash, hashRouter, routePath, error404, ejectProps, getRoute]);
 
     // 页面切换，触发窗口resize事件，表格高度、PageContent高度等需要重新计算
     useEffect(() => {
