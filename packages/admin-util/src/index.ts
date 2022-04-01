@@ -487,14 +487,16 @@ export function getConfig() {
     const baseName = window.__MICRO_APP_BASE_ROUTE__ || query.baseName;
 
     // 是否同源
+    let isSameOrigin = query.isSameOrigin === 'true';
     // @ts-ignore
     if (window.__MICRO_APP_PUBLIC_PATH__) {
         // @ts-ignore
-        query.isSameOrigin = new URL(window.__MICRO_APP_PUBLIC_PATH__).origin === window.location.origin;
+        isSameOrigin = new URL(window.__MICRO_APP_PUBLIC_PATH__).origin === window.location.origin;
     }
 
     return {
         ...query,
+        isSameOrigin,
         isIframe,
         isMicro,
         publicPath,
