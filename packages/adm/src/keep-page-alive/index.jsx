@@ -43,7 +43,11 @@ function KeepPageAlive(props, ref) {
     const getRoute = useCallback((_routes) => {
         return _routes.find(({ path }) => {
             // 通配符路由，不能通过match匹配，会报错
-            if (path.endsWith('/*')) return routePath.startsWith(path.replace('/*', ''));
+            if (path.endsWith('/*')) {
+                const basePath = path.split('/').filter(Boolean).shift();
+                const _basePath = routePath.split('/').filter(Boolean).shift();
+                return basePath === _basePath;
+            }
 
             return match(path, { decode: decodeURIComponent })(routePath);
         });
