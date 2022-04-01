@@ -368,7 +368,7 @@ if (window.microApp) {
  * @param options
  */
 export function useMainAppDataListener(options) {
-    const { navigate, baseName, keepPageAlive } = options;
+    const { navigate, baseName, keepPageAlive, name } = options;
     const [ keepAlive, setKeepAlive ] = useState(keepPageAlive);
     // 获取主应用数据
     useEffect(() => {
@@ -391,29 +391,30 @@ export function useMainAppDataListener(options) {
         };
 
         const handleMessage = e => {
-            if (e?.data?.type === 'mainApp') {
-                handleMainAppData({
-                    ...e.data.data,
-                    // message 无法传递函数，需要通过postMessage触发父级函数
-                    navigate: (path) => {
-                        window.parent.postMessage({
-                            type: 'subApp',
-                            data: {
-                                action: 'navigate',
-                                payload: { path },
-                            },
-                        }, '*');
-                    },
-                    toLogin: () => {
-                        window.parent.postMessage({
-                            type: 'subApp',
-                            data: {
-                                action: 'toLogin',
-                            },
-                        }, '*');
-                    },
-                });
-            }
+            if (e?.data?.data?.name !== name) return;
+            if (e?.data?.type !== 'mainApp') return;
+
+            handleMainAppData({
+                ...e.data.data,
+                // message 无法传递函数，需要通过postMessage触发父级函数
+                navigate: (path) => {
+                    window.parent.postMessage({
+                        type: 'subApp',
+                        data: {
+                            action: 'navigate',
+                            payload: { path },
+                        },
+                    }, '*');
+                },
+                toLogin: () => {
+                    window.parent.postMessage({
+                        type: 'subApp',
+                        data: {
+                            action: 'toLogin',
+                        },
+                    }, '*');
+                },
+            });
         };
         window.addEventListener('message', handleMessage);
         // @ts-ignore
