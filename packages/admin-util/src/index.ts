@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { checkSameField, convertToTree, queryParse, sort, Storage } from '@ra-lib/util';
 // @ts-ignore
 import appPackage from 'root/package.json';
@@ -355,3 +355,140 @@ export function getParentOrigin(): string {
     return url;
 }
 
+
+// @ts-ignore
+if (window.microApp) {
+    // @ts-ignore
+    const mainApp = window.microApp.getData() || {};
+    setMainApp(mainApp);
+}
+
+/**
+ * 监听组应用数据
+ * @param options
+ */
+export function useMainAppDataListener(options) {
+    const { navigate, baseName, keepPageAlive } = options;
+    const [ keepAlive, setKeepAlive ] = useState(keepPageAlive);
+    // 获取主应用数据
+    useEffect(() => {
+        // 监听主应用下发的数据变化
+        const handleMainAppData = (data) => {
+            // 当主应用下发跳转指令时进行跳转
+            if (data.path) {
+                navigate(data.path.replace(baseName, '/'));
+            }
+
+            // 更新主应用
+            const mainApp = getMainApp() || {};
+
+            setKeepAlive(mainApp.keepAlive);
+
+            setMainApp({
+                ...mainApp,
+                ...data,
+            });
+        };
+
+        const handleMessage = e => {
+            if (e?.data?.type === 'mainApp') {
+                handleMainAppData({
+                    ...e.data.data,
+                    // message 无法传递函数，需要通过postMessage触发父级函数
+                    navigate: (path) => {
+                        window.parent.postMessage({
+                            type: 'subApp',
+                            data: {
+                                action: 'navigate',
+                                payload: { path },
+                            },
+                        }, '*');
+                    },
+                    toLogin: () => {
+                        window.parent.postMessage({
+                            type: 'subApp',
+                            data: {
+                                action: 'toLogin',
+                            },
+                        }, '*');
+                    },
+                });
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        // @ts-ignore
+        window.microApp?.addDataListener(handleMainAppData);
+
+        return () => {
+            // @ts-ignore
+            window.microApp?.removeDataListener(handleMainAppData);
+            window.removeEventListener('message', handleMessage);
+        };
+    }, [ baseName, navigate ]);
+
+    return { keepAlive };
+}
+
+
+/**
+ * 监听子应用数据
+ * @param options
+ */
+export function useSubAppDataListener(options) {
+    const { toHome, toLogin, navigate } = options;
+    // 监听iframe子应用数据
+    useEffect(() => {
+        const handleSubAppData = e => {
+            if (e?.data?.type !== 'subApp') return;
+            const data = e.data.data || {};
+            const { action, payload = {} } = data;
+
+            if (action === 'navigate') {
+                const { path } = payload;
+                return navigate(path);
+            }
+
+            if (action === 'toLogin') {
+                return toLogin();
+            }
+
+            if (action === 'toHome') {
+                return toHome();
+            }
+        };
+
+        window.addEventListener('message', handleSubAppData);
+        return () => window.removeEventListener('message', handleSubAppData);
+    }, [ navigate, toHome, toLogin ]);
+}
+
+/**
+ * 获取配置
+ */
+export function getConfig() {
+    // 从query参数中，获取部分配置
+    // 同步session，防止页面跳转之后，刷新没query了
+    const sQuery = storage.session.getItem('query') || {};
+    const query = { ...sQuery, ...queryParse() };
+    storage.session.setItem('query', query);
+
+    const isIframe = window.self !== window.top;
+    // @ts-ignore
+    const isMicro = !!window.microApp;
+
+    // 静态文件文件前缀
+    // @ts-ignore
+    let publicPath = (window.__MICRO_APP_PUBLIC_PATH__ || query.publicPath || '');
+    publicPath.substring(0, publicPath.length - 1);
+
+    // 路由前缀
+    // @ts-ignore
+    const baseName = window.__MICRO_APP_BASE_ROUTE__ || query.baseName;
+
+    return {
+        isIframe,
+        isMicro,
+        publicPath,
+        baseName,
+    };
+}

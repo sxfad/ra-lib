@@ -74,10 +74,10 @@ function KeepPageAlive(props, ref) {
         // 当前页面需要保持，但是没有在keepPagesRef.current中
         if (keepRoute && !nextPage) {
             nextPage = {
-                type: keepRoute?.type,
-                path: keepRoute?.path,
+                type: keepRoute.type,
+                path: keepRoute.path,
                 key,
-                Component: keepRoute?.Component,
+                Component: keepRoute.Component,
             };
             keepPagesRef.current.unshift(nextPage);
         }
