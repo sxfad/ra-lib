@@ -115,7 +115,7 @@ function KeepPageAlive(props, ref) {
                 if (path === '/iframe_page_/:src') activeProps = {};
 
                 return (
-                    <div key={key} style={{ display }}>
+                    <div key={key} style={{ display, overflow: 'auto' }}>
                         <Component {...ejectProps} {...activeProps} />
                     </div>
                 );
