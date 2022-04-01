@@ -391,7 +391,7 @@ export function useMainAppDataListener(options) {
         };
 
         const handleMessage = e => {
-            if (e?.data?.data?.name !== name) return;
+            if (name && e?.data?.data?.name !== name) return;
             if (e?.data?.type !== 'mainApp') return;
 
             handleMainAppData({
@@ -487,6 +487,7 @@ export function getConfig() {
     const baseName = window.__MICRO_APP_BASE_ROUTE__ || query.baseName;
 
     return {
+        ...query,
         isIframe,
         isMicro,
         publicPath,
