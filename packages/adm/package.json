@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/adm",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "description": "管理系统整合库",
     "main": "lib/index.js",
     "module": "es/index.js",
