@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/adm",
-    "version": "0.0.20",
+    "version": "0.0.21",
     "description": "管理系统整合库",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -21,7 +21,7 @@
     "homepage": "",
     "gitHead": "512f2b222bc7b76ea65a16b1e430b0b49dd78049",
     "dependencies": {
-        "@ra-lib/admin-util": "0.0.10",
+        "@ra-lib/admin-util": "0.0.11",
         "@ra-lib/ajax": "0.1.44",
         "@ra-lib/component": "0.0.4",
         "@ra-lib/hoc": "0.1.18",
