@@ -501,5 +501,6 @@ export function getConfig() {
         isMicro,
         publicPath,
         baseName: isIframe ? '' : baseName,
+        name: query.name || baseName,
     };
 }
