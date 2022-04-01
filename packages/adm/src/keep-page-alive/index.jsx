@@ -81,7 +81,7 @@ function KeepPageAlive(props, ref) {
         if (nextPage) nextPage.active = true;
 
         // 路由不存在，渲染 404 页面
-        if (!keepRoute && !unKeepRoute && !nextPage) {
+        if (routes.length && !keepRoute && !unKeepRoute && !nextPage) {
             keepPagesRef.current.unshift({
                 path: routePath,
                 key,
@@ -91,7 +91,7 @@ function KeepPageAlive(props, ref) {
 
         // 触发当前组件更新
         setRefresh({});
-    }, [reload, keepRoutes, unKeepRoutes, pathname, search, hash, hashRouter, routePath, error404, ejectProps, getRoute]);
+    }, [reload, keepRoutes, unKeepRoutes, pathname, search, hash, hashRouter, routePath, error404, ejectProps, getRoute, routes.length]);
 
     // 页面切换，触发窗口resize事件，表格高度、PageContent高度等需要重新计算
     useEffect(() => {
