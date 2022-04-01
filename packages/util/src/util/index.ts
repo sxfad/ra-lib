@@ -446,7 +446,7 @@ export function loadScript(url) {
 }
 
 /**
- * 检测URL是否可以访问
+ * 前端检测URL是否可以访问
  * @param url
  */
 export function ping(url) {
