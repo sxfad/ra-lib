@@ -444,3 +444,25 @@ export function loadScript(url) {
         document.head.appendChild(script);
     });
 }
+
+/**
+ * 检测URL是否可以访问
+ * @param url
+ */
+export function ping(url) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        const remove = () => script.remove();
+        script.src = url;
+
+        script.onload = () => {
+            resolve(true);
+            remove();
+        };
+        script.onerror = () => {
+            reject();
+            remove();
+        };
+        document.head.appendChild(script);
+    });
+}
