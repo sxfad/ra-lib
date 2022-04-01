@@ -74,6 +74,7 @@ function KeepPageAlive(props, ref) {
         // 当前页面需要保持，但是没有在keepPagesRef.current中
         if (keepRoute && !nextPage) {
             nextPage = {
+                type: keepRoute?.type,
                 path: keepRoute?.path,
                 key,
                 Component: keepRoute?.Component,
@@ -106,13 +107,13 @@ function KeepPageAlive(props, ref) {
         <>
             {/* 进行 keepAlive 的页面 */}
             {keepPagesRef.current.map((item) => {
-                const { key, Component, path, active } = item;
+                const { key, Component, active, type } = item;
                 const display = active !== false ? 'block' : 'none';
                 let activeProps = { active };
 
                 // 内嵌iframe 不传递 props，防止更新
                 // 页面首次加载，不传递active属性
-                if (path === '/iframe_page_/:src') activeProps = {};
+                if (type === 'iframe') activeProps = {};
 
                 return (
                     <div key={key} style={{ display, overflow: 'auto' }}>
