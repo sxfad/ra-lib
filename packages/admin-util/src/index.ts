@@ -355,6 +355,13 @@ export function getParentOrigin(): string {
     return url;
 }
 
+// @ts-ignore
+if (window.microApp) {
+    // @ts-ignore
+    const mainApp = window.microApp.getData() || {};
+    setMainApp(mainApp);
+}
+
 /**
  * 监听组应用数据
  * @param options
@@ -366,7 +373,8 @@ export function useMainAppDataListener(options) {
     useEffect(() => {
         if (!isSub) return setLoading(false);
 
-        setLoading(true);
+        // @ts-ignore
+        setLoading(!window.microApp);
 
         // 监听主应用下发的数据变化
         const handleMainAppData = (data) => {
@@ -424,7 +432,7 @@ export function useMainAppDataListener(options) {
             window.microApp?.removeDataListener(handleMicroData);
             window.removeEventListener('message', handleMessage);
         };
-    }, [isSub, name, navigate, setLoading]);
+    }, [ isSub, name, navigate, setLoading ]);
 }
 
 
