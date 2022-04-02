@@ -368,7 +368,8 @@ if (window.microApp) {
  * @param options
  */
 export function useMainAppDataListener(options) {
-    const { navigate, baseName, name } = options;
+    const { navigate, name: _name } = options;
+    const name = _name || window.location.pathname.split('/').filter(Boolean).shift();
     // 获取主应用数据
     useEffect(() => {
         // 监听主应用下发的数据变化
@@ -385,7 +386,7 @@ export function useMainAppDataListener(options) {
         const handleMicroData = data => {
             // 当主应用下发跳转指令时进行跳转
             if (data.path) {
-                navigate(data.path.replace(baseName, '/'));
+                navigate(data.path);
             }
             handleMainAppData(data);
         };
@@ -425,7 +426,7 @@ export function useMainAppDataListener(options) {
             window.microApp?.removeDataListener(handleMicroData);
             window.removeEventListener('message', handleMessage);
         };
-    }, [ baseName, name, navigate ]);
+    }, [ name, navigate ]);
 }
 
 
