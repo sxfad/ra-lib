@@ -1,0 +1,28 @@
+@import '../theme';
+
+.root {
+    display: flex;
+    align-items: center;
+    transition: opacity .3s;
+    cursor: pointer;
+    margin-right: 16px;
+    color: @primary-color;
+
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid @primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.name {
+    margin: 0 8px;
+}

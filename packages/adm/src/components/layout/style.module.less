@@ -1,0 +1,136 @@
+@import '../theme';
+
+@header-height: 50px;
+@aside-width: 222px;
+@aside-collapsed-width: 80px;
+@z-index: 999;
+
+.root {
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: @z-index;
+  height: @header-height;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+
+  .logo {
+    flex: 0 0 @aside-width;
+    width: @aside-width;
+    background: @layout-header-background;
+    height: 100%;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #000c17;
+    transition: width, flex @animation-duration-base;
+    overflow: hidden;
+    cursor: pointer;
+
+    &.collapsed {
+      flex: 0 0 @aside-collapsed-width;
+      width: @aside-collapsed-width;
+    }
+
+    img {
+      width: 30px;
+      margin-left: 24px;
+      margin-right: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+      word-break: keep-all;
+    }
+  }
+
+  .toggle {
+    color: @primary-color;
+    cursor: pointer;
+    height: 100%;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .headerMain {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    border-bottom: 1px solid @border-color-base;
+
+    .headerCenter {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+    }
+
+    .headerRight {
+      display: flex;
+      align-items: center;
+      justify-content: right;
+      padding-right: 16px;
+    }
+  }
+
+  .action {
+    cursor: pointer;
+    transition: opacity @animation-duration-base;
+
+    &:hover {
+      opacity: .7;
+    }
+  }
+
+  .avatar {
+    background: yellowgreen;
+  }
+
+  .userName {
+    margin: 0 8px;
+  }
+}
+
+.aside {
+  position: fixed;
+  top: @header-height;
+  left: 0;
+  z-index: @z-index;
+  width: @aside-width;
+  height: calc(100vh - @header-height);
+  background: @menu-dark-inline-submenu-bg;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  transition: width @animation-duration-base;
+
+  &.collapsed {
+    width: @aside-collapsed-width;
+  }
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+}
+
+.main {
+  padding-top: @header-height;
+  padding-left: @aside-width;
+  transition: padding-left @animation-duration-base;
+
+  &.collapsed {
+    padding-left: @aside-collapsed-width;
+  }
+
+}
+
+
