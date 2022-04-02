@@ -355,23 +355,19 @@ export function getParentOrigin(): string {
     return url;
 }
 
-
-// @ts-ignore
-if (window.microApp) {
-    // @ts-ignore
-    const mainApp = window.microApp.getData() || {};
-    setMainApp(mainApp);
-}
-
 /**
  * 监听组应用数据
  * @param options
  */
 export function useMainAppDataListener(options) {
-    const { navigate, name: _name } = options;
+    const { navigate, name: _name, isSub, setLoading } = options;
     const name = _name || window.location.pathname.split('/').filter(Boolean).shift();
     // 获取主应用数据
     useEffect(() => {
+        if (!isSub) return setLoading(false);
+
+        setLoading(true);
+
         // 监听主应用下发的数据变化
         const handleMainAppData = (data) => {
             // 更新主应用
@@ -381,6 +377,8 @@ export function useMainAppDataListener(options) {
                 ...mainApp,
                 ...data,
             });
+
+            setLoading(false);
         };
 
         const handleMicroData = data => {
@@ -426,7 +424,7 @@ export function useMainAppDataListener(options) {
             window.microApp?.removeDataListener(handleMicroData);
             window.removeEventListener('message', handleMessage);
         };
-    }, [ name, navigate ]);
+    }, [isSub, name, navigate, setLoading]);
 }
 
 
