@@ -479,7 +479,8 @@ export function getConfig() {
 
     // 静态文件文件前缀
     // @ts-ignore
-    const publicPath = (window.__MICRO_APP_PUBLIC_PATH__ || query.publicPath || '');
+    let publicPath = (window.__MICRO_APP_PUBLIC_PATH__ || query.publicPath || '');
+    publicPath = publicPath.endsWith('/') ? publicPath.substring(0, publicPath.length - 1) : publicPath;
 
     // 路由前缀
     // @ts-ignore
