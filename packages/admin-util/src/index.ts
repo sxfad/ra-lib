@@ -363,21 +363,18 @@ if (window.microApp) {
 }
 
 /**
- * 监听组应用数据
+ * 监听主应用数据
  * @param options
  */
 export function useMainAppDataListener(options) {
-    const { navigate, name: _name, isSub, setLoading } = options;
-    const name = _name || window.location.pathname.split('/').filter(Boolean).shift();
+    const { navigate } = options;
     // 获取主应用数据
     useEffect(() => {
-        if (!isSub) return setLoading(false);
-
-        // @ts-ignore
-        setLoading(!window.microApp);
-
-        // 监听主应用下发的数据变化
-        const handleMainAppData = (data) => {
+        const handleMicroData = data => {
+            // 当主应用下发跳转指令时进行跳转
+            if (data.path) {
+                navigate(data.path);
+            }
             // 更新主应用
             const mainApp = getMainApp() || {};
 
@@ -385,127 +382,11 @@ export function useMainAppDataListener(options) {
                 ...mainApp,
                 ...data,
             });
-
-            setLoading(false);
         };
 
-        const handleMicroData = data => {
-            // 当主应用下发跳转指令时进行跳转
-            if (data.path) {
-                navigate(data.path);
-            }
-            handleMainAppData(data);
-        };
-
-        const handleMessage = e => {
-            if (name && e?.data?.data?.name !== name) return;
-            if (e?.data?.type !== 'mainApp') return;
-
-            handleMainAppData({
-                ...e.data.data,
-                // message 无法传递函数，需要通过postMessage触发父级函数
-                navigate: (path) => {
-                    window.parent.postMessage({
-                        type: 'subApp',
-                        data: {
-                            action: 'navigate',
-                            payload: { path },
-                        },
-                    }, '*');
-                },
-                toLogin: () => {
-                    window.parent.postMessage({
-                        type: 'subApp',
-                        data: {
-                            action: 'toLogin',
-                        },
-                    }, '*');
-                },
-            });
-        };
-        window.addEventListener('message', handleMessage);
         // @ts-ignore
         window.microApp?.addDataListener(handleMicroData);
-
-        return () => {
-            // @ts-ignore
-            window.microApp?.removeDataListener(handleMicroData);
-            window.removeEventListener('message', handleMessage);
-        };
-    }, [ isSub, name, navigate, setLoading ]);
-}
-
-
-/**
- * 监听子应用数据
- * @param options
- */
-export function useSubAppDataListener(options) {
-    const { toHome, toLogin, navigate } = options;
-    // 监听iframe子应用数据
-    useEffect(() => {
-        const handleSubAppData = e => {
-            if (e?.data?.type !== 'subApp') return;
-            const data = e.data.data || {};
-            const { action, payload = {} } = data;
-
-            if (action === 'navigate') {
-                const { path } = payload;
-                return navigate(path);
-            }
-
-            if (action === 'toLogin') {
-                return toLogin();
-            }
-
-            if (action === 'toHome') {
-                return toHome();
-            }
-        };
-
-        window.addEventListener('message', handleSubAppData);
-        return () => window.removeEventListener('message', handleSubAppData);
-    }, [ navigate, toHome, toLogin ]);
-}
-
-/**
- * 获取配置
- */
-export function getConfig() {
-    // 从query参数中，获取部分配置
-    // 同步session，防止页面跳转之后，刷新没query了
-    const sQuery = storage.session.getItem('query') || {};
-    const query = { ...sQuery, ...queryParse() };
-    storage.session.setItem('query', query);
-
-    const isIframe = window.self !== window.top;
-    // @ts-ignore
-    const isMicro = !!window.microApp;
-
-    // 静态文件文件前缀
-    // @ts-ignore
-    let publicPath = (window.__MICRO_APP_PUBLIC_PATH__ || query.publicPath || '');
-    publicPath = publicPath.endsWith('/') ? publicPath.substring(0, publicPath.length - 1) : publicPath;
-
-    // 路由前缀
-    // @ts-ignore
-    const baseName = window.__MICRO_APP_BASE_ROUTE__ || query.baseName;
-
-    // 是否同源
-    let isSameOrigin = query.isSameOrigin === 'true';
-    // @ts-ignore
-    if (window.__MICRO_APP_PUBLIC_PATH__) {
         // @ts-ignore
-        isSameOrigin = new URL(window.__MICRO_APP_PUBLIC_PATH__).origin === window.location.origin;
-    }
-
-    return {
-        ...query,
-        isSameOrigin,
-        isIframe,
-        isMicro,
-        publicPath,
-        baseName: isIframe ? '' : baseName,
-        name: query.name || baseName,
-    };
+        return () => window.microApp?.removeDataListener(handleMicroData);
+    }, [ navigate ]);
 }
