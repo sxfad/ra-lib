@@ -425,7 +425,7 @@ export function useMainAppDataListener(options) {
             window.microApp?.removeDataListener(handleMainAppData);
             window.removeEventListener('message', handleMessage);
         };
-    }, [ baseName, navigate ]);
+    }, [baseName, name, navigate]);
 
     return { keepAlive };
 }
