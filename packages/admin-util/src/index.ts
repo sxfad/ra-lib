@@ -368,26 +368,26 @@ if (window.microApp) {
  * @param options
  */
 export function useMainAppDataListener(options) {
-    const { navigate, baseName, keepPageAlive, name } = options;
-    const [ keepAlive, setKeepAlive ] = useState(keepPageAlive);
+    const { navigate, baseName, name } = options;
     // 获取主应用数据
     useEffect(() => {
         // 监听主应用下发的数据变化
         const handleMainAppData = (data) => {
-            // 当主应用下发跳转指令时进行跳转
-            if (data.path) {
-                navigate(data.path.replace(baseName, '/'));
-            }
-
             // 更新主应用
             const mainApp = getMainApp() || {};
-
-            setKeepAlive(mainApp.keepAlive);
 
             setMainApp({
                 ...mainApp,
                 ...data,
             });
+        };
+
+        const handleMicroData = data => {
+            // 当主应用下发跳转指令时进行跳转
+            if (data.path) {
+                navigate(data.path.replace(baseName, '/'));
+            }
+            handleMainAppData(data);
         };
 
         const handleMessage = e => {
@@ -418,16 +418,14 @@ export function useMainAppDataListener(options) {
         };
         window.addEventListener('message', handleMessage);
         // @ts-ignore
-        window.microApp?.addDataListener(handleMainAppData);
+        window.microApp?.addDataListener(handleMicroData);
 
         return () => {
             // @ts-ignore
-            window.microApp?.removeDataListener(handleMainAppData);
+            window.microApp?.removeDataListener(handleMicroData);
             window.removeEventListener('message', handleMessage);
         };
-    }, [baseName, name, navigate]);
-
-    return { keepAlive };
+    }, [ baseName, name, navigate ]);
 }
 
 
