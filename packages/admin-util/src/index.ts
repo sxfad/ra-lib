@@ -390,3 +390,61 @@ export function useMainAppDataListener(options) {
         return () => window.microApp?.removeDataListener(handleMicroData);
     }, [ navigate ]);
 }
+
+/**
+ * 监听组应用数据
+ * @param options
+ */
+export function useMainAppDataListenerForIframe(options) {
+    const { navigate, name, onFinish } = options;
+    // 获取主应用数据
+    useEffect(() => {
+        // 不是嵌入iframe，直接完成
+        if (window.self === window.top) return onFinish();
+
+        const handleMessage = e => {
+            if (name && e?.data?.data?.name !== name) return;
+            if (e?.data?.type !== 'mainApp') return;
+
+            // 更新主应用
+            const mainApp = getMainApp() || {};
+            const data = {
+                ...mainApp,
+                ...e.data.data,
+                // message 无法传递函数，需要通过postMessage触发父级函数
+                navigate: (path) => {
+                    window.parent.postMessage({
+                        type: 'subApp',
+                        data: {
+                            action: 'navigate',
+                            payload: { path },
+                        },
+                    }, '*');
+                },
+                toLogin: () => {
+                    window.parent.postMessage({
+                        type: 'subApp',
+                        data: {
+                            action: 'toLogin',
+                        },
+                    }, '*');
+                },
+                toHome: () => {
+                    window.parent.postMessage({
+                        type: 'subApp',
+                        data: {
+                            action: 'toHome',
+                        },
+                    }, '*');
+                },
+            };
+            setMainApp(data);
+            onFinish(data);
+        };
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+            window.removeEventListener('message', handleMessage);
+        };
+    }, [ name, navigate, onFinish ]);
+}
