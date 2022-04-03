@@ -396,7 +396,7 @@ export function useMainAppDataListener(options) {
  * @param options
  */
 export function useMainAppDataListenerForIframe(options) {
-    const { navigate, name, onFinish } = options;
+    const { name, onFinish } = options;
     // 获取主应用数据
     useEffect(() => {
         // 不是嵌入iframe，直接完成
@@ -446,5 +446,5 @@ export function useMainAppDataListenerForIframe(options) {
         return () => {
             window.removeEventListener('message', handleMessage);
         };
-    }, [ name, navigate, onFinish ]);
+    }, [ name, onFinish ]);
 }
