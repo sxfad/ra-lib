@@ -367,21 +367,34 @@ if (window.microApp) {
  * @param options
  */
 export function useMainAppDataListener(options) {
-    const { navigate } = options;
+    useMainAppDataListenerForMicro(options);
+    useMainAppDataListenerForIframe(options);
+}
+
+/**
+ * mirco嵌入方式时，监听主应用数据
+ * @param options
+ */
+export function useMainAppDataListenerForMicro(options) {
+    const { navigate, onFinish } = options;
     // 获取主应用数据
     useEffect(() => {
-        const handleMicroData = data => {
+        onFinish && onFinish();
+        const handleMicroData = _data => {
             // 当主应用下发跳转指令时进行跳转
-            if (data.path) {
-                navigate(data.path);
+            if (_data.path) {
+                navigate(_data.path);
             }
             // 更新主应用
             const mainApp = getMainApp() || {};
 
-            setMainApp({
+            const data = {
                 ...mainApp,
-                ...data,
-            });
+                ..._data,
+            };
+            setMainApp(data);
+
+            onFinish && onFinish(data);
         };
 
         // @ts-ignore
@@ -392,18 +405,17 @@ export function useMainAppDataListener(options) {
 }
 
 /**
- * 监听组应用数据
+ * iframe嵌入方式时，监听组应用数据
  * @param options
  */
 export function useMainAppDataListenerForIframe(options) {
-    const { name, onFinish } = options;
+    const { onFinish } = options;
     // 获取主应用数据
     useEffect(() => {
         // 不是嵌入iframe，直接完成
-        if (window.self === window.top) return onFinish();
+        if (window.self === window.top) return onFinish && onFinish();
 
         const handleMessage = e => {
-            if (name && e?.data?.data?.name !== name) return;
             if (e?.data?.type !== 'mainApp') return;
 
             // 更新主应用
@@ -439,12 +451,13 @@ export function useMainAppDataListenerForIframe(options) {
                 },
             };
             setMainApp(data);
-            onFinish(data);
+            onFinish && onFinish(data);
         };
         window.addEventListener('message', handleMessage);
 
         return () => {
             window.removeEventListener('message', handleMessage);
         };
-    }, [ name, onFinish ]);
+    }, [ onFinish ]);
 }
+
