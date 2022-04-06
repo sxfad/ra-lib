@@ -355,6 +355,31 @@ export function getParentOrigin(): string {
     return url;
 }
 
+/**
+ * 子应用相关获取配置
+ */
+export function getSubAppConfig() {
+    const isIframe = window.self !== window.top;
+    // @ts-ignore
+    const isMicro = !!window.microApp;
+    // @ts-ignore
+    const baseName = window.__MICRO_APP_BASE_ROUTE__ || '';
+    // @ts-ignore
+    let publicPath = window.__MICRO_APP_PUBLIC_PATH__ || '';
+    publicPath = publicPath.endsWith('/') ? publicPath.substring(0, publicPath.length - 1) : publicPath;
+    const isSameOrigin = publicPath && new URL(publicPath).origin === window.location.origin;
+    const ajaxFullPrefix = `${publicPath}${isSameOrigin ? `${baseName}` : ''}`;
+
+    return {
+        isIframe,
+        isMicro,
+        baseName,
+        publicPath,
+        isSameOrigin,
+        ajaxFullPrefix,
+    };
+}
+
 // @ts-ignore
 if (window.microApp) {
     // @ts-ignore
