@@ -291,6 +291,7 @@ export default class Ajax {
             originResponse = true,
             beforeDownload = () => true,
             responseType = 'blob',
+            errorTip,
             ...others
         } = options;
 
@@ -309,9 +310,22 @@ export default class Ajax {
             data,
             originResponse,
             responseType,
+            errorTip,
             ...others,
         });
 
+        const showError = err => {
+            // errorTip不等于false，进行提示
+            if (errorTip !== false) {
+                this.onError({
+                    options,
+                    error: err,
+                    tip: errorTip,
+                    from: 'ajax',
+                });
+            }
+            throw err;
+        };
         ajaxPromise.then((res: AxiosResponse) => {
             // 现在之前，如果返回false，终止下载操作
             if (beforeDownload(res) === false) return;
@@ -323,22 +337,36 @@ export default class Ajax {
                     reader.readAsText(res.data, 'utf-8');
                     reader.onload = () => {
                         try {
-                            const result = JSON.parse(reader.result as string);
-                            reject(result);
+                            const resultStr: string = reader.result as string;
+
+                            if (!resultStr.includes('{')) {
+                                reject(new Error(resultStr));
+                            } else {
+                                const result = JSON.parse(resultStr);
+                                reject(result);
+                            }
                         } catch (e) {
                             reject(e);
                         }
                     };
+                }).catch(err => {
+                    showError(err);
                 });
             }
 
             const errorMessage = 'download fail';
 
-            if (!res || !res.headers || !res.data) throw Error(errorMessage);
+            if (!res || !res.headers || !res.data) {
+                const err = Error(errorMessage);
+                showError(err);
+            }
 
             fileName = fileName || getFileName(res?.headers);
 
-            if (!fileName) throw Error('file name can not be null!');
+            if (!fileName) {
+                const err = Error('file name can not be null!');
+                showError(err);
+            }
 
             // 构造a标签，进行文件下载
             const blob = new Blob([ res.data ], { type: res.headers['content-type'] });
