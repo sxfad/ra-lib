@@ -316,6 +316,22 @@ export default class Ajax {
             // 现在之前，如果返回false，终止下载操作
             if (beforeDownload(res) === false) return;
 
+            // 出错了
+            if (res.data.type === 'application/json') {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsText(res.data, 'utf-8');
+                    reader.onload = () => {
+                        try {
+                            const result = JSON.parse(reader.result as string);
+                            reject(result);
+                        } catch (e) {
+                            reject(e);
+                        }
+                    };
+                });
+            }
+
             const errorMessage = 'download fail';
 
             if (!res || !res.headers || !res.data) throw Error(errorMessage);
