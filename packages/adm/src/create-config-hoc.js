@@ -18,6 +18,8 @@ export default function create(_options) {
         theme,
         toLogin,
         ejectProps,
+        modalCommonProps,
+        drawerCommonProps,
     } = _options;
 
     // 公共高阶组件，注入一些常用数据，比如 query loginUser等
@@ -70,9 +72,12 @@ export default function create(_options) {
         } = options;
 
         // config 传递 参数校验
-        if (modal && drawer) throw Error('[config hoc] modal and drawer config can not be used together!');
-        if (modalFunction && drawer) throw Error('[config hoc] modalFunction and drawer config can not be used together!');
         if (modal && modalFunction) throw Error('[config hoc] modal and modalFunction config can not be used together!');
+        if (modal && drawer) throw Error('[config hoc] modal and drawer config can not be used together!');
+        if (modal && drawerFunction) throw Error('[config hoc] modal and drawerFunction config can not be used together!');
+        if (modalFunction && drawer) throw Error('[config hoc] modalFunction and drawer config can not be used together!');
+        if (modalFunction && drawerFunction) throw Error('[config hoc] modalFunction and drawerFunction config can not be used together!');
+        if (drawer && drawerFunction) throw Error('[config hoc] drawer and drawerFunction config can not be used together!');
 
         const hoc = [];
         const commonProps = {
@@ -81,6 +86,7 @@ export default function create(_options) {
             footer: false,
             bodyStyle: { padding: 0 },
             // style: { top: 50 },
+            ...(modal || modalFunction ? modalCommonProps : drawerCommonProps),
         };
         const functionOptions = {
             commonProps,
