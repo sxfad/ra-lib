@@ -23,5 +23,6 @@ export { default as Operator } from './operator';
 export { default as confirm } from './confirm';
 export { default as Loading } from './loading';
 export { default as Error404 } from './error-404';
+export { default as WaterMark } from './water-mark';
 
 // export { default as Error404 } from './error/Error404';
