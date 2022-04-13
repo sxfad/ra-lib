@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/component",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "通用公共组件",
     "main": "lib/index.js",
     "module": "es/index.js",
