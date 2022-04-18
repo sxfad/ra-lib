@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import {Helmet} from 'react-helmet';
 import { getLoginUser } from '@ra-lib/admin-util';
 import { compose, queryParse } from '@ra-lib/util';
 
@@ -29,6 +30,7 @@ export default function create(_options) {
             loginUser = true,
             layout = !IS_SUB,
             auth = true,
+            title,
         } = options;
 
         return (WrappedComponent) => {
@@ -48,7 +50,12 @@ export default function create(_options) {
                 if (query) _ejectProps.query = queryParse();
                 if (loginUser) _ejectProps.loginUser = getLoginUser();
 
-                return <WrappedComponent {..._ejectProps} {...props} />;
+                return (
+                    <>
+                        <Helmet title={title}/>
+                        <WrappedComponent {..._ejectProps} {...props} />
+                    </>
+                );
             };
 
             WithEjectProps.displayName = `WithCommon(${componentName})`;

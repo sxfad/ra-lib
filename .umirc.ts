@@ -22,7 +22,7 @@ export default defineConfig({
         'zh-CN': [
             {
                 title: '组件',
-                path: '/components',
+                path: '/component',
             },
             {
                 title: 'Hooks',

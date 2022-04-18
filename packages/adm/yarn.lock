@@ -2,42 +2,90 @@
 # yarn lockfile v1
 
 
-"@ra-lib/ajax@0.1.43":
-  version "0.1.43"
-  resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.43.tgz#f41601c72166128c15a9c16c0e14ea084b6bb374"
-  integrity sha512-rbp0/FnF9vTRdqbuAp0DSaLw4ZuFJdPCXa30tLN5rvTTEO3qOOHuChS496ogBEmFzUFr5N+F96DYC7j7s6ac4A==
+"@ra-lib/admin-util@0.0.21":
+  version "0.0.21"
+  resolved "https://registry.npmjs.org/@ra-lib/admin-util/-/admin-util-0.0.21.tgz#7a657ad51167919e01e6af7088783adadba5553d"
+  integrity sha512-Wg2WjT+NKx8/VLzQewDFtF5o8oDsemadxckKAE/okXx6WF8A63rFgmAXJl4kTt5+BR+N5iH8bIKZOWil4SRb5w==
+  dependencies:
+    "@ra-lib/util" "0.1.34"
 
-"@ra-lib/babel-plugin-attribute-wrapper@^0.0.20":
-  version "0.0.20"
-  resolved "https://registry.npmjs.org/@ra-lib/babel-plugin-attribute-wrapper/-/babel-plugin-attribute-wrapper-0.0.20.tgz#15929da0f1d2643f22323f8c2c5be6197b981bc0"
-  integrity sha512-6cB21bF906ZPKhnEOG1caT8n76gn8VzULQG5yAXUvkB01RyDkXpLxh1ubKW7fMsiQJw9SbDgftZbHZqDQVyq/w==
+"@ra-lib/ajax@0.1.46":
+  version "0.1.46"
+  resolved "https://registry.npmjs.org/@ra-lib/ajax/-/ajax-0.1.46.tgz#e745e3da585db4249ed7d3c74e9080a2454b08c4"
+  integrity sha512-od01uKVWwFWJnFA9k7uuAFQG93bq9z8OI76OelLPtl9HojU/94X6MiKEZ22HePfmQL/FyqsJyrl4sVDgc9VgDQ==
 
-"@ra-lib/components@^0.1.100":
-  version "0.1.100"
-  resolved "https://registry.npmjs.org/@ra-lib/components/-/components-0.1.100.tgz#5beab4894fb456c79524d7adf1c11e48f8cc8f6b"
-  integrity sha512-hw64StSyG+iWy2AEOKM0DOCxIdP0qDiJ/zWQhqkfhAntSk+D3daJy9YAqmAypwkRB8sRTZ2KEF6mXhJ+G3J3CQ==
+"@ra-lib/component@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/@ra-lib/component/-/component-0.0.5.tgz#a8dfaffbcd7c1a3cecf594954458a104ccf90164"
+  integrity sha512-zHQvGXt4tDGJY7ibcXECYXfpNsuro5PFi2XvHaLqt/K60wN6Y0Hsv0jfaFUXGxhqHf71Km+G+8+4EAKgqfdMPQ==
 
-"@ra-lib/config-loader@0.1.9":
-  version "0.1.9"
-  resolved "https://registry.npmjs.org/@ra-lib/config-loader/-/config-loader-0.1.9.tgz#8da89878a2d7829fb97a78c1ba78a73e8606b1f3"
-  integrity sha512-a+Ms8fLQSRr9nskbRt7bQHmwCoupKGEAg95gukymSyEqiQg0pvY6Tc2qkCayIaFBzZTGmrz33QePUGM5VZNW1g==
-
-"@ra-lib/hoc@0.1.10":
-  version "0.1.10"
-  resolved "https://registry.npmjs.org/@ra-lib/hoc/-/hoc-0.1.10.tgz#bc1cb7ed4d18c85e952a730283fe6b65e56b828f"
-  integrity sha512-uEoSdX7OG0wozFc8Co1oX61soHmb0OrkzAdKJBQPgZdD+4pubEtgVAu2E1VJo9DBKXnkn/wxLS7EOjZl4zhbKw==
+"@ra-lib/hoc@0.1.18":
+  version "0.1.18"
+  resolved "https://registry.npmjs.org/@ra-lib/hoc/-/hoc-0.1.18.tgz#68ac60146034bc1c46bfc41f87de24d223be8954"
+  integrity sha512-HK+khWfGzWIy4GcKqSYL+H0yVVXcTcdXMWbkya9Gt5LdsR5UuY7iPUTY+f8WILrMe6XbdXX8kqCcjNaD1Hu8+Q==
 
 "@ra-lib/hooks@0.1.11":
   version "0.1.11"
   resolved "https://registry.npmjs.org/@ra-lib/hooks/-/hooks-0.1.11.tgz#6a2406cadf0ce328f832742f7966e9a634366517"
   integrity sha512-7W7Sm8MUTK28FtSwKnkzM5D2WR9MVjWZ/GYZe0H/RVECjjU2TRaZMM2X+gfsfbeOf+R0f8N+4zy9zOhhmughLQ==
 
-"@ra-lib/model@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.npmjs.org/@ra-lib/model/-/model-0.1.11.tgz#cc68606223a1e53c48b6c31d40067d8deb6f4b27"
-  integrity sha512-wzOhEm77wtyiXdPDSehYcwIY4EDP3jjP2MnueiKZ5F+3Y1ExzVdmdnQ0MzAN6L126NJQ86T+lgE/f8pkUMo4Jg==
+"@ra-lib/options@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/@ra-lib/options/-/options-0.0.2.tgz#b91c1f7331fc9aba4f0b0a2d5f6f0fda8a3a7fb8"
+  integrity sha512-xshPD+UrG4ZaHpG80G8HZCgFrgbIKq6aB5ofwZv1ysvHJ38rfUfPeFEMWPeyILFDDbhYzJzrYc8n9wg4+uS5Pw==
 
-"@ra-lib/util@^0.1.27":
-  version "0.1.27"
-  resolved "https://registry.npmjs.org/@ra-lib/util/-/util-0.1.27.tgz#b8d6a09029d208b06629a196f6733c28a7cbd2ce"
-  integrity sha512-UgkZuZXwWe9iwxG2AMK89cYvRIxqAt9TBCLVvuc8Hu4Iwee4+mc0d+UYaE9/Ia9LiD5r5WqKUK5vdIuhNoDXIw==
+"@ra-lib/util@0.1.34":
+  version "0.1.34"
+  resolved "https://registry.npmjs.org/@ra-lib/util/-/util-0.1.34.tgz#c39bd255529b48002913b4a81b0197b06960e954"
+  integrity sha512-nKvmnk2FEQjeQRPX7Aaqlvkp1SrgfBJR8jYmnkOSdIjCKnxqG7OlvUrsP5Wa18UFBoiLgewsB14yUIhFwW7R7A==
+
+"js-tokens@^3.0.0 || ^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
+
+loose-envify@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
+  dependencies:
+    js-tokens "^3.0.0 || ^4.0.0"
+
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+  integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
+
+prop-types@^15.7.2:
+  version "15.8.1"
+  resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
+react-fast-compare@^3.1.1:
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
+  integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
+
+react-helmet@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/react-helmet/-/react-helmet-6.1.0.tgz#a750d5165cb13cf213e44747502652e794468726"
+  integrity sha512-4uMzEY9nlDlgxr61NL3XbKRy1hEkXmKNXhjbAIOVw5vcFrsdYbH2FEwcNyWvWinl103nXgzYNlns9ca+8kFiWw==
+  dependencies:
+    object-assign "^4.1.1"
+    prop-types "^15.7.2"
+    react-fast-compare "^3.1.1"
+    react-side-effect "^2.1.0"
+
+react-is@^16.13.1:
+  version "16.13.1"
+  resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
+  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-side-effect@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/react-side-effect/-/react-side-effect-2.1.1.tgz#66c5701c3e7560ab4822a4ee2742dee215d72eb3"
+  integrity sha512-2FoTQzRNTncBVtnzxFOk2mCpcfxQpenBMbk5kSVBg5UcPqV9fRbgY2zhb7GTWWOlpFmAxhClBDlIq8Rsubz1yQ==
