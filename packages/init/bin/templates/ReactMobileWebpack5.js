@@ -9,7 +9,6 @@ module.exports = class ReactAdmin extends Base {
         'docs',
         'build',
     ];
-
     replaceFiles() {
         const { chineseName } = this.answers;
 
