@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/components",
-    "version": "0.1.104",
+    "version": "0.1.105",
     "description": "通用公共组件",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -35,6 +35,6 @@
     "homepage": "",
     "gitHead": "b1d6a9caa157ac0c65a6e6ef4de3b8395522c4af",
     "dependencies": {
-        "@ra-lib/component": "0.0.5"
+        "@ra-lib/component": "0.0.6"
     }
 }

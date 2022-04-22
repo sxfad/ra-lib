@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/admin",
-    "version": "0.1.81",
+    "version": "0.1.82",
     "description": "管理系统整合库",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -25,15 +25,15 @@
     "homepage": "",
     "gitHead": "512f2b222bc7b76ea65a16b1e430b0b49dd78049",
     "dependencies": {
-        "@ra-lib/admin-util": "0.0.21",
+        "@ra-lib/admin-util": "0.0.22",
         "@ra-lib/ajax": "0.1.46",
         "@ra-lib/babel-plugin-attribute-wrapper": "^0.0.20",
-        "@ra-lib/components": "0.1.104",
+        "@ra-lib/components": "0.1.105",
         "@ra-lib/config-loader": "0.1.10",
         "@ra-lib/hoc": "0.1.18",
-        "@ra-lib/hooks": "0.1.11",
+        "@ra-lib/hooks": "0.1.12",
         "@ra-lib/model": "^0.1.11",
         "@ra-lib/options": "0.0.2",
-        "@ra-lib/util": "0.1.34"
+        "@ra-lib/util": "0.1.35"
     }
 }
