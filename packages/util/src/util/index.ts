@@ -431,6 +431,32 @@ export function formatDateTime(date, time) {
 
 
 /**
+ * 20220419103519
+ * @param format
+ */
+export function formatStringDate(format = 'YYYY-MM-DD HH:mm:ss') {
+    return value => {
+        if (!value) return '-';
+
+        // 长度不够，补0
+        const timeStr = value.padEnd(14, '0');
+
+        const year = timeStr.substring(0, 4);
+        const month = timeStr.substring(4, 6);
+        const day = timeStr.substring(6, 8);
+        const hour = timeStr.substring(8, 10);
+        const minutes = timeStr.substring(10, 12);
+        const second = timeStr.substring(12, 14);
+
+        const mDate = moment(`${year}-${month}-${day} ${hour}:${minutes}:${second}`);
+
+        if (mDate.isValid()) return mDate.format(format);
+
+        return '-';
+    };
+}
+
+/**
  * 加载js文件
  * @param url
  * @returns {Promise<unknown>}
