@@ -6,6 +6,7 @@ const ERROR_FORBIDDEN = '您无权访问！';
 const ERROR_UNKNOWN = '未知错误';
 const TIP_TITLE = '温馨提示';
 const TIP = '失败';
+const TOO_LARGE = '上传文件过大！'
 
 function getErrorTip(error, tip, toLogin) {
     if (tip && tip !== true) return tip;
@@ -17,6 +18,7 @@ function getErrorTip(error, tip, toLogin) {
         if (status === 401) return toLogin();
         if (status === 403) return ERROR_FORBIDDEN;
         if (status === 404) return ERROR_NOT_FOUND;
+        if (status === 413) return TOO_LARGE;
         if (status >= 500) return ERROR_SERVER;
     }
 
