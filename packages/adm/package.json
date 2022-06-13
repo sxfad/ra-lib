@@ -1,6 +1,6 @@
 {
     "name": "@ra-lib/adm",
-    "version": "0.0.38",
+    "version": "0.0.39",
     "description": "管理系统整合库",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -26,9 +26,9 @@
         "@ra-lib/component": "0.0.6",
         "@ra-lib/hoc": "0.1.18",
         "@ra-lib/hooks": "0.1.12",
+        "@ra-lib/model": "^0.1.11",
         "@ra-lib/options": "0.0.2",
         "@ra-lib/util": "0.1.35",
-        "react-helmet": "^6.1.0",
-        "@ra-lib/model": "^0.1.11"
+        "react-helmet": "^6.1.0"
     }
 }
