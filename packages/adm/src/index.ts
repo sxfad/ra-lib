@@ -5,6 +5,7 @@ export * from '@ra-lib/hooks';
 export { default as Ajax, createHooks as createAjaxHooks, createHoc as createAjaxHoc } from '@ra-lib/ajax';
 export * from '@ra-lib/admin-util';
 export * from '@ra-lib/options';
+export * from '@ra-lib/model';
 export { default as KeepPageAlive } from './keep-page-alive';
 export * from './util';
 export { default as handleError } from './handle-error';

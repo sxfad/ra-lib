@@ -28,6 +28,7 @@
         "@ra-lib/hooks": "0.1.12",
         "@ra-lib/options": "0.0.2",
         "@ra-lib/util": "0.1.35",
-        "react-helmet": "^6.1.0"
+        "react-helmet": "^6.1.0",
+        "@ra-lib/model": "^0.1.11"
     }
 }

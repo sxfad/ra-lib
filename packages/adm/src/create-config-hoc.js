@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import { getLoginUser } from '@ra-lib/admin-util';
 import { compose, queryParse } from '@ra-lib/util';
 
@@ -21,6 +21,7 @@ export default function create(_options) {
         ejectProps,
         modalCommonProps,
         drawerCommonProps,
+        reduxConnect,
     } = _options;
 
     // 公共高阶组件，注入一些常用数据，比如 query loginUser等
@@ -52,7 +53,7 @@ export default function create(_options) {
 
                 return (
                     <>
-                        <Helmet title={title}/>
+                        <Helmet title={title} />
                         <WrappedComponent {..._ejectProps} {...props} />
                     </>
                 );
@@ -76,6 +77,7 @@ export default function create(_options) {
             modalFunction, // 是否是弹框函数
             drawer, // 是否是抽屉
             drawerFunction, // 是否是抽屉函数
+            connect = false,
         } = options;
 
         // config 传递 参数校验
@@ -110,7 +112,10 @@ export default function create(_options) {
         // 抽屉高阶组件
         if (drawer) hoc.push(modalHoc({ commonProps }));
         // ajax高阶组件
-        if (ajax) hoc.push(ajaxHoc());
+        if (ajax && ajaxHoc) hoc.push(ajaxHoc());
+        // redux
+        if (reduxConnect && connect === true) hoc.push(reduxConnect());
+        if (reduxConnect && typeof connect === 'function') hoc.push(reduxConnect(connect));
 
         // 公共高阶组件
         hoc.push(commonHoc(options));
