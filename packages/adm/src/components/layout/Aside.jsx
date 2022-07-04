@@ -6,7 +6,7 @@ import c from 'classnames';
 import s from './style.module.less';
 
 export default function Aside(props) {
-    const { menus, keepMenuOpen = true, collapsed, style } = props;
+    const { menus, keepMenuOpen = true, collapsed } = props;
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [openKeys, setOpenKeys] = useState([]);
     const openKeysRef = useRef([]);
@@ -61,7 +61,7 @@ export default function Aside(props) {
     }, [menus]);
 
     return (
-        <aside className={c(s.aside, collapsed && s.collapsed)} style={style}>
+        <aside className={c(s.aside, collapsed && s.collapsed)}>
             <Menu
                 theme={'dark'}
                 mode='inline'

@@ -8,7 +8,7 @@ import c from 'classnames';
 import s from './style.module.less';
 
 export default function Header(props) {
-    const { collapsed, onCollapsedChange, proxyVisible, Logo, onLogout, proxyConfig, style } = props;
+    const { collapsed, onCollapsedChange, proxyVisible, Logo, onLogout, proxyConfig } = props;
     const navigate = useNavigate();
 
     const handleLogout = useCallback(() => {
@@ -18,7 +18,7 @@ export default function Header(props) {
     const userName = getLoginUser()?.name || '';
 
     return (
-        <header className={s.header} style={style}>
+        <header className={s.header}>
             <div className={c(s.logo, collapsed && s.collapsed)} onClick={() => navigate('/')}>
                 <Logo simple={collapsed}/>
             </div>
