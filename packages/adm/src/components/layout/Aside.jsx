@@ -6,7 +6,7 @@ import c from 'classnames';
 import s from './style.module.less';
 
 export default function Aside(props) {
-    const { layout, menus, keepMenuOpen = true, collapsed } = props;
+    const { menus, keepMenuOpen = true, collapsed, style } = props;
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [openKeys, setOpenKeys] = useState([]);
     const openKeysRef = useRef([]);
@@ -19,10 +19,7 @@ export default function Aside(props) {
     }, [navigate]);
 
     // 页面切换，选中菜单
-    useEffect(() => {
-        if(!layout) return;
-        setSelectedKeys([location.pathname]);
-    }, [layout, location]);
+    useEffect(() => setSelectedKeys([location.pathname]), [location]);
 
     // 计算openKeys
     useEffect(() => {
@@ -64,7 +61,7 @@ export default function Aside(props) {
     }, [menus]);
 
     return (
-        <aside className={c(s.aside, collapsed && s.collapsed)}>
+        <aside className={c(s.aside, collapsed && s.collapsed)} style={style}>
             <Menu
                 theme={'dark'}
                 mode='inline'

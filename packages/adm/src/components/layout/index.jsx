@@ -13,6 +13,7 @@ export default function Layout(props) {
     return (
         <div className={s.root}>
             <Header
+                style={{ display: layout ? 'block' : 'none' }}
                 collapsed={collapsed}
                 onCollapsedChange={setCollapsed}
                 proxyVisible={proxyVisible}
@@ -20,13 +21,17 @@ export default function Layout(props) {
                 onLogout={onLogout}
                 proxyConfig={proxyConfig}
             />
+
             <Aside
-                layout={layout}
+                style={{ display: layout ? 'block' : 'none' }}
                 menus={menus}
                 collapsed={collapsed}
                 keepMenuOpen={keepMenuOpen}
             />
-            <main className={c(s.main, collapsed && s.collapsed)}>
+            <main
+                className={c(s.main, collapsed && s.collapsed)}
+                style={layout ? {} : { paddingLeft: 0, paddingTop: 0 }}
+            >
                 {props.children}
             </main>
         </div>
