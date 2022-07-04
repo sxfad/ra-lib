@@ -6,6 +6,7 @@
         "start": "node scripts/build-watch.js",
         "build": "father-build",
         "build:config-loader": "PACKAGE=config-loader father-build",
+        "build:adm": "PACKAGE=adm father-build",
         "build:admin": "PACKAGE=admin father-build",
         "build:hoc": "PACKAGE=hoc father-build",
         "build:model": "PACKAGE=model father-build",

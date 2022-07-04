@@ -8,8 +8,10 @@ export default function Layout(props) {
     const { layout, menus, keepMenuOpen = true, proxyVisible, Logo, onLogout, proxyConfig } = props;
     const [collapsed, setCollapsed] = useState(false);
 
+    if (!layout) return props.children;
+
     return (
-        <div className={s.root} style={{ display: layout ? 'block' : 'none' }}>
+        <div className={s.root}>
             <Header
                 collapsed={collapsed}
                 onCollapsedChange={setCollapsed}
@@ -19,6 +21,7 @@ export default function Layout(props) {
                 proxyConfig={proxyConfig}
             />
             <Aside
+                layout={layout}
                 menus={menus}
                 collapsed={collapsed}
                 keepMenuOpen={keepMenuOpen}
