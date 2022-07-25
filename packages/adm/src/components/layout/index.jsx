@@ -5,7 +5,7 @@ import c from 'classnames';
 import s from './style.module.less';
 
 export default function Layout(props) {
-    const { layout, menus, keepMenuOpen = true, proxyVisible, Logo, onLogout, proxyConfig } = props;
+    const { selectedMenuPath, layout, menus, keepMenuOpen = true, proxyVisible, Logo, onLogout, proxyConfig } = props;
     const [collapsed, setCollapsed] = useState(false);
 
     if (!layout) return props.children;
@@ -24,6 +24,7 @@ export default function Layout(props) {
                 menus={menus}
                 collapsed={collapsed}
                 keepMenuOpen={keepMenuOpen}
+                selectedMenuPath={selectedMenuPath}
             />
             <main className={c(s.main, collapsed && s.collapsed)}>
                 {props.children}
